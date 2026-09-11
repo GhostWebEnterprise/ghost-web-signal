@@ -1,5 +1,14 @@
 # Ghostly
 
+<p align="center">
+
+[![GitHub](https://img.shields.io/badge/GitHub-TempleEU%2FGhostly.android-181717?style=plastic&logo=github&logoColor=white)](https://github.com/TempleEU/Ghostly.android)
+[![Android](https://img.shields.io/badge/Platform-Android-3DDC84?style=plastic&logo=android&logoColor=white)](https://github.com/TempleEU/Ghostly.android)
+[![Privacy](https://img.shields.io/badge/Focus-Private%20Messaging-67e8a2?style=plastic&logo=github&logoColor=white)](https://github.com/TempleEU/Ghostly.android)
+[![Open Source](https://img.shields.io/badge/Source-Open%20Source-67e8a2?style=plastic&logo=github&logoColor=white)](https://github.com/TempleEU/Ghostly.android)
+
+</p>
+
 > **Private by design. Secure by default. Open source.**
 
 **Ghostly Android** is an independent, privacy-focused messaging application built on the Signal/Molly technology stack, with its own Ghostly branding, configuration and privacy-focused enhancements.
