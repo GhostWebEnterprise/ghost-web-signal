@@ -53,6 +53,6 @@ jobs:
           VALIDATE_EDITORCONFIG: true
           VALIDATE_GIT_MERGE_CONFLICT_MARKERS: true
           IGNORE_GITIGNORED_FILES: true
-          FILTER_REGEX_EXCLUDE: '(^|/)(build|\.gradle|\.idea|generated|node_modules)(/|$)|(^|/)(local\.properties)$'
+          FILTER_REGEX_EXCLUDE: '(^|/)(build|\.gradle|\.idea|generated|node_modules|reproducible-builds)(/|$)|(^|/)(local\.properties)$'
           ENABLE_GITHUB_ACTIONS_STEP_SUMMARY: true
           SAVE_SUPER_LINTER_SUMMARY: true
