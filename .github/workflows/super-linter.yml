@@ -23,7 +23,9 @@ jobs:
   super-linter:
     name: Super-Linter
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    # The full Signal/Molly codebase needs more than 20 minutes to lint all
+    # enabled languages; previous runs were cancelled right at the old limit.
+    timeout-minutes: 45
     permissions:
       contents: read
       statuses: write

@@ -11,10 +11,10 @@
       android:translateY="96">
     <path
         android:pathData="M302,828 C330,840 354,850 372,858 C352,886 326,918 296,946 C294,906 297,866 302,828 Z"
-        android:fillColor="#5B8DEF"/>
+        android:fillColor="#2EE6FF"/>
     <path
         android:pathData="M134.00,492.00 A378.00,362.00 0 1 1 890.00,492.00 A378.00,362.00 0 1 1 134.00,492.00 Z"
-        android:strokeColor="#5B8DEF"
+        android:strokeColor="#2EE6FF"
         android:strokeWidth="42.0"/>
 <group android:rotation="-8.0" android:pivotX="512.0" android:pivotY="520.0">
       <path

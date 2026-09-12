@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <defs>
+    <radialGradient id="glowCyan" cx="0.34" cy="0.28" r="0.46">
+      <stop offset="0" stop-color="#1893E6" stop-opacity="0.42"/>
+      <stop offset="1" stop-color="#1893E6" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowViolet" cx="0.74" cy="0.68" r="0.42">
+      <stop offset="0" stop-color="#7A3BF0" stop-opacity="0.34"/>
+      <stop offset="1" stop-color="#7A3BF0" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="ghostFill" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#C9D6F2"/>
+    </linearGradient>
+    <linearGradient id="ringBase" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#0B54D0"/>
+      <stop offset="1" stop-color="#2FC1FF"/>
+    </linearGradient>
+  </defs>
+  <rect width="1024" height="1024" rx="228" fill="#050509"/>
+  <rect width="1024" height="1024" rx="228" fill="url(#glowCyan)"/>
+  <rect width="1024" height="1024" rx="228" fill="url(#glowViolet)"/>
+  <path d="M302,828 C330,840 354,850 372,858 C352,886 326,918 296,946 C294,906 297,866 302,828 Z" fill="url(#ringBase)"/>
+  <path d="M134.00,492.00 A378.00,362.00 0 1 1 890.00,492.00 A378.00,362.00 0 1 1 134.00,492.00 Z" fill="none" stroke="url(#ringBase)" stroke-width="42.0"/>
+  <path d="M512.00,130.00 A378.00,362.00 0 0 1 867.20,368.19" fill="none" stroke="#2FC1FF" stroke-width="42.0"/><path d="M867.20,368.19 A378.00,362.00 0 0 1 728.81,788.53" fill="none" stroke="#6A46F5" stroke-width="42.0"/><path d="M728.81,788.53 A378.00,362.00 0 0 1 295.19,788.53" fill="none" stroke="#8A3BE0" stroke-width="42.0"/><path d="M295.19,788.53 A378.00,362.00 0 0 1 156.80,368.19" fill="none" stroke="#0B54D0" stroke-width="42.0"/><path d="M156.80,368.19 A378.00,362.00 0 0 1 512.00,130.00" fill="none" stroke="#1893E6" stroke-width="42.0"/>
+  <g transform="rotate(-8.0 512.0 520.0)">
+    <path d="M182.00,520.00 A330.00,86.00 0 0 1 842.00,520.00" fill="none" stroke="#A6DCFF" stroke-width="13" opacity="0.75"/>
+  </g>
+  <path d="M512,232 C436,232 354,300 330,420 C322,470 322,540 330,612 C336,668 368,712 404,690 C424,678 432,700 452,706 C470,712 486,690 512,688 C538,690 554,712 572,706 C592,700 600,678 620,690 C656,712 688,668 694,612 C702,540 702,470 694,420 C670,300 588,232 512,232 Z" fill="url(#ghostFill)"/>
+  <path d="M374,470 C382,432 434,414 478,436 C492,443 496,452 492,462 C478,496 416,506 382,492 C374,488 372,478 374,470 Z" fill="#0A0E1A"/>
+  <path d="M650,470 C642,432 590,414 546,436 C532,443 528,452 532,462 C546,496 608,506 642,492 C650,488 652,478 650,470 Z" fill="#0A0E1A"/>
+  <ellipse cx="446.0" cy="460.0" rx="28" ry="36" fill="#35E0FF" opacity="0.35"/>
+  <ellipse cx="578.0" cy="460.0" rx="28" ry="36" fill="#35E0FF" opacity="0.35"/>
+  <ellipse cx="446.0" cy="460.0" rx="19.0" ry="27.0" fill="#35E0FF"/>
+  <ellipse cx="578.0" cy="460.0" rx="19.0" ry="27.0" fill="#35E0FF"/>
+  <g transform="rotate(-8.0 512.0 520.0)">
+    <path d="M182.00,520.00 A330.00,86.00 0 0 0 842.00,520.00" fill="none" stroke="#A6DCFF" stroke-width="15" opacity="0.95"/>
+  </g>
+</svg>
