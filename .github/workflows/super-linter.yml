@@ -23,8 +23,8 @@ jobs:
   super-linter:
     name: Super-Linter
     runs-on: ubuntu-latest
-    # The full Signal/Molly codebase needs more than 45 minutes to lint all
-    # enabled languages; previous runs were killed right at the old limit.
+    # Incremental linting (only changed files) finishes in minutes; full
+    # sweeps of the Signal/Molly codebase exceeded 60-minute job limits.
     timeout-minutes: 60
     permissions:
       contents: read
@@ -42,7 +42,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DEFAULT_BRANCH: Ghostly.main
-          VALIDATE_ALL_CODEBASE: true
+          VALIDATE_ALL_CODEBASE: false
           VALIDATE_KOTLIN: true
           VALIDATE_JAVA: true
           VALIDATE_GROOVY: true
