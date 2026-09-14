@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="art/ghostly-icon-512.png" width="128" alt="Ghostly icon" />
+<img src="art/ghostly-icon-512.png" width="128" alt="GhostWeb icon" />
 
 # GhostWeb
 
@@ -24,19 +24,19 @@
 
 **GhostWeb** is an independent open-source software ecosystem focused on privacy, secure communication, network protection, and AI tooling.
 
-The central project website brings the ecosystem together in one place so users can discover releases, downloads, source code, and documentation.
+The central website is the project hub for discovering the GhostWeb applications, source code, releases, downloads, and documentation.
 
 **Project hub:** https://ghostwebenterprise.github.io/ghostweb.signal/
 
 | Project | Purpose | Status |
 |---|---|---|
-| **Ghostly / GhostWeb Signal** | Privacy-focused Android messaging and calling | **Available** |
-| **GhostWeb VPN** | Privacy-focused browser/network protection | **Available** |
+| **GhostWeb Signal / Ghostly** | Privacy-focused Android messaging and calling | **Available** |
+| **GhostWeb VPN** | Privacy-focused browser and network protection | **Available** |
 | **GhostWeb AI** | Privacy-focused AI client and tooling | **Available** |
 
 ### Downloads
 
-All GhostWeb projects are linked from the central project hub:
+All GhostWeb projects are available through the central website:
 
 - **GhostWeb Signal / Ghostly** — Android messaging client and releases
 - **GhostWeb VPN** — browser VPN/proxy protection project and releases
@@ -44,7 +44,7 @@ All GhostWeb projects are linked from the central project hub:
 
 ---
 
-## Ghostly — Signal client
+## GhostWeb Signal — Ghostly
 
 **Ghostly** is an independent, privacy-focused messaging app for Android, built on the **Signal/Molly** technology stack with its own branding, configuration, and privacy enhancements. It provides end-to-end encrypted messaging and calling while connecting to the standard Signal service network.
 
@@ -106,23 +106,27 @@ Build flavors include `prodWebsiteRelease` (in-app updater), `prodStoreRelease` 
 | Windows | In development |
 | Linux | In development |
 
-## GhostWeb projects
+---
 
-### GhostWeb VPN
+## GhostWeb VPN
 
-Privacy-focused browser/network protection with proxy and traffic-protection features.
+**GhostWeb VPN** is the GhostWeb privacy/network-protection project, providing browser-based proxy and traffic-protection functionality.
 
-Repository: https://github.com/GhostWebEnterprise/ghost-web-vpn
+**Repository:** https://github.com/GhostWebEnterprise/ghost-web-vpn
 
-### GhostWeb AI
+**Releases:** https://github.com/GhostWebEnterprise/ghost-web-vpn/releases
 
-Privacy-focused AI client and tooling for working with AI models and agent workflows.
+## GhostWeb AI
 
-Repository: https://github.com/GhostWebEnterprise/ghost-web-ai
+**GhostWeb AI** is the GhostWeb AI client and tooling project for AI models, agents, and related workflows.
 
-### Central website
+**Repository:** https://github.com/GhostWebEnterprise/ghost-web-ai
 
-Use the GhostWeb website as the main download and project-discovery hub:
+**Releases:** https://github.com/GhostWebEnterprise/ghost-web-ai/releases
+
+## Central GhostWeb website
+
+The GhostWeb website brings the projects together in one place for downloads and project discovery:
 
 **https://ghostwebenterprise.github.io/ghostweb.signal/**
 
@@ -145,7 +149,7 @@ Security-focused improvements, bug reports, documentation improvements, and thou
 - [Pull requests](https://github.com/GhostWebEnterprise/ghostweb.signal/pulls)
 - [Releases](https://github.com/GhostWebEnterprise/ghostweb.signal/releases)
 
-For the other GhostWeb projects, use their respective repositories linked above.
+For GhostWeb VPN and GhostWeb AI, use the respective repositories linked above.
 
 ## License & legal
 
