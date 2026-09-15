@@ -24,7 +24,7 @@
 
 ---
 
-## GhostWeb Eco System
+## **GhostWeb Eco System**
 
 **GhostWeb** is an independent open-source software ecosystem focused on privacy, secure communication, network protection, and AI tooling.
 
@@ -40,8 +40,8 @@ The central website is the project hub for discovering the GhostWeb applications
 
 ### Downloads
  
-*note* "GhostWB:VPN ⒼⓌⓈ under dev. 📲🛡️🔞
-*note* "GhostWB:Ai ⒼⓌⓈ under dev. 📲🛡️📵
+*note* "GhostWB:VPN ⒼⓌⓈ under dev. 🛡️
+*note* "GhostWB:Ai ⒼⓌⓈ under dev. 🛡️
 
 All GhostWeb projects are available through the central website:
 
