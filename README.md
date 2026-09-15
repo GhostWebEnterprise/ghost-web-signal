@@ -8,7 +8,7 @@
 
 [![GitHub](https://img.shields.io/badge/GitHub-GhostWebEnterprise-181717?style=plastic&logo=github&logoColor=white)](https://github.com/GhostWebEnterprise)
 [![Android](https://img.shields.io/badge/Platform-Android-3DDC84?style=plastic&logo=android&logoColor=white)](https://github.com/GhostWebEnterprise/ghostweb.signal)
-[![Release](https://img.shields.io/github/v/release/GhostWebEnterprise/ghostweb.signal?style=plastic&label=Ghostly%20Release)](https://github.com/GhostWebEnterprise/ghostweb.signal/releases)
+[![Release](https://img.shields.io/github/v/release/GhostWebEnterprise/ghostweb.signal?style=plastic&label=GhostWeb)](https://github.com/GhostWebEnterprise/ghostweb.signal/releases)
 [![License](https://img.shields.io/badge/License-AGPL_v3-blue?style=plastic)](https://github.com/GhostWebEnterprise/ghostweb.signal/blob/GWSignal.main/LICENSE)
 
 [![Test](https://img.shields.io/github/actions/workflow/status/GhostWebEnterprise/ghostweb.signal/test.yml?branch=GWSignal.main&style=plastic&label=Test)](https://github.com/GhostWebEnterprise/ghostweb.signal/actions/workflows/test.yml)
