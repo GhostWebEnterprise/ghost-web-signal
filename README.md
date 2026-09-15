@@ -12,9 +12,13 @@
 [![License](https://img.shields.io/badge/License-AGPL_v3-blue?style=plastic)](https://github.com/GhostWebEnterprise/ghostweb.signal/blob/GWSignal.main/LICENSE)
 
 [![Test](https://img.shields.io/github/actions/workflow/status/GhostWebEnterprise/ghostweb.signal/test.yml?branch=GWSignal.main&style=plastic&label=Test)](https://github.com/GhostWebEnterprise/ghostweb.signal/actions/workflows/test.yml)
+[![Website](https://img.shields.io/github/actions/workflow/status/GhostWebEnterprise/ghostweb.signal/pages.yml?branch=GWSignal.main&style=plastic&label=Website)](https://ghostwebenterprise.github.io/ghostweb.signal/)
+[![Release](https://img.shields.io/github/v/release/GhostWebEnterprise/ghostweb.signal?style=plastic&label=Release)](https://github.com/GhostWebEnterprise/ghostweb.signal/releases)
+[![CodeQL](https://github.com/GhostWebEnterprise/ghostweb.signal/actions/workflows/codeql.yml/badge.svg?branch=GWSignal.main&style=plastic&label=CodeQL)](https://github.com/GhostWebEnterprise/ghostweb.signal/actions/workflows/codeql.yml)
+[![Dependabot](https://img.shields.io/github/issues/GhostWebEnterprise/ghostweb.signal/dependabot?style=plastic&label=Dependabot)](https://github.com/GhostWebEnterprise/ghostweb.signal/network/updates)
+
 [![Lint](https://img.shields.io/github/actions/workflow/status/GhostWebEnterprise/ghostweb.signal/super-linter.yml?branch=GWSignal.main&style=plastic&label=Super-Linter)](https://github.com/GhostWebEnterprise/ghostweb.signal/actions/workflows/super-linter.yml)
 [![Reproducible Build](https://img.shields.io/github/actions/workflow/status/GhostWebEnterprise/ghostweb.signal/reprocheck.yml?style=plastic&label=Reproducible%20Build)](https://github.com/GhostWebEnterprise/ghostweb.signal/actions/workflows/reprocheck.yml)
-[![Website](https://img.shields.io/github/actions/workflow/status/GhostWebEnterprise/ghostweb.signal/pages.yml?branch=GWSignal.main&style=plastic&label=Website)](https://ghostwebenterprise.github.io/ghostweb.signal/)
 
 </div>
 
