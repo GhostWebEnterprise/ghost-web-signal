@@ -40,8 +40,8 @@ The central website is the project hub for discovering the GhostWeb applications
 
 ### Downloads
  
-*note* "GhostWB:VPN (beta)
-*note* "GhostWB:Ai  (beta)
+*note* "GhostWB:VPN ⒼⓌⓈ under dev. 📲🛡️🔞
+*note* "GhostWB:Ai ⒼⓌⓈ under dev. 📲🛡️📵
 
 All GhostWeb projects are available through the central website:
 
