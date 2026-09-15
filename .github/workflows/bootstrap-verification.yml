@@ -3,7 +3,7 @@ name: Bootstrap Gradle Verification Metadata
 on:
   push:
     branches:
-      - Ghostly.main
+      - GWSignal.main
   workflow_dispatch:
 
 permissions:

@@ -3,11 +3,11 @@ name: Super-Linter
 on:
   push:
     branches:
-      - Ghostly.main
+      - GWSignal.main
       - main
   pull_request:
     branches:
-      - Ghostly.main
+      - GWSignal.main
       - main
   workflow_dispatch:
 
@@ -41,7 +41,7 @@ jobs:
         uses: super-linter/super-linter@4ce20838b8ab83717e78138c5b3a1407148e0918 # v8.7.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          DEFAULT_BRANCH: Ghostly.main
+          DEFAULT_BRANCH: GWSignal.main
           VALIDATE_ALL_CODEBASE: false
           VALIDATE_KOTLIN: true
           VALIDATE_JAVA: true

@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="art/ghostly-icon-512.png" width="128" alt="GhostWeb icon" />
+<img src="art/ghostweb-icon-512.png" width="128" alt="GhostWeb icon" />
 
 # GhostWeb
 
@@ -42,7 +42,7 @@ The central website is the project hub for discovering the GhostWeb applications
 
 All GhostWeb projects are available through the central website:
 
-- **GhostWeb Signal / Ghostly** — Android messaging client and releases
+- **GhostWeb Signal** — Android messaging client and releases
 - **GhostWeb VPN** — browser VPN/proxy protection project and releases
 - **GhostWeb AI** — AI client, agents, and releases
 
@@ -60,7 +60,7 @@ All GhostWeb projects are available through the central website:
 - Multi-device support where supported by the underlying implementation
 - Encrypted local storage and secure application access
 - Privacy-focused notifications, blocking, and reporting
-- Ghostly branding and customization
+- GhostWeb branding and customization
 
 ## Privacy & security
 
@@ -138,7 +138,7 @@ The GhostWeb website brings the projects together in one place for downloads and
 
 ## Upstream & attribution
 
-Ghostly is built from the Molly Android concept and uses [johanw666/mollyim-android](https://github.com/johanw666/mollyim-android) as its upstream reference (branch `main`). Molly and Signal remain the upstream projects.
+GhostWeb is built from the Molly Android concept and uses [johanw666/mollyim-android](https://github.com/johanw666/mollyim-android) as its upstream reference (branch `main`). Molly and Signal remain the upstream projects.
 
 - Signal Android — https://github.com/signalapp/Signal-Android
 - Molly — https://github.com/mollyim/mollyim-android
@@ -157,7 +157,7 @@ For GhostWeb VPN and GhostWeb AI, use the respective repositories linked above.
 
 ## License & legal
 
-Ghostly is free software licensed under the **GNU Affero General Public License v3.0 only** (AGPL-3.0-only). See [LICENSE](LICENSE), [NOTICE](NOTICE), and [LEGAL.md](LEGAL.md) for copyright, third-party notices, and export information.
+GhostWeb is free software licensed under the **GNU Affero General Public License v3.0 only** (AGPL-3.0-only). See [LICENSE](LICENSE), [NOTICE](NOTICE), and [LEGAL.md](LEGAL.md) for copyright, third-party notices, and export information.
 
 ## Disclaimer
 

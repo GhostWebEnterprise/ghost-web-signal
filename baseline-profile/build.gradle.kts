@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-  namespace = "org.ghostly.baselineprofile"
+  namespace = "org.ghostweb.baselineprofile"
   compileSdk {
     version = release(36)
   }

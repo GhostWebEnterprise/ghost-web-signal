@@ -122,4 +122,4 @@ include(":feature:media-send")
 include(":lintchecks")
 include(":fast-lint")
 
-rootProject.name = "Ghostly"
+rootProject.name = "GhostWeb"

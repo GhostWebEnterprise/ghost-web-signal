@@ -1,5 +1,5 @@
 # Pages deployment: use an unprotected environment so GWSignal.main can deploy.
-name: Deploy Ghostly Website
+name: Deploy GhostWeb Website
 
 on:
   push:

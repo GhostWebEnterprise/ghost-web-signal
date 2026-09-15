@@ -2,9 +2,9 @@
 # Copyright 2026 Molly Instant Messenger
 # SPDX-License-Identifier: AGPL-3.0-only
 """
-Ghostly icon generator.
+GhostWeb icon generator.
 
-Single source of truth for the Ghostly emblem (neon ghost inside a glowing
+Single source of truth for the GhostWeb emblem (neon ghost inside a glowing
 speech-bubble ring with an orbit). Emits every icon surface used by the app:
 
   app/  default + all alt adaptive-icon layers (vector drawables)
@@ -689,10 +689,10 @@ def main() -> None:
     ART.mkdir(exist_ok=True)
 
     # art/
-    (ART / "ghostly-icon.svg").write_text(master_svg())
-    (ART / "ghostly-icon-mono.svg").write_text(mono_svg())
-    (ART / "ghostly-icon-512.png").write_bytes(flat_png(512, None))
-    (ART / "ghostly-icon-192.png").write_bytes(flat_png(192, None))
+    (ART / "ghostweb-icon.svg").write_text(master_svg())
+    (ART / "ghostweb-icon-mono.svg").write_text(mono_svg())
+    (ART / "ghostweb-icon-512.png").write_bytes(flat_png(512, None))
+    (ART / "ghostweb-icon-192.png").write_bytes(flat_png(192, None))
 
     # Default launcher layers
     (APP_RES / "drawable/ic_launcher_background.xml").write_text(default_background_xml())
