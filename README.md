@@ -24,7 +24,7 @@
 
 ---
 
-## GhostWeb ecosystem
+## GhostWeb Eco System
 
 **GhostWeb** is an independent open-source software ecosystem focused on privacy, secure communication, network protection, and AI tooling.
 
@@ -39,6 +39,9 @@ The central website is the project hub for discovering the GhostWeb applications
 | **GhostWeb AI** | Privacy-focused AI client and tooling | **Available** |
 
 ### Downloads
+ 
+*note* "GhostWB:VPN (beta)
+*note* "GhostWB:Ai  (beta)
 
 All GhostWeb projects are available through the central website:
 
@@ -48,9 +51,9 @@ All GhostWeb projects are available through the central website:
 
 ---
 
-## GhostWeb: Signal 
+## **GhostWeb #Ⓢ**signal**
 
-**GhostWeb: Signal** is an independent, privacy-focused messaging app for Android, built on the **Signal/Molly** technology stack with its own branding, configuration, and privacy enhancements. It provides end-to-end encrypted messaging and calling while connecting to the standard Signal service network.
+**GhostWeb: Ⓢignl** is an independent, privacy-focused messaging app for Android, built on the **Signal/Molly** technology stack with its own branding, configuration, and privacy enhancements. It provides end-to-end encrypted messaging and calling while connecting to the standard Signal service network.
 
 ### Highlights
 
@@ -64,7 +67,7 @@ All GhostWeb projects are available through the central website:
 
 ## Privacy & security
 
-GhostWeb: Signal uses established cryptographic protocols and libraries from the Signal ecosystem, including libsignal, RingRTC, and SQLCipher, rather than custom cryptography.
+#**GhostWeb: Ⓢ** uses established cryptographic protocols and libraries from the Signal ecosystem, including libsignal, RingRTC, and SQLCipher, rather than custom cryptography.
 
 The project prioritizes:
 
@@ -74,13 +77,13 @@ The project prioritizes:
 - Privacy-focused defaults and configuration
 - Compatibility with the Signal/Molly architecture
 
-## Download GhostWeb: Signal 
+## Download GhostWeb: Ⓢingal
 
 Get signed Android APKs from the [**Releases**](https://github.com/GhostWebEnterprise/ghostweb.signal/releases) page.
 
 Before installing an APK from any source, verify the release signature and published checksums. See [Reproducible Builds](reproducible-builds/README.md) to compile the source yourself and verify the distributed APK.
 
-## Building GhostWeb: Signal
+## Building GhostWeb: Ⓢingal
 
 Requirements: JDK 21 and the Android SDK (see [BUILDING.md](BUILDING.md)).
 
