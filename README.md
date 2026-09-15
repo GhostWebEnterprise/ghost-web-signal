@@ -2,7 +2,7 @@
 
 <img src="art/ghostweb-icon-512.png" width="128" alt="GhostWeb icon" />
 
-# GhostWeb
+## GhostWeb **(S)** ### ©
 
 **Private by design. Secure by default. Open source.**
 
