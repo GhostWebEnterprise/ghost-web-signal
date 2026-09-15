@@ -30,7 +30,7 @@ The central website is the project hub for discovering the GhostWeb applications
 
 | Project | Purpose | Status |
 |---|---|---|
-| **GhostWeb Signal / Ghostly** | Privacy-focused Android messaging and calling | **Available** |
+| **GhostWeb Signal** | Privacy-focused Android messaging and calling | **Available** |
 | **GhostWeb VPN** | Privacy-focused browser and network protection | **Available** |
 | **GhostWeb AI** | Privacy-focused AI client and tooling | **Available** |
 
@@ -44,9 +44,9 @@ All GhostWeb projects are available through the central website:
 
 ---
 
-## GhostWeb Signal — Ghostly
+## GhostWeb: Signal 
 
-**Ghostly** is an independent, privacy-focused messaging app for Android, built on the **Signal/Molly** technology stack with its own branding, configuration, and privacy enhancements. It provides end-to-end encrypted messaging and calling while connecting to the standard Signal service network.
+**GhostWeb: Signal** is an independent, privacy-focused messaging app for Android, built on the **Signal/Molly** technology stack with its own branding, configuration, and privacy enhancements. It provides end-to-end encrypted messaging and calling while connecting to the standard Signal service network.
 
 ### Highlights
 
@@ -60,7 +60,7 @@ All GhostWeb projects are available through the central website:
 
 ## Privacy & security
 
-Ghostly uses established cryptographic protocols and libraries from the Signal ecosystem, including libsignal, RingRTC, and SQLCipher, rather than custom cryptography.
+GhostWeb: Signal uses established cryptographic protocols and libraries from the Signal ecosystem, including libsignal, RingRTC, and SQLCipher, rather than custom cryptography.
 
 The project prioritizes:
 
@@ -70,13 +70,13 @@ The project prioritizes:
 - Privacy-focused defaults and configuration
 - Compatibility with the Signal/Molly architecture
 
-## Download Ghostly
+## Download GhostWeb: Signal 
 
 Get signed Android APKs from the [**Releases**](https://github.com/GhostWebEnterprise/ghostweb.signal/releases) page.
 
 Before installing an APK from any source, verify the release signature and published checksums. See [Reproducible Builds](reproducible-builds/README.md) to compile the source yourself and verify the distributed APK.
 
-## Building Ghostly
+## Building GhostWeb: Signal
 
 Requirements: JDK 21 and the Android SDK (see [BUILDING.md](BUILDING.md)).
 
@@ -108,7 +108,7 @@ Build flavors include `prodWebsiteRelease` (in-app updater), `prodStoreRelease` 
 
 ---
 
-## GhostWeb VPN
+## GhostWeb VPN (still in testing phase)
 
 **GhostWeb VPN** is the GhostWeb privacy/network-protection project, providing browser-based proxy and traffic-protection functionality.
 
@@ -116,7 +116,7 @@ Build flavors include `prodWebsiteRelease` (in-app updater), `prodStoreRelease` 
 
 **Releases:** https://github.com/GhostWebEnterprise/ghost-web-vpn/releases
 
-## GhostWeb AI
+## GhostWeb AI (still in testing phase)
 
 **GhostWeb AI** is the GhostWeb AI client and tooling project for AI models, agents, and related workflows.
 
