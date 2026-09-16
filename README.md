@@ -79,13 +79,13 @@ The project prioritizes:
 - Privacy-focused defaults and configuration
 - Compatibility with the Signal/Molly architecture
 
-## Download GhostWeb: Ⓢingal
+## Download GhostWeb: Signal
 
 Get signed Android APKs from the [**Releases**](https://github.com/GhostWebEnterprise/ghostweb.signal/releases) page.
 
 Before installing an APK from any source, verify the release signature and published checksums. See [Reproducible Builds](reproducible-builds/README.md) to compile the source yourself and verify the distributed APK.
 
-## Building GhostWeb: Ⓢingal
+## Building GhostWeb: Signal
 
 Requirements: JDK 21 and the Android SDK (see [BUILDING.md](BUILDING.md)).
 
