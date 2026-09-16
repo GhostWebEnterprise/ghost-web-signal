@@ -1,3 +1,5 @@
+# GhostWeb
+
 <div align="center">
 
 <img src="art/ghostweb-icon-512.png" width="128" alt="GhostWeb icon" />
@@ -30,18 +32,18 @@
 
 The central website is the project hub for discovering the GhostWeb applications, source code, releases, downloads, and documentation.
 
-**Project hub:** https://ghostwebenterprise.github.io/ghostweb.signal/
+**Project hub:** [ghostwebenterprise.github.io/ghostweb.signal](https://ghostwebenterprise.github.io/ghostweb.signal/)
 
 | Project | Purpose | Status |
-|---|---|---|
+| --- | --- | --- |
 | **GhostWeb Signal** | Privacy-focused Android messaging and calling | **Available** |
 | **GhostWeb VPN** | Privacy-focused browser and network protection | **Available** |
 | **GhostWeb AI** | Privacy-focused AI client and tooling | **Available** |
 
 ### Downloads
- 
-*note* "GhostWB:VPN ⒼⓌⓈ under dev. 🛡️
-*note* "GhostWB:Ai ⒼⓌⓈ under dev. 🛡️
+
+- **GhostWeb VPN** — under development
+- **GhostWeb AI** — under development
 
 All GhostWeb projects are available through the central website:
 
@@ -51,7 +53,7 @@ All GhostWeb projects are available through the central website:
 
 ---
 
-## **GhostWeb #Ⓢ**signal**
+## **GhostWeb Signal**
 
 **GhostWeb: Ⓢignl** is an independent, privacy-focused messaging app for Android, built on the **Signal/Molly** technology stack with its own branding, configuration, and privacy enhancements. It provides end-to-end encrypted messaging and calling while connecting to the standard Signal service network.
 
@@ -67,7 +69,7 @@ All GhostWeb projects are available through the central website:
 
 ## Privacy & security
 
-#**GhostWeb: Ⓢ** uses established cryptographic protocols and libraries from the Signal ecosystem, including libsignal, RingRTC, and SQLCipher, rather than custom cryptography.
+**GhostWeb Signal** uses established cryptographic protocols and libraries from the Signal ecosystem, including libsignal, RingRTC, and SQLCipher, rather than custom cryptography.
 
 The project prioritizes:
 
@@ -106,7 +108,7 @@ Build flavors include `prodWebsiteRelease` (in-app updater), `prodStoreRelease` 
 ## Platform status
 
 | Platform | Status |
-|---|---|
+| --- | --- |
 | Android | **Available** |
 | iOS | In development |
 | macOS | In development |
@@ -119,23 +121,23 @@ Build flavors include `prodWebsiteRelease` (in-app updater), `prodStoreRelease` 
 
 **GhostWeb VPN** is the GhostWeb privacy/network-protection project, providing browser-based proxy and traffic-protection functionality.
 
-**Repository:** https://github.com/GhostWebEnterprise/ghost-web-vpn
+**Repository:** [GhostWeb VPN](https://github.com/GhostWebEnterprise/ghost-web-vpn)
 
-**Releases:** https://github.com/GhostWebEnterprise/ghost-web-vpn/releases
+**Releases:** [GhostWeb VPN releases](https://github.com/GhostWebEnterprise/ghost-web-vpn/releases)
 
 ## GhostWeb AI (still in testing phase)
 
 **GhostWeb AI** is the GhostWeb AI client and tooling project for AI models, agents, and related workflows.
 
-**Repository:** https://github.com/GhostWebEnterprise/ghost-web-ai
+**Repository:** [GhostWeb AI](https://github.com/GhostWebEnterprise/ghost-web-ai)
 
-**Releases:** https://github.com/GhostWebEnterprise/ghost-web-ai/releases
+**Releases:** [GhostWeb AI releases](https://github.com/GhostWebEnterprise/ghost-web-ai/releases)
 
 ## Central GhostWeb website
 
 The GhostWeb website brings the projects together in one place for downloads and project discovery:
 
-**https://ghostwebenterprise.github.io/ghostweb.signal/**
+[ghostwebenterprise.github.io/ghostweb.signal](https://ghostwebenterprise.github.io/ghostweb.signal/)
 
 ---
 
@@ -143,8 +145,8 @@ The GhostWeb website brings the projects together in one place for downloads and
 
 GhostWeb is built from the Molly Android concept and uses [johanw666/mollyim-android](https://github.com/johanw666/mollyim-android) as its upstream reference (branch `main`). Molly and Signal remain the upstream projects.
 
-- Signal Android — https://github.com/signalapp/Signal-Android
-- Molly — https://github.com/mollyim/mollyim-android
+- [Signal Android](https://github.com/signalapp/Signal-Android)
+- [Molly](https://github.com/mollyim/mollyim-android)
 
 Migration policy and the build gate are documented in [UPSTREAM.md](UPSTREAM.md).
 
