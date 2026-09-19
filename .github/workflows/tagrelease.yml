@@ -51,3 +51,5 @@ jobs:
     with:
       version: ${{ needs.push_tag.outputs.version }}
     secrets: inherit
+
+# Release trigger is intentionally gated by the [release] commit marker.
