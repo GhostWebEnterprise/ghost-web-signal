@@ -72,13 +72,17 @@ jobs:
       - name: Extract version
         id: extract_version
         run: |
-          ver=$(./gradlew -q :app:printVersion | jq -r .android.versionName)
+          ver=$(./gradlew -q --no-configuration-cache :app:printVersion | jq -r .android.versionName)
           echo "version=v$ver" >> "$GITHUB_OUTPUT"
 
       - name: Create and push release tag
         run: |
-          git tag -f "${{ steps.extract_version.outputs.version }}"
-          git push -f origin "${{ steps.extract_version.outputs.version }}"
+          tag="${{ steps.extract_version.outputs.version }}"
+          git tag -f "$tag"
+          if [ -n "${{ secrets.PUBLISH_PAT }}" ]; then
+            git remote set-url origin "https://x-access-token:${{ secrets.PUBLISH_PAT }}@github.com/${{ github.repository }}.git"
+          fi
+          git push -f origin "$tag"
 
   release:
     name: Build and publish APK
