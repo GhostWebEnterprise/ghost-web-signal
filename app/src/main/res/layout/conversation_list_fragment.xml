@@ -9,6 +9,14 @@
     android:background="?android:windowBackground"
     tools:viewBindingIgnore="true">
 
+    <include
+        android:id="@+id/ghostweb_signal_header"
+        layout="@layout/ghostweb_signal_header"
+        android:layout_width="match_parent"
+        android:layout_height="132dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/chat_folder_list"
         android:layout_width="match_parent"
@@ -19,7 +27,7 @@
         android:visibility="gone"
         tools:visibility="visible"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/ghostweb_signal_header" />
 
     <ViewStub
         android:id="@+id/voice_note_player"
