@@ -2,10 +2,14 @@ name: Tag Commit for Release
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - GWSignal.main
 
 jobs:
   push_tag:
     name: Push version tag
+    if: github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[release]')
     runs-on: ubuntu-24.04
     outputs:
       version: ${{ steps.extract_version.outputs.version }}
