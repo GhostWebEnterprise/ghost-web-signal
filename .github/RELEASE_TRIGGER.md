@@ -2,4 +2,4 @@
 
 Release: v8.19.2-5
 
-This marker intentionally triggers the release workflow after the release-trigger workflow configuration is present.
+Build and publish the Android release APK through the verified release pipeline.
