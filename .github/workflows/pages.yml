@@ -6,6 +6,7 @@ on:
     branches: [GWSignal.main]
     paths:
       - 'docs/**'
+      - 'site/**'
       - '.github/workflows/pages.yml'
   workflow_dispatch:
 
@@ -27,12 +28,21 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: site/package.json
+      - name: Build landing page
+        working-directory: site
+        run: npm install --no-audit --no-fund && npm run build
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload site
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./docs
+          path: ./site/dist
           name: github-pages-${{ github.run_id }}-${{ github.run_attempt }}
       - name: Deploy to GitHub Pages
         id: deployment
