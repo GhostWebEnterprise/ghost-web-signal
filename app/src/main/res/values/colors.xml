@@ -5,6 +5,18 @@
 
     <color name="signal_accent_green">#4CAF50</color>
 
+    <!-- GhostWeb Signal visual system -->
+    <color name="ghostweb_signal_bg">#020A0D</color>
+    <color name="ghostweb_signal_panel">#071923</color>
+    <color name="ghostweb_signal_panel_2">#0B2430</color>
+    <color name="ghostweb_signal_cyan">#35E8FF</color>
+    <color name="ghostweb_signal_teal">#00FFC6</color>
+    <color name="ghostweb_signal_blue">#2D7DFF</color>
+    <color name="ghostweb_signal_text">#F2FEFF</color>
+    <color name="ghostweb_signal_muted">#8AA7AD</color>
+    <color name="ghostweb_signal_line">#3355E8FF</color>
+    <color name="ghostweb_signal_green">#20F5A5</color>
+
     <color name="story_gradient_start">#99000000</color>
     <color name="story_caption_gradient_start">#CC000000</color>
 
