@@ -1,78 +1,241 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#050b09">
-<meta name="description" content="GhostWeb Enterprise — privacy-focused open-source platform, products and security tooling.">
-<title>GhostWeb Enterprise — Platform Overview</title>
-<link rel="icon" href="/ghostweb.signal/icon.svg">
-<style>
-:root{color-scheme:dark;--bg:#030806;--panel:#07120f;--panel2:#0a1814;--line:rgba(75,230,255,.18);--line2:rgba(0,255,154,.2);--text:#efffff;--muted:#8ea7a7;--cyan:#35eaff;--green:#00ff9a;--blue:#2e8cff;--max:1440px}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(900px 500px at 55% -10%,rgba(0,238,255,.14),transparent 65%),radial-gradient(800px 500px at 0 30%,rgba(0,255,130,.08),transparent 65%),linear-gradient(180deg,#020605,var(--bg));color:var(--text);font:14px/1.5 Inter,ui-sans-serif,system-ui,sans-serif;overflow-x:hidden}a{color:inherit;text-decoration:none}button{font:inherit}
-body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.2;background-image:linear-gradient(rgba(53,234,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(53,234,255,.035) 1px,transparent 1px);background-size:36px 36px}
-.wrap{width:min(var(--max),calc(100% - 28px));margin:auto}.nav{height:72px;display:flex;align-items:center;gap:24px;border-bottom:1px solid rgba(255,255,255,.07)}.brand{display:flex;align-items:center;gap:10px;font-weight:900;font-size:18px}.brand img{width:38px;height:38px}.brand span{color:var(--cyan)}.navlinks{display:flex;gap:5px;flex:1}.navlinks a{padding:10px 12px;color:#8ba1a0;border:1px solid transparent;border-radius:10px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em}.navlinks a:hover,.navlinks a.active{color:var(--cyan);border-color:var(--line);background:rgba(53,234,255,.06)}.status{display:flex;align-items:center;gap:7px;color:#8ba1a0;font:10px monospace;text-transform:uppercase}.dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 12px rgba(0,255,154,.8);animation:pulse 1.8s infinite}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 15px;border:1px solid var(--line);border-radius:10px;background:rgba(255,255,255,.035);font-size:11px;font-weight:850}.btn.primary{border-color:transparent;background:linear-gradient(135deg,#00d7ff,#00ff9a);color:#00120e;box-shadow:0 0 25px rgba(0,255,154,.15)}
-.hero{padding:48px 0 22px;display:grid;grid-template-columns:minmax(0,1.35fr) minmax(310px,.65fr);gap:18px}.hero-main,.hero-side,.card{border:1px solid var(--line);background:linear-gradient(145deg,rgba(10,26,22,.94),rgba(4,12,10,.9));border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.25)}.hero-main{position:relative;overflow:hidden;padding:36px}.eyebrow{color:var(--cyan);font:10px monospace;text-transform:uppercase;letter-spacing:.16em}.hero h1{font-size:clamp(38px,6vw,76px);line-height:.98;letter-spacing:-.06em;margin:16px 0}.gradient{background:linear-gradient(100deg,#fff,var(--cyan),#65ffb9);-webkit-background-clip:text;color:transparent}.lead{max-width:720px;color:var(--muted);font-size:16px;line-height:1.75}.hero-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:24px}.mountains{height:125px;margin:28px -36px -36px;background:linear-gradient(to top,rgba(0,255,154,.08),transparent),linear-gradient(155deg,transparent 48%,rgba(53,234,255,.2) 49%,transparent 50%),linear-gradient(25deg,transparent 48%,rgba(0,255,154,.14) 49%,transparent 50%);position:relative}.mountains:after{content:"";position:absolute;inset:auto 0 0;height:2px;background:linear-gradient(90deg,transparent,var(--cyan),var(--green),transparent);box-shadow:0 0 24px var(--cyan)}
-.hero-side{padding:20px}.side-title{display:flex;justify-content:space-between;align-items:center;font-weight:850}.pipeline{margin-top:15px;display:grid;gap:7px}.step{display:grid;grid-template-columns:28px 1fr auto;gap:9px;align-items:center;padding:9px;border:1px solid rgba(255,255,255,.07);border-radius:10px;background:rgba(255,255,255,.018)}.step b{width:25px;height:25px;border-radius:50%;display:grid;place-items:center;background:#0c211b;border:1px solid var(--line2);color:var(--green);font-size:10px}.step span{font-size:11px;font-weight:750}.step small{display:block;color:#687f7d;font-size:9px}.complete{color:var(--green);font:9px monospace}.running{color:var(--cyan);font:9px monospace}
-.section-title{display:flex;align-items:end;justify-content:space-between;gap:15px;margin:20px 0 12px}.section-title h2{margin:0;font-size:27px;letter-spacing:-.04em}.section-title p{margin:0;color:#667d7a;font-size:11px}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.card{padding:18px;min-height:145px}.card .icon{font-size:22px}.card h3{font-size:14px;margin:10px 0 4px}.card p{color:#78908d;font-size:12px;margin:0}.release{margin:10px 0;padding:15px;border:1px solid var(--line2);border-radius:13px;background:rgba(0,255,154,.035);display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}.release strong{color:#baffec;font-size:14px}.release span{color:#6e8984;font-size:11px}.downloads{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.download{padding:13px;border:1px solid rgba(255,255,255,.08);border-radius:11px;background:rgba(255,255,255,.025);font-weight:750;font-size:11px}.download span{float:right;color:var(--cyan)}.security{display:grid;grid-template-columns:1.1fr .9fr;gap:10px;margin-top:10px}.console{padding:18px;border:1px solid var(--line);border-radius:14px;background:#020705;font:11px/1.8 monospace;color:#78e8c0}.console b{color:var(--green)}.console i{color:var(--cyan);font-style:normal}.footer{margin:38px 0 75px;padding:25px 0;border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;gap:15px;color:#566c68;font-size:11px}.mobile-nav{display:none}.mobile-menu{display:none}
-@keyframes pulse{0%,100%{opacity:.55;transform:scale(.95)}50%{opacity:1;transform:scale(1.05)}}@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-@media(max-width:900px){.hero{grid-template-columns:1fr}.grid{grid-template-columns:repeat(2,1fr)}.security{grid-template-columns:1fr}.navlinks{display:none}.mobile-menu{display:block;margin-left:auto}.status{display:none}}
-@media(max-width:620px){body{padding-bottom:66px}.wrap{width:min(100% - 18px,var(--max))}.nav{height:60px}.brand{font-size:16px}.brand img{width:32px;height:32px}.hero{padding-top:25px}.hero-main{padding:24px}.hero h1{font-size:43px}.lead{font-size:14px}.mountains{margin:20px -24px -24px;height:90px}.grid,.downloads{grid-template-columns:1fr}.section-title{align-items:start;flex-direction:column}.footer{margin-bottom:20px;flex-direction:column}.mobile-nav{display:grid;position:fixed;inset:auto 0 0;z-index:50;grid-template-columns:repeat(4,1fr);padding:7px 5px max(7px,env(safe-area-inset-bottom));background:rgba(3,8,6,.96);border-top:1px solid var(--line);backdrop-filter:blur(18px)}.mobile-nav a{display:flex;flex-direction:column;align-items:center;gap:3px;color:#6e8581;font-size:8px;font-weight:800;text-transform:uppercase}.mobile-nav a.active{color:var(--cyan)}.mobile-nav b{font-size:16px}}
-@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation:none!important}}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#050d13">
+  <meta name="description" content="GhostWeb AI — private, secure, AI-powered software delivery.">
+  <title>GhostWeb AI — Secure delivery console</title>
+  <link rel="icon" href="/ghostweb.signal/icon.svg">
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #02070b;
+      --panel: #07141d;
+      --panel-strong: #0a1b26;
+      --panel-soft: rgba(8, 28, 40, .72);
+      --line: rgba(39, 207, 255, .2);
+      --line-strong: rgba(39, 207, 255, .48);
+      --text: #f2fbff;
+      --muted: #88a5b4;
+      --quiet: #577383;
+      --cyan: #28e4ff;
+      --cyan-soft: #74eeff;
+      --green: #17e7a1;
+      --amber: #ffb454;
+      --blue: #5d9cff;
+      --shadow: 0 24px 70px rgba(0,0,0,.38);
+      --radius: 14px;
+      --sidebar: 214px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0; min-width: 320px; background:
+        radial-gradient(900px 480px at 54% -10%, rgba(18,175,233,.15), transparent 68%),
+        radial-gradient(620px 480px at 100% 40%, rgba(0,255,177,.07), transparent 68%),
+        linear-gradient(180deg, #020609, var(--bg));
+      color: var(--text); font: 13px/1.45 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      overflow-x: hidden;
+    }
+    body::before { content:""; position: fixed; inset: 0; pointer-events:none; opacity:.16; background-image: linear-gradient(rgba(40,228,255,.04) 1px, transparent 1px), linear-gradient(90deg, rgba(40,228,255,.04) 1px, transparent 1px); background-size: 32px 32px; mask-image: linear-gradient(to bottom, black, transparent 85%); }
+    button, input, textarea { font: inherit; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    a { color: inherit; text-decoration: none; }
+    button { border: 0; color: inherit; cursor: pointer; }
+    .app { display: grid; grid-template-columns: var(--sidebar) minmax(0,1fr); min-height: 100vh; }
+    .sidebar { position: sticky; top: 0; height: 100vh; padding: 21px 14px 16px; border-right: 1px solid rgba(41, 195, 239, .16); background: linear-gradient(180deg, rgba(4,18,27,.97), rgba(2,9,14,.98)); z-index: 20; }
+    .brand { display:flex; align-items:center; gap:10px; padding: 4px 9px 27px; font-size: 16px; font-weight: 800; letter-spacing: -.03em; }
+    .brand-mark { display:grid; place-items:center; width:32px; height:32px; border:1px solid var(--cyan); border-radius:11px; color:var(--cyan); background: linear-gradient(145deg, rgba(31,220,255,.22), rgba(18,232,160,.08)); box-shadow: 0 0 22px rgba(31,220,255,.18), inset 0 0 12px rgba(31,220,255,.12); }
+    .brand em { color:var(--cyan); font-style:normal; }
+    .nav-label { padding: 12px 11px 7px; color: #486574; font: 9px/1 monospace; letter-spacing: .15em; text-transform: uppercase; }
+    .nav { display:grid; gap:4px; }
+    .nav-link { display:flex; align-items:center; gap:11px; min-height:39px; padding: 0 11px; color: #91aeba; border:1px solid transparent; border-radius:10px; transition: .2s ease; }
+    .nav-link:hover { color:var(--text); background:rgba(39,207,255,.07); border-color:var(--line); }
+    .nav-link.active { color:var(--cyan); background: linear-gradient(90deg, rgba(24,216,255,.17), rgba(24,216,255,.05)); border-color:var(--line-strong); box-shadow: inset 3px 0 0 var(--cyan), 0 0 18px rgba(24,216,255,.08); }
+    .nav-icon { width:19px; text-align:center; font-size:16px; }
+    .sidebar-bottom { position:absolute; right:14px; bottom:17px; left:14px; }
+    .system { padding:13px; border:1px solid rgba(23,231,161,.24); border-radius:11px; background:rgba(13,83,68,.14); }
+    .system-title { display:flex; align-items:center; gap:7px; color:var(--green); font-weight:700; font-size:11px; }
+    .dot { width:7px; height:7px; border-radius:50%; background:var(--green); box-shadow:0 0 12px var(--green); }
+    .system p { margin:5px 0 0; color:#6d948e; font-size:10px; }
+    .version { margin:12px 4px 0; padding-top:11px; border-top:1px solid rgba(255,255,255,.07); color:#56717d; font:10px monospace; }
+    .main { min-width:0; }
+    .topbar { display:flex; align-items:center; gap:18px; height:67px; padding:0 28px; border-bottom:1px solid rgba(41,195,239,.14); background:rgba(3,11,17,.66); backdrop-filter: blur(16px); position:sticky; top:0; z-index:10; }
+    .mobile-menu { display:none; width:37px; height:37px; border:1px solid var(--line); border-radius:10px; background:rgba(255,255,255,.03); font-size:19px; }
+    .search { display:flex; align-items:center; gap:9px; flex:1; max-width:510px; padding:9px 13px; border:1px solid rgba(55,188,233,.26); border-radius:10px; color:var(--quiet); background:rgba(8,25,36,.76); }
+    .search input { min-width:0; flex:1; border:0; outline:0; color:var(--text); background:transparent; font-size:11px; }
+    .search input::placeholder { color:#658393; }
+    .key { padding:2px 6px; border:1px solid rgba(255,255,255,.13); border-radius:5px; color:#7895a3; font:10px monospace; }
+    .top-actions { display:flex; align-items:center; gap:9px; margin-left:auto; }
+    .top-btn { display:grid; place-items:center; width:34px; height:34px; border:1px solid transparent; border-radius:9px; background:transparent; color:#9ab4bf; transition:.2s; }
+    .top-btn:hover { border-color:var(--line); color:var(--cyan); background:rgba(39,207,255,.06); }
+    .connection { display:flex; align-items:center; gap:8px; padding:8px 11px; border:1px solid rgba(39,207,255,.25); border-radius:10px; color:#a5c0cb; background:rgba(9,31,43,.72); font-size:10px; }
+    .connection strong { display:block; color:var(--green); font-size:9px; }
+    .avatar { display:grid; place-items:center; width:31px; height:31px; border-radius:50%; color:#061017; background:linear-gradient(135deg,#a9ddff,#5d9cff); font-size:10px; font-weight:800; }
+    .profile { display:flex; align-items:center; gap:8px; color:#bad0d8; font-size:11px; }
+    .profile small { display:block; color:#5b7a88; font-size:9px; }
+    .content { width:min(1450px, calc(100% - 48px)); margin:auto; padding:22px 0 48px; }
+    .hero { display:grid; grid-template-columns:minmax(0,1fr) 360px; gap:12px; }
+    .panel { border:1px solid var(--line); border-radius:var(--radius); background: linear-gradient(145deg, rgba(8,29,42,.86), rgba(4,14,21,.9)); box-shadow:var(--shadow); }
+    .hero-card { position:relative; min-height:196px; padding:28px 32px; overflow:hidden; }
+    .hero-card::before { content:""; position:absolute; inset:0; background: linear-gradient(160deg, transparent 36%, rgba(35,215,255,.14) 37%, transparent 38%), linear-gradient(22deg, transparent 41%, rgba(23,231,161,.12) 42%, transparent 43%); opacity:.8; }
+    .hero-card::after { content:""; position:absolute; right:-8%; bottom:-46%; width:75%; height:120%; background:linear-gradient(145deg, transparent 38%, rgba(35,215,255,.18) 39%, transparent 40%), linear-gradient(35deg, transparent 48%, rgba(23,231,161,.2) 49%, transparent 50%); transform:skewX(-14deg); }
+    .hero-copy { position:relative; z-index:1; max-width:590px; }
+    .eyebrow { color:var(--cyan); font:10px monospace; letter-spacing:.14em; text-transform:uppercase; }
+    h1 { margin:13px 0 7px; font-size:clamp(29px,3vw,45px); line-height:1.02; letter-spacing:-.055em; }
+    .gradient { background:linear-gradient(90deg,#fff,var(--cyan),#77ffc7); color:transparent; background-clip:text; -webkit-background-clip:text; }
+    .hero-copy p { margin:0; max-width:500px; color:#91b0bd; font-size:12px; }
+    .hero-links { display:flex; gap:17px; margin-top:18px; color:#57dfff; font-size:10px; }
+    .hero-links a:hover { color:#fff; }
+    .pipeline { padding:16px 17px; }
+    .panel-title { display:flex; justify-content:space-between; align-items:center; gap:10px; color:#e5faff; font-size:12px; font-weight:750; }
+    .status-green { color:var(--green); font:10px monospace; }
+    .pipeline-list { position:relative; display:grid; gap:7px; margin-top:13px; }
+    .pipeline-list::before { content:""; position:absolute; top:14px; bottom:14px; left:11px; width:1px; background:linear-gradient(var(--green),var(--cyan),#5e7585); opacity:.65; }
+    .stage { position:relative; display:grid; grid-template-columns:25px 1fr auto; gap:8px; align-items:center; min-height:34px; cursor:pointer; }
+    .stage-bullet { display:grid; place-items:center; width:23px; height:23px; border:1px solid #557786; border-radius:50%; color:#87aab9; background:#092130; font:10px monospace; z-index:1; }
+    .stage.done .stage-bullet { border-color:var(--green); color:#02150e; background:var(--green); box-shadow:0 0 11px rgba(23,231,161,.3); }
+    .stage.running .stage-bullet { border-color:var(--cyan); color:#00151a; background:var(--cyan); box-shadow:0 0 14px rgba(39,228,255,.4); }
+    .stage-name { display:block; color:#d8edf4; font-size:10px; font-weight:700; }
+    .stage-desc { display:block; color:#62808f; font-size:8px; }
+    .stage-time { color:#668796; font:9px monospace; }
+    .stage.done .stage-time { color:var(--green); }
+    .stage.running .stage-time { color:var(--cyan); }
+    .workspace { margin-top:12px; }
+    .workspace-tabs { display:flex; gap:4px; padding:0 14px; border-bottom:1px solid rgba(39,207,255,.15); }
+    .tab { position:relative; padding:12px 15px 10px; color:#7995a2; background:transparent; font-size:10px; font-weight:700; }
+    .tab.active { color:var(--cyan); }
+    .tab.active::after { content:""; position:absolute; right:9px; bottom:-1px; left:9px; height:2px; background:var(--cyan); box-shadow:0 0 10px var(--cyan); }
+    .workspace-body { padding:15px; }
+    .composer { padding:16px; border:1px solid rgba(52,194,243,.34); border-radius:12px; background:linear-gradient(145deg,rgba(6,25,37,.95),rgba(5,17,26,.82)); }
+    .composer textarea { display:block; width:100%; min-height:58px; resize:vertical; border:0; outline:0; color:var(--text); background:transparent; font-size:12px; }
+    .composer textarea::placeholder { color:#7292a2; }
+    .composer-foot { display:flex; align-items:center; gap:8px; margin-top:10px; }
+    .select-btn, .small-btn { display:inline-flex; align-items:center; gap:5px; padding:7px 9px; border:1px solid rgba(93,176,218,.27); border-radius:8px; color:#9bb6c2; background:rgba(255,255,255,.025); font-size:9px; }
+    .select-btn:hover, .small-btn:hover { border-color:var(--cyan); color:var(--cyan); }
+    .send { display:grid; place-items:center; width:35px; height:35px; margin-left:auto; border-radius:50%; color:#01151a; background:linear-gradient(135deg,var(--cyan),var(--green)); box-shadow:0 0 20px rgba(39,228,255,.28); font-size:16px; font-weight:900; transition:.2s; }
+    .send:hover { transform:translateX(2px) scale(1.05); }
+    .quick-actions { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-top:12px; }
+    .quick { display:flex; align-items:center; gap:9px; min-height:54px; padding:10px 12px; border:1px solid rgba(39,207,255,.18); border-radius:10px; text-align:left; background:rgba(5,20,29,.7); transition:.2s; }
+    .quick:hover { transform:translateY(-2px); border-color:var(--cyan); background:rgba(22,67,83,.45); }
+    .quick-icon { color:var(--cyan); font-size:18px; }
+    .quick b { display:block; color:#d6f5fb; font-size:10px; }
+    .quick span { display:block; color:#698894; font-size:8px; }
+    .overview-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-top:12px; }
+    .card { padding:15px; min-height:174px; }
+    .card-head { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:15px; }
+    .card-title { display:flex; align-items:center; gap:8px; color:#dff6fb; font-weight:750; font-size:11px; }
+    .card-title i { display:grid; place-items:center; width:25px; height:25px; border-radius:8px; color:var(--cyan); background:rgba(39,207,255,.12); font-style:normal; }
+    .badge { padding:4px 6px; border-radius:8px; color:var(--green); background:rgba(23,231,161,.1); font:9px monospace; }
+    .repo-name { margin-bottom:10px; color:#e3f8ff; font-size:11px; }
+    .branch { display:inline-flex; gap:6px; align-items:center; padding:4px 7px; border:1px solid rgba(255,255,255,.1); border-radius:6px; color:#9cc4d1; font:9px monospace; }
+    .card-copy { margin:12px 0 14px; color:#70909d; font-size:10px; }
+    .link { color:var(--cyan); font-size:10px; font-weight:700; }
+    .link:hover { color:#fff; }
+    .metric-list { display:grid; gap:9px; }
+    .metric { display:flex; justify-content:space-between; align-items:center; gap:8px; color:#9ab6c2; font-size:10px; }
+    .metric strong { color:var(--green); font-size:9px; font-weight:500; }
+    .metric strong::before { content:"●"; margin-right:5px; }
+    .agents { display:grid; gap:8px; }
+    .agent { display:flex; align-items:center; gap:8px; color:#9ebbc6; font-size:10px; }
+    .agent i { width:8px; height:8px; border-radius:50%; background:var(--green); box-shadow:0 0 8px rgba(23,231,161,.8); }
+    .agent b { margin-left:auto; color:#648794; font:9px monospace; font-weight:400; }
+    .bar { height:5px; margin-top:12px; overflow:hidden; border-radius:5px; background:#12313d; }
+    .bar span { display:block; width:92%; height:100%; background:linear-gradient(90deg,var(--cyan),var(--green)); box-shadow:0 0 10px var(--green); }
+    .lower-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:10px; }
+    .check-list, .activity-list { display:grid; gap:9px; }
+    .check, .activity { display:flex; align-items:center; gap:8px; color:#9cb9c3; font-size:10px; }
+    .check-icon { display:grid; place-items:center; width:17px; height:17px; border-radius:50%; color:#001a12; background:var(--green); font-size:10px; }
+    .check em { margin-left:auto; color:var(--green); font:9px monospace; font-style:normal; }
+    .activity i { width:9px; height:9px; border:2px solid var(--cyan); border-radius:50%; }
+    .activity span { min-width:0; flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .activity time { color:#567582; font:8px monospace; }
+    .toast { position:fixed; right:22px; bottom:22px; z-index:60; max-width:320px; padding:12px 15px; border:1px solid var(--line-strong); border-radius:10px; color:#dffbff; background:#09212e; box-shadow:var(--shadow),0 0 28px rgba(39,207,255,.14); transform:translateY(20px); opacity:0; pointer-events:none; transition:.25s; font-size:11px; }
+    .toast.show { transform:none; opacity:1; }
+    .mobile-nav { display:none; }
+    @media (max-width:1120px) { :root { --sidebar:190px; } .hero { grid-template-columns:minmax(0,1fr) 310px; } .overview-grid { grid-template-columns:repeat(2,1fr); } .lower-grid { grid-template-columns:repeat(2,1fr); } .lower-grid .card:last-child { grid-column:span 2; } }
+    @media (max-width:800px) { .app { display:block; } .sidebar { position:fixed; inset:0 auto 0 0; width:240px; transform:translateX(-102%); transition:.25s; box-shadow:20px 0 50px rgba(0,0,0,.5); } body.menu-open .sidebar { transform:none; } .mobile-menu { display:block; } .topbar { padding:0 15px; gap:9px; } .connection, .profile { display:none; } .content { width:min(100% - 24px, 700px); padding-top:14px; } .hero { grid-template-columns:1fr; } .hero-card { min-height:190px; } .mobile-nav { display:grid; position:fixed; inset:auto 0 0; z-index:30; grid-template-columns:repeat(4,1fr); padding:7px 6px max(7px,env(safe-area-inset-bottom)); border-top:1px solid var(--line); background:rgba(3,12,18,.94); backdrop-filter:blur(16px); } .mobile-nav button { display:flex; flex-direction:column; align-items:center; gap:3px; color:#7895a2; background:transparent; font-size:8px; } .mobile-nav button.active { color:var(--cyan); } .mobile-nav b { font-size:16px; } }
+    @media (max-width:520px) { .search { max-width:none; } .search .key { display:none; } .hero-card { padding:23px 19px; } .hero-links { gap:11px; flex-wrap:wrap; } .workspace-tabs { overflow:auto; } .tab { white-space:nowrap; padding-inline:10px; } .quick-actions { grid-template-columns:repeat(2,1fr); } .overview-grid, .lower-grid { grid-template-columns:1fr; } .lower-grid .card:last-child { grid-column:auto; } .card { min-height:0; } .pipeline { padding:14px 12px; } .stage-desc { display:none; } .top-actions { gap:1px; } .top-btn { width:30px; } .toast { right:12px; bottom:70px; left:12px; max-width:none; } }
+    @media (prefers-reduced-motion:reduce) { *,*::before,*::after { transition:none!important; animation:none!important; scroll-behavior:auto!important; } }
+  </style>
 </head>
 <body>
-<header class="wrap"><nav class="nav"><a class="brand" href="#top"><img src="/ghostweb.signal/icon.svg" alt="GhostWeb Enterprise"><span>GhostWeb</span> Enterprise</a><div class="navlinks"><a class="active" href="#top">Overview</a><a href="#platform">Platform</a><a href="#products">Products</a><a href="#security">Security</a><a href="#releases">Releases</a><a href="https://github.com/GhostWebEnterprise">GitHub</a></div><div class="status"><i class="dot"></i>GhostWeb platform online</div><button class="btn mobile-menu" onclick="document.querySelector('.navlinks').classList.toggle('mobile-open')">☰</button></nav></header>
-
-<main class="wrap" id="top">
-<section class="hero">
-<div class="hero-main"><div class="eyebrow">GhostWeb Enterprise · Platform overview</div><h1>Build <span class="gradient">Private.</span><br>Ship Secure.</h1><p class="lead">GhostWeb Enterprise is an open-source platform for privacy-focused software, secure communication, network protection and AI-assisted development. Explore the products, projects and delivery systems that make up the GhostWeb ecosystem.</p><div class="hero-actions"><a class="btn primary" href="#products">Explore products →</a><a class="btn" href="https://github.com/GhostWebEnterprise">View GitHub organization ↗</a></div><div class="mountains"></div></div>
-<aside class="hero-side"><div class="side-title"><span>Security Pipeline</span><span class="running">● ACTIVE</span></div><div class="pipeline">
-<div class="step"><b>1</b><div><span>Encrypt</span><small>End-to-end encrypted messaging</small></div><em class="complete">Enabled</em></div>
-<div class="step"><b>2</b><div><span>Protect</span><small>Privacy-oriented defaults</small></div><em class="complete">Enabled</em></div>
-<div class="step"><b>3</b><div><span>Build</span><small>Reproducible CI workflow</small></div><em class="complete">CI</em></div>
-<div class="step"><b>4</b><div><span>Verify</span><small>Tests, lint and artifacts</small></div><em class="running">Active</em></div>
-<div class="step"><b>5</b><div><span>Release</span><small>Signed GitHub artifacts</small></div><em class="running">Ready</em></div>
-</div></aside>
-</section>
-
-<section class="section-title" id="platform"><div><div class="eyebrow">GhostWeb Platform</div><h2>One ecosystem, multiple privacy tools.</h2></div><p>Open source · Privacy · Security · AI</p></section>
-<div class="grid">
-<article class="card"><div class="icon">🛡️</div><h3>Privacy by design</h3><p>Products are built around privacy-oriented defaults, transparent source code and user-controlled data.</p></article>
-<article class="card"><div class="icon">🔐</div><h3>Security engineering</h3><p>Security, hardening, CI verification and release integrity are treated as part of the product lifecycle.</p></article>
-<article class="card"><div class="icon">🌐</div><h3>Connected platform</h3><p>Communication, network privacy and AI tooling are presented as complementary parts of the GhostWeb ecosystem.</p></article>
-<article class="card"><div class="icon">🚀</div><h3>Open development</h3><p>Repositories, issues, builds and release artifacts are published through GitHub for transparent development.</p></article>
-</div>
-
-<section class="section-title" id="features"><div><div class="eyebrow">Platform capabilities</div><h2>Designed for secure delivery.</h2></div><p>Develop · Verify · Release</p></section>
-<div class="grid">
-<article class="card"><div class="icon">🔐</div><h3>End-to-end encryption</h3><p>Private conversations built around established Signal-ecosystem cryptographic technology.</p></article>
-<article class="card"><div class="icon">💬</div><h3>Private messaging</h3><p>Modern one-to-one and group communication with privacy-focused defaults.</p></article>
-<article class="card"><div class="icon">🛡️</div><h3>Security focused</h3><p>Security-oriented storage, permissions and notification controls.</p></article>
-<article class="card"><div class="icon">🐙</div><h3>Open source</h3><p>Source, issues, CI workflows and releases are available through GitHub.</p></article>
-</div>
-
-<section class="section-title" id="security"><div><div class="eyebrow">Security model</div><h2>Transparent delivery pipeline.</h2></div><p>Build → Test → Verify → Release</p></section>
-<div class="security">
-<div class="console"><b>$ ghostweb.signal</b><br><i>[01]</i> checkout GWSignal.main<br><i>[02]</i> configure JDK 21 + Gradle<br><i>[03]</i> build application + tests<br><i>[04]</i> run lint / verification<br><i>[05]</i> collect release artifacts<br><i>[06]</i> publish verified release<br><b>status: monitoring CI</b></div>
-<div class="card"><div class="icon">⚙️</div><h3>GitHub-native workflow</h3><p>Changes are validated through automated workflows before release. Build failures become the next concrete fix target instead of being hidden behind a static status page.</p><br><a class="btn" href="https://github.com/GhostWebEnterprise/ghostweb.signal/actions">Open Actions ↗</a></div>
-</div>
-
-<section class="section-title" id="releases"><div><div class="eyebrow">Distribution</div><h2>Products & releases.</h2></div><p>Official GhostWeb project repositories</p></section>
-<div class="release"><div><strong>GhostWeb product releases</strong><br><span>Use each project repository for its current source, builds, releases and documentation.</span></div><a class="btn primary" href="https://github.com/GhostWebEnterprise">Open GitHub ↗</a></div>
-<div class="downloads"><a class="download" href="https://github.com/GhostWebEnterprise/ghostweb.signal/releases">Signal releases <span>↗</span></a><a class="download" href="https://github.com/GhostWebEnterprise/ghost-web-vpn/releases">VPN releases <span>↗</span></a><a class="download" href="https://github.com/GhostWebEnterprise/ghost-web-ai/releases">AI releases <span>↗</span></a></div>
-
-<section class="section-title" id="products"><div><div class="eyebrow">GhostWeb products</div><h2>The ecosystem at a glance.</h2></div><p>Signal · VPN · AI · Enterprise</p></section>
-<div class="grid">
-<article class="card"><div class="icon">🛡️</div><h3>GhostWeb Signal</h3><p>Private Android messaging and encrypted communication, with an open-source development and release workflow.</p><br><a class="btn" href="https://github.com/GhostWebEnterprise/ghostweb.signal">Open project ↗</a></article>
-<article class="card"><div class="icon">🌐</div><h3>GhostWeb VPN</h3><p>Network privacy tooling with proxy routing, location protection and browser/WebRTC hardening.</p><br><a class="btn" href="https://github.com/GhostWebEnterprise/ghost-web-vpn">Open project ↗</a></article>
-<article class="card"><div class="icon">🤖</div><h3>GhostWeb AI</h3><p>AI-assisted development, repository automation, security workflows and GitHub delivery.</p><br><a class="btn" href="https://github.com/GhostWebEnterprise/ghost-web-ai">Open project ↗</a></article>
-<article class="card"><div class="icon">⌘</div><h3>GhostWeb Enterprise</h3><p>The organization and platform layer connecting open-source applications, infrastructure and future products.</p><br><a class="btn" href="https://github.com/GhostWebEnterprise">Open organization ↗</a></article>
-</div>
-
-<footer class="footer"><span>© 2026 GhostWeb Enterprise · Open source · Privacy by design.</span><span><a href="https://github.com/GhostWebEnterprise">GitHub</a> · <a href="https://github.com/GhostWebEnterprise/ghostweb.signal/releases">Releases</a> · <a href="https://github.com/GhostWebEnterprise/ghostweb.signal/actions">CI</a></span></footer>
-</main>
-<nav class="mobile-nav"><a class="active" href="#top"><b>⌂</b>Home</a><a href="#platform"><b>◈</b>Platform</a><a href="#products"><b>✦</b>Products</a><a href="#releases"><b>↓</b>Releases</a></nav>
+  <div class="app">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="#dashboard" data-view="dashboard"><span class="brand-mark">◈</span><span>GhostWeb <em>AI</em></span></a>
+      <div class="nav-label">Workspace</div>
+      <nav class="nav" aria-label="Main navigation">
+        <a class="nav-link active" href="#dashboard" data-view="dashboard"><span class="nav-icon">✦</span>Dashboard</a>
+        <a class="nav-link" href="#chat" data-view="chat"><span class="nav-icon">▣</span>Chat</a>
+        <a class="nav-link" href="#build" data-view="build"><span class="nav-icon">ϟ</span>Build</a>
+        <a class="nav-link" href="#pipeline" data-view="pipeline"><span class="nav-icon">◌</span>Pipeline</a>
+        <a class="nav-link" href="#team" data-view="team"><span class="nav-icon">♙</span>Team</a>
+        <a class="nav-link" href="#repositories" data-view="repositories"><span class="nav-icon">◇</span>Repositories</a>
+        <a class="nav-link" href="#security" data-view="security"><span class="nav-icon">⬟</span>Security</a>
+        <a class="nav-link" href="#settings" data-view="settings"><span class="nav-icon">⚙</span>Settings</a>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="system"><div class="system-title"><i class="dot"></i>System Online</div><p>All AI systems operational</p></div>
+        <div class="version">v1.2.0 · secure workspace</div>
+      </div>
+    </aside>
+    <main class="main">
+      <header class="topbar">
+        <button class="mobile-menu" id="menuButton" aria-label="Open menu">☰</button>
+        <label class="search"><span>⌕</span><input id="globalSearch" type="search" placeholder="Search repositories, tasks, or ask AI..." aria-label="Search"><kbd class="key">/</kbd></label>
+        <div class="top-actions">
+          <div class="connection"><span>◉</span><div><strong>GitHub Connected</strong>GhostWebEnterprise</div>↗</div>
+          <button class="top-btn" data-toast="No new notifications">♧</button>
+          <button class="top-btn" id="themeButton" data-toast="Secure dark mode enabled">☼</button>
+          <div class="profile"><span class="avatar">BM</span><span><b>Ben-Yamin Mester</b><small>Developer</small></span>⌄</div>
+        </div>
+      </header>
+      <div class="content" id="dashboard">
+        <section class="hero" aria-label="GhostWeb overview">
+          <article class="panel hero-card"><div class="hero-copy"><div class="eyebrow">GhostWeb AI · Secure developer workspace</div><h1>Your AI-Powered<br><span class="gradient">Development Partner</span></h1><p>Plan, build, test and ship private software with an AI team designed for secure delivery.</p><div class="hero-links"><a href="#chat" data-view="chat">Plan</a><span>·</span><a href="#build" data-view="build">Build</a><span>·</span><a href="#pipeline" data-view="pipeline">Test</a><span>·</span><a href="#security" data-view="security">Secure</a><span>·</span><a href="#releases" data-toast="Release center is ready">Deploy</a></div></div></article>
+          <aside class="panel pipeline" id="pipeline"><div class="panel-title"><span>◈ Delivery Pipeline</span><span class="status-green">● Running</span></div><div class="pipeline-list" id="pipelineList"><div class="stage done" data-stage="Plan"><span class="stage-bullet">1</span><span><b class="stage-name">Plan</b><small class="stage-desc">Analyze request & create plan</small></span><span class="stage-time">✓ Complete</span></div><div class="stage done" data-stage="Branch"><span class="stage-bullet">2</span><span><b class="stage-name">Branch</b><small class="stage-desc">Create git branch</small></span><span class="stage-time">✓ Complete</span></div><div class="stage done" data-stage="Implement"><span class="stage-bullet">3</span><span><b class="stage-name">Implement</b><small class="stage-desc">Write and test code</small></span><span class="stage-time">✓ Complete</span></div><div class="stage done" data-stage="Guardrails"><span class="stage-bullet">4</span><span><b class="stage-name">Guardrails</b><small class="stage-desc">Security, license & code review</small></span><span class="stage-time">✓ Complete</span></div><div class="stage running" data-stage="CI Build"><span class="stage-bullet">5</span><span><b class="stage-name">CI Build</b><small class="stage-desc">Build and run tests</small></span><span class="stage-time">◌ Running</span></div><div class="stage" data-stage="Repair"><span class="stage-bullet">6</span><span><b class="stage-name">Repair</b><small class="stage-desc">Fix first error (if any)</small></span><span class="stage-time">○ Pending</span></div><div class="stage" data-stage="Commit & Push"><span class="stage-bullet">↥</span><span><b class="stage-name">Commit & Push</b><small class="stage-desc">Push changes to repository</small></span><span class="stage-time">○ Pending</span></div><div class="stage" data-stage="Pull Request"><span class="stage-bullet">♧</span><span><b class="stage-name">Pull Request</b><small class="stage-desc">Create and update PR</small></span><span class="stage-time">○ Pending</span></div><div class="stage" data-stage="Verify"><span class="stage-bullet">9</span><span><b class="stage-name">Verify</b><small class="stage-desc">Final verification & artifacts</small></span><span class="stage-time">○ Pending</span></div></div></aside>
+        </section>
+        <section class="panel workspace" id="chat">
+          <div class="workspace-tabs"><button class="tab active" data-tab="chat">▣ Chat</button><button class="tab" data-tab="build">ϟ Build</button><button class="tab" data-tab="code">◉ Code</button><button class="tab" data-tab="agents">♧ Agents</button></div>
+          <div class="workspace-body"><form class="composer" id="composer"><textarea id="prompt" placeholder="Describe your project, feature or issue..." aria-label="Describe your project"></textarea><div class="composer-foot"><button class="select-btn" type="button" data-toast="Model set to GPT-5.6">◈ GPT-5.6⌄</button><button class="select-btn" type="button" data-toast="Web access enabled">◉ Web⌄</button><button class="select-btn" type="button" data-toast="Tools are ready">⚙ Tools⌄</button><button class="send" aria-label="Send prompt">➜</button></div></form><div class="quick-actions"><button class="quick" data-prompt="Analyze my project and create a secure implementation plan."><span class="quick-icon">◈</span><span><b>Plan & Analyze</b><span>Create a plan</span></span></button><button class="quick" data-prompt="Build the next feature and include tests."><span class="quick-icon">⌁</span><span><b>Build & Code</b><span>Generate code</span></span></button><button class="quick" data-prompt="Inspect the latest error and suggest a safe fix."><span class="quick-icon">☼</span><span><b>Fix & Improve</b><span>Debug and repair</span></span></button><button class="quick" data-prompt="Prepare this project for a verified release."><span class="quick-icon">⬟</span><span><b>Deploy & Release</b><span>Ship to production</span></span></button></div></div>
+        </section>
+        <section class="overview-grid" id="repositories">
+          <article class="panel card"><div class="card-head"><div class="card-title"><i>◈</i>Repository</div><span class="badge">✦ Synced</span></div><div class="repo-name">GhostWebEnterprise/ghost-web-ai</div><span class="branch">⑂ main⌄</span><p class="card-copy">AI-powered development platform with secure agents, multi-provider support and verifiable delivery.</p><a class="link" href="https://github.com/GhostWebEnterprise/ghost-web-ai">View repository →</a></article>
+          <article class="panel card"><div class="card-head"><div class="card-title"><i>♧</i>AI Providers</div><span class="badge">✦ Healthy</span></div><div class="metric-list"><div class="metric">OpenRouter <strong>Online · 1.2s</strong></div><div class="metric">OpenAI <strong>Online · 1.4s</strong></div><div class="metric">Anthropic <strong>Online · 1.8s</strong></div><div class="metric">Ollama (Local) <strong>Online · 0.7s</strong></div><div class="metric">SambaNova <strong>Online · 2.3s</strong></div></div><a class="link" href="#settings" data-view="settings">Provider settings →</a></article>
+          <article class="panel card" id="team"><div class="card-head"><div class="card-title"><i>♙</i>15-Agent Task Force</div><span class="badge">✦ Active</span></div><div class="agents"><div class="agent"><i></i>Code Architect<b>1/1</b></div><div class="agent"><i></i>Security Analyst<b>1/1</b></div><div class="agent"><i></i>DevOps Engineer<b>1/1</b></div><div class="agent"><i></i>QA Tester<b>1/1</b></div><div class="agent"><i></i>Documentation<b>1/1</b></div></div><div class="bar"><span></span></div><a class="link" href="#team" data-toast="All 15 agents are active">View all agents →</a></article>
+          <article class="panel card" id="security"><div class="card-head"><div class="card-title"><i>⬟</i>Security & CI</div><span class="badge">✦ All clear</span></div><div class="check-list"><div class="check"><span class="check-icon">✓</span>SAST (CodeQL)<em>Passed</em></div><div class="check"><span class="check-icon">✓</span>Dependency Scan<em>Passed</em></div><div class="check"><span class="check-icon">✓</span>License Check<em>Passed</em></div><div class="check"><span class="check-icon">✓</span>Secret Scan<em>Passed</em></div><div class="check"><span class="check-icon">✓</span>Container Scan<em>Passed</em></div></div><a class="link" href="#security" data-toast="Security report is clean">View security report →</a></article>
+        </section>
+        <section class="lower-grid">
+          <article class="panel card"><div class="card-head"><div class="card-title"><i>⬢</i>Artifact Verification</div><span class="badge">✦ Verified</span></div><div class="check-list"><div class="check"><span class="check-icon">✓</span>Build Artifacts<em>Verified</em></div><div class="check"><span class="check-icon">✓</span>SBOM<em>Verified</em></div><div class="check"><span class="check-icon">✓</span>Signature<em>Verified</em></div><div class="check"><span class="check-icon">✓</span>Provenance<em>Verified</em></div></div><a class="link" href="#releases" data-toast="Artifacts are ready for review">View artifacts →</a></article>
+          <article class="panel card"><div class="card-head"><div class="card-title"><i>◷</i>Recent Activity</div><a class="link" href="#activity">View all →</a></div><div class="activity-list" id="activity"><div class="activity"><i></i><span>CI build completed successfully</span><time>2m</time></div><div class="activity"><i></i><span>Security scan passed</span><time>4m</time></div><div class="activity"><i></i><span>Pull request created</span><time>6m</time></div><div class="activity"><i></i><span>Code committed</span><time>8m</time></div><div class="activity"><i></i><span>Branch created</span><time>10m</time></div></div></article>
+          <article class="panel card" id="build"><div class="card-head"><div class="card-title"><i>ϟ</i>Build Center</div><span class="badge">Ready</span></div><p class="card-copy">Choose a secure action to continue your delivery pipeline.</p><button class="small-btn" data-prompt="Run the GhostWeb build with tests, security scans and artifact verification.">Start verified build →</button><div style="margin-top:16px"><a class="link" href="#pipeline" data-view="pipeline">Open pipeline monitor →</a></div></article>
+        </section>
+      </div>
+    </main>
+  </div>
+  <nav class="mobile-nav" aria-label="Mobile navigation"><button class="active" data-view="dashboard"><b>✦</b>Home</button><button data-view="chat"><b>▣</b>Chat</button><button data-view="team"><b>♙</b>Team</button><button data-view="pipeline"><b>◌</b>Pipeline</button></nav>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script>
+    const toast = document.querySelector('#toast');
+    let toastTimer;
+    function showToast(message) { toast.textContent = message; toast.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => toast.classList.remove('show'), 2800); }
+    function setView(view) {
+      document.querySelectorAll('[data-view]').forEach(el => el.classList.toggle('active', el.dataset.view === view));
+      const target = document.getElementById(view) || document.getElementById('dashboard');
+      if (target && view !== 'dashboard') target.scrollIntoView({behavior:'smooth', block:'start'});
+      document.body.classList.remove('menu-open');
+    }
+    document.querySelectorAll('[data-view]').forEach(el => el.addEventListener('click', event => { const view = el.dataset.view; if (view) { event.preventDefault(); setView(view); } }));
+    document.querySelectorAll('[data-toast]').forEach(el => el.addEventListener('click', () => showToast(el.dataset.toast)));
+    document.querySelector('#menuButton').addEventListener('click', () => document.body.classList.toggle('menu-open'));
+    document.querySelectorAll('.tab').forEach(tab => tab.addEventListener('click', () => { document.querySelectorAll('.tab').forEach(item => item.classList.remove('active')); tab.classList.add('active'); showToast(`${tab.textContent.trim()} workspace selected`); }));
+    document.querySelectorAll('[data-prompt]').forEach(button => button.addEventListener('click', () => { const prompt = document.querySelector('#prompt'); prompt.value = button.dataset.prompt; prompt.focus(); document.querySelector('#chat').scrollIntoView({behavior:'smooth', block:'center'}); }));
+    document.querySelector('#composer').addEventListener('submit', event => { event.preventDefault(); const prompt = document.querySelector('#prompt').value.trim(); if (!prompt) { showToast('Describe a project or task first.'); return; } showToast('GhostWeb AI is analyzing your request...'); document.querySelector('#prompt').value = ''; document.querySelector('.stage.running .stage-time').textContent = '◌ Analyzing'; });
+    document.querySelector('#globalSearch').addEventListener('keydown', event => { if (event.key === 'Enter' && event.target.value.trim()) showToast(`Searching workspace for “${event.target.value.trim()}”`); });
+    window.addEventListener('keydown', event => { if (event.key === '/' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') { event.preventDefault(); document.querySelector('#globalSearch').focus(); } });
+    document.querySelector('#themeButton').addEventListener('click', () => showToast('GhostWeb secure dark mode is active'));
+    document.querySelectorAll('.stage').forEach(stage => stage.addEventListener('click', () => showToast(`${stage.dataset.stage}: ${stage.querySelector('.stage-time').textContent}`)));
+  </script>
 </body>
 </html>
