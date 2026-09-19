@@ -9974,4 +9974,13 @@
     <string name="RecoveryKeyWarningDialog__dont_share">Don\'t share</string>
 
     <!-- EOF -->
+
+    <string name="ghostweb_signal_logo" translatable="false">GhostWeb Signal</string>
+    <string name="ghostweb_signal_title" translatable="false">GhostWeb Signal</string>
+    <string name="ghostweb_signal_tagline" translatable="false">PRIVATE MESSAGING · SECURE BY DESIGN</string>
+    <string name="ghostweb_signal_security_line" translatable="false">End-to-end encrypted · Privacy-first · Open source</string>
+    <string name="ghostweb_signal_encrypted" translatable="false">ENCRYPTED</string>
+    <string name="ghostweb_signal_private" translatable="false">PRIVATE</string>
+    <string name="ghostweb_signal_online" translatable="false">● ONLINE</string>
+
 </resources>
