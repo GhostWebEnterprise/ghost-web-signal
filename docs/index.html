@@ -37,12 +37,12 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.2;bac
 </section>
 
 <section class="section-title" id="ecosystem"><div><div class="eyebrow">GhostWeb ecosystem</div><h2>One platform. Multiple products.</h2></div><p>Communication · Privacy · AI</p></section><nav id="products" class="tabs" aria-label="GhostWeb products">
-<button class="tab active" data-tab="signal">🛡️ GhostWeb Signal<small>Android · Private messaging</small></button>
-<button class="tab" data-tab="vpn">🌐 GhostWeb VPN<small>Chromium · Browser privacy</small></button>
-<button class="tab" data-tab="ai">🤖 GhostWeb AI<small>AI · Software delivery</small></button>
+<button class="tab" :class="{active:tab==='signal'}" @click="tab='signal'">🛡️ GhostWeb Signal<small>Android · Private messaging</small></button>
+<button class="tab" :class="{active:tab==='vpn'}" @click="tab='vpn'">🌐 GhostWeb VPN<small>Chromium · Browser privacy</small></button>
+<button class="tab" :class="{active:tab==='ai'}" @click="tab='ai'">🤖 GhostWeb AI<small>AI · Software delivery</small></button>
 </nav>
 
-<section id="signal" class="panel active">
+<section id="signal" class="panel" x-show="tab==='signal'" x-cloak>
 <div class="section-title"><div><div class="eyebrow">Product 01 · Android</div><h2>GhostWeb Signal</h2></div><p>Private messaging · open source · E2EE</p></div>
 <p class="lead">A GhostWeb-branded privacy-focused Android messenger built on the Signal/Molly technology stack.</p>
 <div class="release"><div><strong>Latest release · v8.19.2-4</strong><br><span>Production APKs published through GitHub Releases.</span></div><a class="btn primary" href="https://github.com/GhostWebEnterprise/ghostweb.signal/releases/tag/v8.19.2-4">Open release ↗</a></div>
@@ -50,7 +50,7 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.2;bac
 <div class="grid" style="margin-top:10px"><article class="card"><div class="icon">🔐</div><h3>End-to-end encryption</h3><p>Private conversations using established Signal-ecosystem cryptographic protocols.</p></article><article class="card"><div class="icon">💬</div><h3>Private messaging</h3><p>Modern one-to-one and group messaging with privacy-focused defaults.</p></article><article class="card"><div class="icon">🛡️</div><h3>Privacy first</h3><p>Security-oriented local storage and notification controls.</p></article><article class="card"><div class="icon">🐙</div><h3>Open source</h3><p>Inspect the source, releases and build workflow on GitHub.</p></article></div>
 </section>
 
-<section id="vpn" class="panel">
+<section id="vpn" class="panel" x-show="tab==='vpn'" x-cloak>
 <div class="section-title"><div><div class="eyebrow">Product 02 · Chromium</div><h2>GhostWeb VPN</h2></div><p>Proxy routing · WebRTC hardening · privacy</p></div>
 <p class="lead">A browser privacy client for routing supported traffic through your chosen proxy or self-hosted endpoint.</p>
 <div class="release"><div><strong>Latest release · v1.0.0</strong><br><span>Manifest V3 browser extension.</span></div><a class="btn primary" href="https://github.com/GhostWebEnterprise/ghost-web-vpn/releases/tag/v1.0.0">Open release ↗</a></div>
@@ -58,7 +58,7 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.2;bac
 <div class="grid" style="margin-top:10px"><article class="card"><div class="icon">🔌</div><h3>Proxy routing</h3><p>HTTP, HTTPS, SOCKS4 and SOCKS5 endpoint support.</p></article><article class="card"><div class="icon">🌍</div><h3>Location protection</h3><p>Browser-level geolocation and timezone privacy features.</p></article><article class="card"><div class="icon">🚫</div><h3>Kill switch</h3><p>Fail-closed protection can block traffic when the connection drops.</p></article><article class="card"><div class="icon">🧩</div><h3>Manifest V3</h3><p>Designed for modern Chromium extension architecture.</p></article></div>
 </section>
 
-<section id="ai" class="panel">
+<section id="ai" class="panel" x-show="tab==='ai'" x-cloak>
 <div class="section-title"><div><div class="eyebrow">Product 03 · AI</div><h2>GhostWeb AI</h2></div><p>Agents · GitHub · Build · Secure · Release</p></div>
 <p class="lead">A privacy-focused AI software-delivery workspace with coordinated agents for planning, implementation, testing, security and GitHub delivery.</p>
 <div class="release"><div><strong>GhostWeb AI UI</strong><br><span>Dashboard concept implemented with responsive desktop and mobile navigation.</span></div><a class="btn primary" href="https://github.com/GhostWebEnterprise/ghost-web-ai">Open repository ↗</a></div>
