@@ -30,10 +30,13 @@ jobs:
 
       - name: Configure CI memory
         run: |
-          sudo fallocate -l 4G /swapfile
-          sudo chmod 600 /swapfile
-          sudo mkswap /swapfile
-          sudo swapon /swapfile
+          if ! sudo swapon --show --noheadings | grep -q .; then
+            sudo fallocate -l 4G /mnt/ghostweb-swapfile
+            sudo chmod 600 /mnt/ghostweb-swapfile
+            sudo mkswap /mnt/ghostweb-swapfile
+            sudo swapon /mnt/ghostweb-swapfile
+          fi
+          sudo swapon --show
           free -h
 
       - name: Prepare release keystore
