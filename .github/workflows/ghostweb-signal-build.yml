@@ -28,6 +28,14 @@ jobs:
           java-version: "21"
           cache: gradle
 
+      - name: Configure CI memory
+        run: |
+          sudo fallocate -l 4G /swapfile
+          sudo chmod 600 /swapfile
+          sudo mkswap /swapfile
+          sudo swapon /swapfile
+          free -h
+
       - name: Prepare release keystore
         env:
           KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 || secrets.SECRET_KEYSTORE }}
@@ -41,7 +49,10 @@ jobs:
 
       - name: Build GhostWeb Signal prod website release APK
         run: |
-          ./gradlew :app:assembleProdWebsiteRelease --stacktrace \
+          ./gradlew --no-daemon --max-workers=2 \
+            -Dorg.gradle.jvmargs="-Xmx4g -XX:+UseParallelGC -XX:+UnlockExperimentalVMOptions -XX:hashCode=3" \
+            -Dorg.gradle.parallel=false \
+            :app:assembleProdWebsiteRelease --stacktrace \
             -PbaseAppTitle="$CI_APP_TITLE" \
             -PbaseAppFileName="GhostWeb-Signal" \
             -PbasePackageId="$CI_PACKAGE_ID" \
