@@ -31,7 +31,7 @@ jobs:
       CI_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD || secrets.ANDROID_KEYSTORE_PASSWORD || secrets.SECRET_KEYSTORE_PASSWORD }}
       CI_APP_TITLE: GhostWeb Signal
       CI_PACKAGE_ID: org.ghostweb.signal
-      CI_BUILD_VARIANTS: prodWebsiteRelease
+      CI_BUILD_VARIANTS: prodWebsite(Release|Debug)
       CI_FORCE_INTERNAL_USER_FLAG: "false"
     steps:
       - name: Checkout
@@ -78,7 +78,7 @@ jobs:
             -Dorg.gradle.jvmargs="-Xmx7g -XX:+UseG1GC -XX:+UnlockExperimentalVMOptions -XX:hashCode=3" \
             -Dorg.gradle.parallel=false \
             :app:assembleProdWebsiteRelease \
-            :app:testProdWebsiteReleaseUnitTest \
+            :app:testProdWebsiteDebugUnitTest \
             --tests 'org.thoughtcrime.securesms.main.GhostWebStartupAnimationTest' \
             --stacktrace \
             -PbaseAppTitle="$CI_APP_TITLE" \
