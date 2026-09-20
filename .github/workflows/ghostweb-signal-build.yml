@@ -5,14 +5,30 @@ on:
     branches:
       - GWSignal.main
   workflow_dispatch:
+    inputs:
+      publish_release:
+        description: Publish the verified signed APK
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ghostweb-signal-build-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 90
+    outputs:
+      release_tag: ${{ steps.verify.outputs.release_tag }}
     env:
-      CI_KEYSTORE_PATH: ${{ github.workspace }}/ghostweb-release.jks
+      CI_KEYSTORE_PATH: ${{ runner.temp }}/ghostweb-release.jks
       CI_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD || secrets.SECRET_KEYSTORE_PASSWORD }}
       CI_KEYSTORE_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS || secrets.SECRET_KEYSTORE_ALIAS }}
+      CI_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD || secrets.ANDROID_KEYSTORE_PASSWORD || secrets.SECRET_KEYSTORE_PASSWORD }}
       CI_APP_TITLE: GhostWeb Signal
       CI_PACKAGE_ID: org.ghostweb.signal
       CI_BUILD_VARIANTS: prodWebsiteRelease
@@ -27,6 +43,9 @@ jobs:
           distribution: temurin
           java-version: "21"
           cache: gradle
+
+      - name: Free disk space
+        uses: ./.github/actions/disk-cleanup
 
       - name: Configure CI memory
         run: |
@@ -44,34 +63,112 @@ jobs:
           KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 || secrets.SECRET_KEYSTORE }}
         run: |
           test -n "$KEYSTORE_B64"
+          test -n "$CI_KEYSTORE_PASSWORD"
+          test -n "$CI_KEYSTORE_ALIAS"
+          umask 077
           printf '%s' "$KEYSTORE_B64" | base64 --decode > "$CI_KEYSTORE_PATH"
           test -s "$CI_KEYSTORE_PATH"
+          keytool -list -keystore "$CI_KEYSTORE_PATH" \
+            -storepass:env CI_KEYSTORE_PASSWORD -alias "$CI_KEYSTORE_ALIAS" > /dev/null
 
-      - name: Make Gradle executable
-        run: chmod +x ./gradlew
-
-      - name: Build GhostWeb Signal prod website release APK
+      - name: Build and test GhostWeb Signal release
         run: |
+          chmod +x ./gradlew
           ./gradlew --no-daemon --max-workers=1 \
             -Dorg.gradle.jvmargs="-Xmx7g -XX:+UseG1GC -XX:+UnlockExperimentalVMOptions -XX:hashCode=3" \
             -Dorg.gradle.parallel=false \
-            :app:assembleProdWebsiteRelease --stacktrace \
+            :app:assembleProdWebsiteRelease \
+            :app:testProdWebsiteReleaseUnitTest \
+            --tests 'org.thoughtcrime.securesms.main.GhostWebStartupAnimationTest' \
+            --stacktrace \
             -PbaseAppTitle="$CI_APP_TITLE" \
             -PbaseAppFileName="GhostWeb-Signal" \
             -PbasePackageId="$CI_PACKAGE_ID" \
             -PbuildVariants="$CI_BUILD_VARIANTS" \
             -PforceInternalUserFlag="$CI_FORCE_INTERNAL_USER_FLAG"
 
-      - name: Verify release APK
+      - name: Verify release APK and signature
+        id: verify
         run: |
-          APK=$(find app/build/outputs/apk -type f -name '*.apk' | head -n 1)
-          test -n "$APK"
-          test -s "$APK"
-          echo "APK=$APK"
+          mapfile -t apks < <(find app/build/outputs/apk -type f -name '*.apk')
+          test "${#apks[@]}" -eq 1
+          apk="${apks[0]}"
+          tools="$ANDROID_HOME/build-tools/36.0.0"
+          "$tools/apksigner" verify --verbose --print-certs "$apk"
+          badging=$("$tools/aapt" dump badging "$apk")
+          package=$(sed -n "s/^package: name='\([^']*\)'.*/\1/p" <<< "$badging")
+          version=$(sed -n "s/^package: .*versionName='\([^']*\)'.*/\1/p" <<< "$badging")
+          test "$package" = "$CI_PACKAGE_ID"
+          [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+-[0-9]+$ ]]
+          mkdir -p dist
+          cp "$apk" "dist/GhostWeb-Signal-v${version}.apk"
+          (cd dist && sha256sum ./*.apk > SHA256SUMS)
+          printf 'Commit: %s\nVersion: %s\nPackage: %s\n' \
+            "$GITHUB_SHA" "$version" "$package" > dist/BUILD.txt
+          echo "release_tag=v$version" >> "$GITHUB_OUTPUT"
 
-      - name: Upload APK
+      - name: Upload verified APK
         uses: actions/upload-artifact@v4
         with:
           name: ghostweb-signal-release-apk
-          path: app/build/outputs/apk/prodWebsiteRelease/*.apk
+          path: dist/
           if-no-files-found: error
+
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ghostweb-startup-test-reports
+          path: app/build/reports/tests/
+          if-no-files-found: ignore
+
+      - name: Remove signing material
+        if: always()
+        run: rm -f "$CI_KEYSTORE_PATH"
+
+  publish:
+    needs: build
+    if: >-
+      github.ref == 'refs/heads/GWSignal.main' &&
+      (inputs.publish_release == true ||
+       contains(github.event.head_commit.message, '[publish-apk]'))
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      RELEASE_TAG: ${{ needs.build.outputs.release_tag }}
+    steps:
+      - name: Download verified APK
+        uses: actions/download-artifact@v4
+        with:
+          name: ghostweb-signal-release-apk
+          path: dist
+
+      - name: Create release draft and verify uploaded bytes
+        run: |
+          cd dist
+          sha256sum --check SHA256SUMS
+          if gh release view "$RELEASE_TAG" > /dev/null 2>&1; then
+            echo "Release already exists; refusing to replace published assets." >&2
+            exit 1
+          fi
+          cat > release-notes.md <<EOF_NOTES
+          GhostWeb Signal startup animation with the original icon and violet Photon-inspired glow.
+
+          Plays after completed registration and app unlock. Respects disabled animations.
+          Android 12+ uses blur-to-focus; older devices use a scale/fade transition.
+
+          Source commit: $GITHUB_SHA
+          Signed APK and startup lifecycle tests verified by GitHub Actions.
+          Physical-device registration and biometric testing is still required.
+          EOF_NOTES
+          gh release create "$RELEASE_TAG" ./*.apk SHA256SUMS BUILD.txt \
+            --target "$GITHUB_SHA" --draft \
+            --title "GhostWeb Signal $RELEASE_TAG" --notes-file release-notes.md
+          mkdir downloaded
+          gh release download "$RELEASE_TAG" --pattern '*.apk' --dir downloaded
+          cp SHA256SUMS downloaded/
+          (cd downloaded && sha256sum --check SHA256SUMS)
+          gh release edit "$RELEASE_TAG" --draft=false

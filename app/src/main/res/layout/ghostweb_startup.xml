@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/ghostweb_signal_bg"
+    android:clickable="true"
+    android:importantForAccessibility="noHideDescendants">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <FrameLayout
+            android:layout_width="240dp"
+            android:layout_height="180dp"
+            android:clipChildren="false">
+
+            <View
+                android:id="@+id/ghostweb_startup_halo"
+                android:layout_width="240dp"
+                android:layout_height="180dp"
+                android:background="@drawable/ghostweb_startup_halo" />
+
+            <ImageView
+                android:id="@+id/ghostweb_startup_logo"
+                android:layout_width="112dp"
+                android:layout_height="112dp"
+                android:layout_gravity="center"
+                android:contentDescription="@null"
+                android:src="@drawable/ghostweb_startup_icon" />
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/ghostweb_startup_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/ghostweb_signal_title"
+            android:textColor="@color/ghostweb_signal_text"
+            android:textSize="28sp" />
+
+        <TextView
+            android:id="@+id/ghostweb_startup_tagline"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:gravity="center"
+            android:letterSpacing="0.12"
+            android:text="@string/ghostweb_signal_tagline"
+            android:textColor="@color/ghostweb_startup_accent"
+            android:textSize="11sp" />
+    </LinearLayout>
+</FrameLayout>

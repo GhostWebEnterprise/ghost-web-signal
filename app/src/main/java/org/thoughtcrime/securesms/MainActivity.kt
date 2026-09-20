@@ -136,6 +136,7 @@ import org.thoughtcrime.securesms.devicetransfer.olddevice.OldDeviceExitActivity
 import org.thoughtcrime.securesms.groups.ui.creategroup.CreateGroupActivity
 import org.thoughtcrime.securesms.keyvalue.SignalStore
 import org.thoughtcrime.securesms.lock.v2.CreateSvrPinActivity
+import org.thoughtcrime.securesms.main.GhostWebStartupAnimation
 import org.thoughtcrime.securesms.main.MainBottomChrome
 import org.thoughtcrime.securesms.main.MainBottomChromeCallback
 import org.thoughtcrime.securesms.main.MainBottomChromeState
@@ -253,6 +254,7 @@ class MainActivity :
 
   private var onFirstRender = false
   private var previousTopToastPopup: TopToastPopup? = null
+  private var startupAnimation: GhostWebStartupAnimation? = null
 
   private val mainBottomChromeCallback = BottomChromeCallback()
   private val megaphoneActionController = MainMegaphoneActionController()
@@ -720,6 +722,12 @@ class MainActivity :
     CachedInflater.from(this).clear()
 
     lifecycleDisposable += vitalsViewModel.vitalsState.subscribe(this::presentVitalsState)
+
+    // Routing in PassphraseRequiredActivity has already completed registration/passphrase checks.
+    // Biometrics, if enabled, must still succeed before onPostResume(false) starts the animation.
+    if (savedInstanceState == null && !isFinishing && SignalStore.account.isRegistered && SignalStore.registration.isRegistrationComplete) {
+      startupAnimation = GhostWebStartupAnimation(findViewById(android.R.id.content))
+    }
   }
 
   /**
@@ -868,9 +876,24 @@ class MainActivity :
     mainNavigationViewModel.refreshNavigationBarState()
   }
 
+  override fun onPostResume(screenLocked: Boolean) {
+    super.onPostResume(screenLocked)
+    if (!screenLocked && !isFinishing && onFirstRender) {
+      startupAnimation?.start()
+    }
+  }
+
   override fun onStop() {
+    startupAnimation?.dismiss()
+    startupAnimation = null
     super.onStop()
     SplashScreenUtil.setSplashScreenThemeIfNecessary(this, SignalStore.settings.theme, SignalStore.settings.isDynamicColorsEnabled)
+  }
+
+  override fun onDestroy() {
+    startupAnimation?.dismiss()
+    startupAnimation = null
+    super.onDestroy()
   }
 
   override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray, deviceId: Int) {
@@ -912,6 +935,9 @@ class MainActivity :
 
   override fun onFirstRender() {
     onFirstRender = true
+    if (lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED) && !ScreenLockController.lockScreenAtStart && !isFinishing) {
+      startupAnimation?.start()
+    }
   }
 
   override fun getNavigator(): MainNavigator {
