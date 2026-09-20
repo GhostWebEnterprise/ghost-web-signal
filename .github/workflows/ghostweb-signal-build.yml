@@ -9,6 +9,14 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      CI_KEYSTORE_PATH: ${{ github.workspace }}/ghostweb-release.jks
+      CI_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+      CI_KEYSTORE_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+      CI_APP_TITLE: GhostWeb Signal
+      CI_PACKAGE_ID: org.ghostweb.signal
+      CI_BUILD_VARIANTS: prodWebsiteRelease
+      CI_FORCE_INTERNAL_USER_FLAG: "false"
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -17,20 +25,39 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '21'
+          java-version: "21"
           cache: gradle
+
+      - name: Prepare release keystore
+        env:
+          KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+        run: |
+          test -n "$KEYSTORE_B64"
+          printf '%s' "$KEYSTORE_B64" | base64 --decode > "$CI_KEYSTORE_PATH"
+          test -s "$CI_KEYSTORE_PATH"
 
       - name: Make Gradle executable
         run: chmod +x ./gradlew
 
-      - name: Build GhostWeb Signal release APK
-        run: ./gradlew assembleRelease --stacktrace
+      - name: Build GhostWeb Signal prod website release APK
+        run: |
+          ./gradlew :app:assembleProdWebsiteRelease --stacktrace \
+            -PbaseAppTitle="$CI_APP_TITLE" \
+            -PbaseAppFileName="GhostWeb-Signal" \
+            -PbasePackageId="$CI_PACKAGE_ID" \
+            -PbuildVariants="$CI_BUILD_VARIANTS" \
+            -PforceInternalUserFlag="$CI_FORCE_INTERNAL_USER_FLAG"
+
+      - name: Verify release APK
+        run: |
+          APK=$(find app/build/outputs/apk -type f -name '*.apk' | head -n 1)
+          test -n "$APK"
+          test -s "$APK"
+          echo "APK=$APK"
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: ghostweb-signal-release-apk
-          path: |
-            **/build/outputs/apk/release/*.apk
-            **/build/outputs/apk/*/release/*.apk
+          path: app/build/outputs/apk/prodWebsiteRelease/*.apk
           if-no-files-found: error
