@@ -222,20 +222,23 @@
         <!-- Allows for Overrides -->
     </style>
 
-    <style name="TextSecure.BaseLightTheme" parent="@style/Theme.Molly.Material3.Light">
-        <item name="theme_type">light</item>
+    <!-- GhostWeb Signal intentionally uses one privacy-first Photon surface in
+         both system modes. This keeps every screen on the same high-contrast
+         dark palette instead of falling back to Molly's light surfaces. -->
+    <style name="TextSecure.BaseLightTheme" parent="@style/Theme.Molly.Material3.Dark">
+        <item name="theme_type">dark</item>
         <item name="dynamic_colors">false</item>
-        <item name="android:navigationBarColor">@color/molly_surface_light</item>
-        <item name="android:statusBarColor">@color/molly_surface_light</item>
-        <item name="android:windowLightNavigationBar">true</item>
-        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:navigationBarColor">@color/ghostweb_signal_bg</item>
+        <item name="android:statusBarColor">@color/ghostweb_signal_bg</item>
+        <item name="android:windowLightNavigationBar">false</item>
+        <item name="android:windowLightStatusBar">false</item>
         <item name="fullScreenDialogStyle">@style/Signal.DayNight.Dialog.FullScreen</item>
         <item name="fixedRoundedCornerBottomSheetStyle">@style/Widget.Signal.FixedRoundedCorners</item>
-        <item name="permissionsRationaleDialogTheme">@style/Theme.Signal.AlertDialog.Light.Cornered</item>
+        <item name="permissionsRationaleDialogTheme">@style/Theme.Signal.AlertDialog.Dark.Cornered</item>
         <item name="android:forceDarkAllowed" tools:targetApi="29">false</item>
         <item name="android:windowOptOutEdgeToEdgeEnforcement" tools:targetApi="35">true</item>
 
-        <item name="colorControlHighlight">@color/transparent_black_10</item>
+        <item name="colorControlHighlight">@color/transparent_white_10</item>
 
         <item name="textAppearanceBodyMedium">@style/Signal.Text.BodyMedium</item>
         <item name="textAppearanceBodyLarge">@style/Signal.Text.BodyLarge</item>
@@ -250,19 +253,20 @@
         <item name="snackbarTextViewStyle">@style/Widget.Signal.Snackbar.TextView</item>
         <item name="snackbarButtonStyle">@style/Widget.Signal.Button.TextButton.Snackbar</item>
 
-        <item name="bottomSheetDialogTheme">@style/Theme.Signal.Light.BottomSheetDialog</item>
+        <item name="bottomSheetDialogTheme">@style/Theme.Signal.BottomSheetDialog</item>
 
         <item name="contactCheckboxBackground">@drawable/contact_selection_checkbox</item>
         <item name="mediaKeyboardBackgroundColor">?attr/colorSurfaceContainer</item>
         <item name="mediaKeyboardBottomBarBackgroundColor">?attr/colorSurfaceDim</item>
 
-        <item name="actionBarStyle">@style/TextSecure.LightActionBar</item>
-        <item name="actionBarTabBarStyle">@style/TextSecure.LightActionBar.TabBar</item>
+        <item name="actionBarStyle">@style/TextSecure.DarkActionBar</item>
+        <item name="actionBarTabBarStyle">@style/TextSecure.DarkActionBar.TabBar</item>
+        <item name="actionBarPopupTheme">@style/ThemeOverlay.Material3.Dark</item>
         <item name="actionModeBackground">@color/transparent</item>
         <item name="actionModeCloseDrawable">@drawable/ic_x_tinted</item>
         <item name="actionModeStyle">@style/TextSecure.ActionModeStyle</item>
-        <item name="android:textColor">@color/text_color_light_theme</item>
-        <item name="android:textColorSecondary">@color/text_color_secondary_light_theme</item>
+        <item name="android:textColor">@color/text_color_dark_theme</item>
+        <item name="android:textColorSecondary">@color/text_color_secondary_dark_theme</item>
         <item name="android:windowBackground">?attr/colorSurface</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="alertDialogTheme">@style/ThemeOverlay.Signal.MaterialAlertDialog</item>
@@ -270,7 +274,7 @@
         <item name="homeAsUpIndicator">@drawable/symbol_arrow_start_24</item>
         <item name="android:homeAsUpIndicator">@drawable/symbol_arrow_start_24</item>
 
-        <item name="settingsToolbarStyle">@style/TextSecure.LightActionBar.Settings</item>
+        <item name="settingsToolbarStyle">@style/TextSecure.DarkActionBar.Settings</item>
 
         <item name="contact_filter_toolbar_icon_tint">?attr/signal_icon_tint_primary</item>
 
@@ -289,7 +293,7 @@
 
         <item name="chipStyle">@style/Signal.Chip.Action</item>
 
-        <item name="colorControlNormal">@color/core_grey_90</item>
+        <item name="colorControlNormal">@color/ghostweb_signal_text</item>
 
         <item name="materialAlertDialogTheme">@style/ThemeOverlay.Signal.MaterialAlertDialog</item>
         <item name="materialTimePickerTheme">@style/Signal.ThemeOverlay.TimePicker</item>
@@ -301,7 +305,7 @@
 
         <!-- light_colors.xml -->
         <item name="conversation_toolbar_color">?attr/colorSurface</item>
-        <item name="signal_accent_primary">@color/core_ultramarine</item>
+        <item name="signal_accent_primary">@color/ghostweb_signal_cyan</item>
         <item name="signal_background_primary">?attr/colorSurface</item>
         <item name="signal_background_secondary">?attr/colorSurfaceContainerLow</item>
         <item name="signal_background_dialog">?attr/colorSurfaceContainer</item>
@@ -314,13 +318,13 @@
         <item name="signal_icon_tint_action">@color/core_black</item>
         <item name="signal_icon_tint_tab_selected">?attr/colorOnSurface</item>
         <item name="signal_icon_tint_tab_unselected">?attr/colorOnSurfaceVariant</item>
-        <item name="signal_button_primary">@color/core_ultramarine</item>
+        <item name="signal_button_primary">@color/ghostweb_signal_cyan</item>
         <item name="signal_button_primary_ripple">@color/transparent_black_15</item>
-        <item name="signal_button_primary_text">@color/core_white</item>
+        <item name="signal_button_primary_text">@color/ghostweb_signal_on_cyan</item>
         <item name="signal_button_primary_text_disabled">@color/transparent_white_20</item>
         <item name="signal_button_secondary">@color/core_grey_05</item>
         <item name="signal_button_secondary_ripple">@color/core_grey_02</item>
-        <item name="signal_button_secondary_text">@color/core_ultramarine</item>
+        <item name="signal_button_secondary_text">@color/ghostweb_signal_cyan</item>
         <item name="signal_button_secondary_text_disabled">@color/core_grey_25</item>
         <item name="signal_button_secondary_stroke">@color/core_grey_15</item>
         <item name="conversation_compose_background">?attr/colorSurfaceContainerHigh</item>
@@ -386,8 +390,8 @@
         <item name="context_menu_container_color">@color/molly_surface_container_light</item>
 
         <!-- MainNavigation.kt -->
-        <item name="navbar_active_indicator_color">@color/molly_secondary_container_light</item>
-        <item name="navbar_container_color">@color/molly_surface_container_light</item>
+        <item name="navbar_active_indicator_color">@color/ghostweb_signal_surface_high</item>
+        <item name="navbar_container_color">@color/ghostweb_signal_panel</item>
     </style>
 
     <style name="TextSecure.DarkTheme" parent="@style/TextSecure.BaseDarkTheme">
@@ -475,7 +479,7 @@
 
         <!-- dark_colors.xml -->
         <item name="conversation_toolbar_color">?attr/colorSurface</item>
-        <item name="signal_accent_primary">@color/core_ultramarine_light</item>
+        <item name="signal_accent_primary">@color/ghostweb_signal_cyan</item>
         <item name="signal_background_primary">?attr/colorSurface</item>
         <item name="signal_background_secondary">?attr/colorSurfaceContainerLow</item>
         <item name="signal_background_dialog">@color/core_grey_75</item>
