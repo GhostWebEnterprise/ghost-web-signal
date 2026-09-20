@@ -52,8 +52,8 @@ jobs:
 
       - name: Build GhostWeb Signal prod website release APK
         run: |
-          ./gradlew --no-daemon --max-workers=2 \
-            -Dorg.gradle.jvmargs="-Xmx4g -XX:+UseParallelGC -XX:+UnlockExperimentalVMOptions -XX:hashCode=3" \
+          ./gradlew --no-daemon --max-workers=1 \
+            -Dorg.gradle.jvmargs="-Xmx7g -XX:+UseG1GC -XX:+UnlockExperimentalVMOptions -XX:hashCode=3" \
             -Dorg.gradle.parallel=false \
             :app:assembleProdWebsiteRelease --stacktrace \
             -PbaseAppTitle="$CI_APP_TITLE" \
