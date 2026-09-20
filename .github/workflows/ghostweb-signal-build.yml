@@ -11,8 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CI_KEYSTORE_PATH: ${{ github.workspace }}/ghostweb-release.jks
-      CI_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-      CI_KEYSTORE_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+      CI_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD || secrets.SECRET_KEYSTORE_PASSWORD }}
+      CI_KEYSTORE_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS || secrets.SECRET_KEYSTORE_ALIAS }}
       CI_APP_TITLE: GhostWeb Signal
       CI_PACKAGE_ID: org.ghostweb.signal
       CI_BUILD_VARIANTS: prodWebsiteRelease
@@ -30,7 +30,7 @@ jobs:
 
       - name: Prepare release keystore
         env:
-          KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 || secrets.SECRET_KEYSTORE }}
         run: |
           test -n "$KEYSTORE_B64"
           printf '%s' "$KEYSTORE_B64" | base64 --decode > "$CI_KEYSTORE_PATH"
