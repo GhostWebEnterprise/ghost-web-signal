@@ -23,7 +23,7 @@ jobs:
       - name: Make Gradle executable
         run: chmod +x ./gradlew
 
-      - name: Build release APK
+      - name: Build GhostWeb Signal release APK
         run: ./gradlew assembleRelease --stacktrace
 
       - name: Upload APK
