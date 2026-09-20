@@ -16,6 +16,12 @@
     <color name="ghostweb_signal_muted">#8AA7AD</color>
     <color name="ghostweb_signal_line">#3355E8FF</color>
     <color name="ghostweb_signal_green">#20F5A5</color>
+    <color name="ghostweb_signal_surface_low">#041217</color>
+    <color name="ghostweb_signal_surface_high">#0D2D3A</color>
+    <color name="ghostweb_signal_surface_highest">#123846</color>
+    <color name="ghostweb_signal_outline">#4D35E8FF</color>
+    <color name="ghostweb_signal_outline_subtle">#3335E8FF</color>
+    <color name="ghostweb_signal_on_cyan">#001014</color>
 
     <color name="story_gradient_start">#99000000</color>
     <color name="story_caption_gradient_start">#CC000000</color>
