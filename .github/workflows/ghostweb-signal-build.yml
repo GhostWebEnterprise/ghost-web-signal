@@ -25,7 +25,7 @@ jobs:
     outputs:
       release_tag: ${{ steps.verify.outputs.release_tag }}
     env:
-      CI_KEYSTORE_PATH: ${{ runner.temp }}/ghostweb-release.jks
+      CI_KEYSTORE_PATH: ${{ github.workspace }}/ghostweb-release.jks
       CI_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD || secrets.SECRET_KEYSTORE_PASSWORD }}
       CI_KEYSTORE_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS || secrets.SECRET_KEYSTORE_ALIAS }}
       CI_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD || secrets.ANDROID_KEYSTORE_PASSWORD || secrets.SECRET_KEYSTORE_PASSWORD }}
