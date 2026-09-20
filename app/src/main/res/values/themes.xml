@@ -161,61 +161,61 @@
         <item name="colorOnTertiary">@color/molly_on_tertiary_light</item>
         <item name="colorTertiaryContainer">@color/molly_tertiary_container_light</item>
         <item name="colorOnTertiaryContainer">@color/molly_on_tertiary_container_light</item>
-        <item name="colorTertiaryFixed">@color/molly_tertiary_fixed</item>
-        <item name="colorTertiaryFixedDim">@color/molly_tertiary_fixed_dim</item>
-        <item name="colorOnTertiaryFixed">@color/molly_on_tertiary_fixed</item>
-        <item name="colorOnTertiaryFixedVariant">@color/molly_on_tertiary_fixed_variant</item>
+        <item name="colorTertiaryFixed">@color/ghostweb_signal_cyan</item>
+        <item name="colorTertiaryFixedDim">@color/ghostweb_signal_cyan_dim</item>
+        <item name="colorOnTertiaryFixed">@color/ghostweb_signal_on_cyan</item>
+        <item name="colorOnTertiaryFixedVariant">@color/ghostweb_signal_on_cyan_variant</item>
         <item name="colorAccent">@color/molly_primary_light</item>
         <item name="colorControlActivated">@color/molly_primary_light</item>
     </style>
 
     <style name="Theme.Molly.Material3.Dark" parent="@style/Theme.Material3.Dark">
-        <item name="colorPrimaryInverse">@color/molly_primary_inverse_dark</item>
-        <item name="colorPrimary">@color/molly_primary_dark</item>
-        <item name="colorPrimaryDark">@color/molly_primary_dark</item>
-        <item name="colorOnPrimary">@color/molly_on_primary_dark</item>
-        <item name="colorPrimaryContainer">@color/molly_primary_container_dark</item>
-        <item name="colorOnPrimaryContainer">@color/molly_on_primary_container_dark</item>
+        <item name="colorPrimaryInverse">@color/ghostweb_signal_text</item>
+        <item name="colorPrimary">@color/ghostweb_signal_cyan</item>
+        <item name="colorPrimaryDark">@color/ghostweb_signal_cyan</item>
+        <item name="colorOnPrimary">@color/ghostweb_signal_on_cyan</item>
+        <item name="colorPrimaryContainer">@color/ghostweb_signal_panel_2</item>
+        <item name="colorOnPrimaryContainer">@color/ghostweb_signal_text</item>
         <item name="colorPrimaryFixed">@color/molly_primary_fixed</item>
         <item name="colorPrimaryFixedDim">@color/molly_primary_fixed_dim</item>
         <item name="colorOnPrimaryFixed">@color/molly_on_primary_fixed</item>
-        <item name="colorSecondary">@color/molly_secondary_dark</item>
-        <item name="colorOnSecondary">@color/molly_on_secondary_dark</item>
-        <item name="colorSecondaryContainer">@color/molly_secondary_container_dark</item>
-        <item name="colorOnSecondaryContainer">@color/molly_on_secondary_container_dark</item>
+        <item name="colorSecondary">@color/ghostweb_signal_teal</item>
+        <item name="colorOnSecondary">@color/ghostweb_signal_on_cyan</item>
+        <item name="colorSecondaryContainer">@color/ghostweb_signal_panel</item>
+        <item name="colorOnSecondaryContainer">@color/ghostweb_signal_text</item>
         <item name="colorSecondaryFixed">@color/molly_secondary_fixed</item>
         <item name="colorSecondaryFixedDim">@color/molly_secondary_fixed_dim</item>
         <item name="colorOnSecondaryFixed">@color/molly_on_secondary_fixed</item>
-        <item name="colorSurfaceInverse">@color/molly_surface_inverse_dark</item>
-        <item name="colorSurfaceVariant">@color/molly_surface_variant_dark</item>
-        <item name="colorSurface">@color/molly_surface_dark</item>
-        <item name="colorSurfaceBright">@color/molly_surface_bright_dark</item>
-        <item name="colorSurfaceContainerHighest">@color/molly_surface_container_highest_dark</item>
-        <item name="colorSurfaceContainerHigh">@color/molly_surface_container_high_dark</item>
-        <item name="colorSurfaceContainer">@color/molly_surface_container_dark</item>
-        <item name="colorSurfaceContainerLow">@color/molly_surface_container_low_dark</item>
-        <item name="colorSurfaceDim">@color/molly_surface_dim_dark</item>
-        <item name="colorSurfaceContainerLowest">@color/molly_surface_container_lowest_dark</item>
-        <item name="colorOnSurfaceInverse">@color/molly_on_surface_inverse_dark</item>
-        <item name="colorOnSurface">@color/molly_on_surface_dark</item>
-        <item name="colorOnBackground">@color/molly_on_background_dark</item>
-        <item name="colorOnSurfaceVariant">@color/molly_on_surface_variant_dark</item>
-        <item name="colorOutline">@color/molly_outline_dark</item>
-        <item name="colorOutlineVariant">@color/molly_outline_variant_dark</item>
+        <item name="colorSurfaceInverse">@color/ghostweb_signal_text</item>
+        <item name="colorSurfaceVariant">@color/ghostweb_signal_panel</item>
+        <item name="colorSurface">@color/ghostweb_signal_bg</item>
+        <item name="colorSurfaceBright">@color/ghostweb_signal_surface_high</item>
+        <item name="colorSurfaceContainerHighest">@color/ghostweb_signal_surface_highest</item>
+        <item name="colorSurfaceContainerHigh">@color/ghostweb_signal_surface_high</item>
+        <item name="colorSurfaceContainer">@color/ghostweb_signal_panel</item>
+        <item name="colorSurfaceContainerLow">@color/ghostweb_signal_surface_low</item>
+        <item name="colorSurfaceDim">@color/ghostweb_signal_bg</item>
+        <item name="colorSurfaceContainerLowest">@color/ghostweb_signal_bg</item>
+        <item name="colorOnSurfaceInverse">@color/ghostweb_signal_on_cyan</item>
+        <item name="colorOnSurface">@color/ghostweb_signal_text</item>
+        <item name="colorOnBackground">@color/ghostweb_signal_text</item>
+        <item name="colorOnSurfaceVariant">@color/ghostweb_signal_muted</item>
+        <item name="colorOutline">@color/ghostweb_signal_outline</item>
+        <item name="colorOutlineVariant">@color/ghostweb_signal_outline_subtle</item>
         <item name="colorError">@color/molly_error_dark</item>
         <item name="colorOnError">@color/molly_on_error_dark</item>
         <item name="colorErrorContainer">@color/molly_error_container_dark</item>
         <item name="colorOnErrorContainer">@color/molly_on_error_container_dark</item>
-        <item name="colorTertiary">@color/molly_tertiary_dark</item>
-        <item name="colorOnTertiary">@color/molly_on_tertiary_dark</item>
-        <item name="colorTertiaryContainer">@color/molly_tertiary_container_dark</item>
-        <item name="colorOnTertiaryContainer">@color/molly_on_tertiary_container_dark</item>
-        <item name="colorTertiaryFixed">@color/molly_tertiary_fixed</item>
-        <item name="colorTertiaryFixedDim">@color/molly_tertiary_fixed_dim</item>
-        <item name="colorOnTertiaryFixed">@color/molly_on_tertiary_fixed</item>
-        <item name="colorOnTertiaryFixedVariant">@color/molly_on_tertiary_fixed_variant</item>
-        <item name="colorAccent">@color/molly_primary_dark</item>
-        <item name="colorControlActivated">@color/molly_primary_dark</item>
+        <item name="colorTertiary">@color/ghostweb_signal_blue</item>
+        <item name="colorOnTertiary">@color/ghostweb_signal_text</item>
+        <item name="colorTertiaryContainer">@color/ghostweb_signal_panel_2</item>
+        <item name="colorOnTertiaryContainer">@color/ghostweb_signal_text</item>
+        <item name="colorTertiaryFixed">@color/ghostweb_signal_cyan</item>
+        <item name="colorTertiaryFixedDim">@color/ghostweb_signal_cyan_dim</item>
+        <item name="colorOnTertiaryFixed">@color/ghostweb_signal_on_cyan</item>
+        <item name="colorOnTertiaryFixedVariant">@color/ghostweb_signal_on_cyan_variant</item>
+        <item name="colorAccent">@color/ghostweb_signal_cyan</item>
+        <item name="colorControlActivated">@color/ghostweb_signal_cyan</item>
     </style>
 
     <style name="TextSecure.LightTheme" parent="TextSecure.BaseLightTheme">
@@ -397,8 +397,8 @@
     <style name="TextSecure.BaseDarkTheme" parent="@style/Theme.Molly.Material3.Dark">
         <item name="theme_type">dark</item>
         <item name="dynamic_colors">false</item>
-        <item name="android:navigationBarColor">@color/molly_surface_dark</item>
-        <item name="android:statusBarColor">@color/molly_surface_dark</item>
+        <item name="android:navigationBarColor">@color/ghostweb_signal_bg</item>
+        <item name="android:statusBarColor">@color/ghostweb_signal_bg</item>
         <item name="android:windowLightNavigationBar">false</item>
         <item name="android:windowLightStatusBar">false</item>
         <item name="fullScreenDialogStyle">@style/Signal.DayNight.Dialog.FullScreen</item>
@@ -549,19 +549,19 @@
 
         <!-- signal_styles.xml -->
         <item name="switchThemeOverlay">@style/ThemeOverlay.MaterialSwitch.DayNight</item>
-        <item name="extended_action_button_container_color">@color/molly_tertiary_container_dark</item>
-        <item name="extended_action_button_icon_color">@color/molly_on_tertiary_container_dark</item>
+        <item name="extended_action_button_container_color">@color/ghostweb_signal_panel_2</item>
+        <item name="extended_action_button_icon_color">@color/ghostweb_signal_text</item>
 
         <!-- contact_selection_*_item.xml -->
-        <item name="filled_tonal_icon_button_container_color">@color/molly_surface_container_highest_dark</item>
-        <item name="filled_tonal_icon_button_icon_color">@color/molly_on_surface_dark</item>
+        <item name="filled_tonal_icon_button_container_color">@color/ghostweb_signal_surface_highest</item>
+        <item name="filled_tonal_icon_button_icon_color">@color/ghostweb_signal_text</item>
 
         <!-- signal_context_menu_background.xml -->
-        <item name="context_menu_container_color">@color/molly_surface_container_high_dark</item>
+        <item name="context_menu_container_color">@color/ghostweb_signal_surface_high</item>
 
         <!-- MainNavigation.kt -->
-        <item name="navbar_active_indicator_color">@color/molly_surface_bright_dark</item>
-        <item name="navbar_container_color">@color/molly_surface_container_dark</item>
+        <item name="navbar_active_indicator_color">@color/ghostweb_signal_surface_high</item>
+        <item name="navbar_container_color">@color/ghostweb_signal_panel</item>
     </style>
 
     <style name="Theme.Signal.AlertDialog.Light.Cornered" parent="MaterialAlertDialog.Material3">
