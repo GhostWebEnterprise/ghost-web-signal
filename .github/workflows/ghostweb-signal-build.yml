@@ -146,12 +146,19 @@ jobs:
           name: ghostweb-signal-release-apk
           path: dist
 
-      - name: Create release draft and verify uploaded bytes
+      - name: Publish verified release
         run: |
           cd dist
           sha256sum --check SHA256SUMS
           if gh release view "$RELEASE_TAG" > /dev/null 2>&1; then
-            echo "Release already exists; refusing to replace published assets." >&2
+            echo "Release $RELEASE_TAG already exists; verifying existing release instead of overwriting it."
+            mkdir downloaded
+            gh release download "$RELEASE_TAG" --pattern '*.apk' --dir downloaded
+            if (cd downloaded && sha256sum --check ../SHA256SUMS); then
+              echo "Existing release already contains the verified APK bytes."
+              exit 0
+            fi
+            echo "Existing release tag points to different APK bytes; refusing to overwrite an immutable published release." >&2
             exit 1
           fi
           cat > release-notes.md <<EOF_NOTES
@@ -169,6 +176,5 @@ jobs:
             --title "GhostWeb Signal $RELEASE_TAG" --notes-file release-notes.md
           mkdir downloaded
           gh release download "$RELEASE_TAG" --pattern '*.apk' --dir downloaded
-          cp SHA256SUMS downloaded/
-          (cd downloaded && sha256sum --check SHA256SUMS)
+          (cd downloaded && sha256sum --check ../SHA256SUMS)
           gh release edit "$RELEASE_TAG" --draft=false
