@@ -23,18 +23,16 @@
 
 ---
 
-## **GhostWeb Eco System**
+## **GhostWeb Ecosystem**
 
-**GhostWeb** is an independent open-source software ecosystem focused on privacy, secure communication, network protection, AI tooling, and privacy-focused Android development.
+GhostWeb Signal is part of the **GhostWeb Enterprise** privacy ecosystem.
 
-**Official project hub:** [ghostweb.bot.cd](https://ghostweb.bot.cd)
+- **GhostWeb Signal** — private Android messaging and calling
+- **GhostWeb VPN** — privacy-focused network protection
+- **GhostWeb AI** — privacy-focused AI client and tooling
+- **GhostOS** — privacy-focused custom Android ROM *(in development)*
 
-| Project | Purpose | Status |
-| --- | --- | --- |
-| **GhostWeb Signal** | Privacy-focused Android messaging and calling | **Available** |
-| **GhostWeb VPN** | Privacy-focused browser and network protection | **Available** |
-| **GhostWeb AI** | Privacy-focused AI client and tooling | **Available** |
-| **GhostOS** | Privacy-focused custom Android ROM | **In development** |
+**Project hub:** [ghostweb.bot.cd](https://ghostweb.bot.cd)
 
 ## **GhostWeb Signal**
 
