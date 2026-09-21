@@ -27,10 +27,12 @@
 
 GhostWeb Signal is part of the **GhostWeb Enterprise** privacy ecosystem.
 
-- **GhostWeb Signal** — private Android messaging and calling
-- **GhostWeb VPN** — privacy-focused network protection
-- **GhostWeb AI** — privacy-focused AI client and tooling
-- **GhostOS** — privacy-focused custom Android ROM *(in development)*
+| Project | Purpose | Current status |
+| --- | --- | --- |
+| **GhostWeb Signal** | Private Android messaging and calling | **Available / active development** |
+| **GhostWeb VPN** | Browser, Android and desktop network protection | **Under active development** |
+| **GhostWeb AI** | Multi-model AI, agents and software delivery | **Under active development** |
+| **GhostOS** | Privacy-focused custom Android ROM | **Under development · not release-ready** |
 
 **Project hub:** [ghostweb.bot.cd](https://ghostweb.bot.cd)
 
