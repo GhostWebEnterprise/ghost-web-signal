@@ -18,7 +18,7 @@
         android:layout_marginEnd="12dp"
         android:contentDescription="@string/ghostweb_signal_logo"
         android:src="@mipmap/ic_launcher"
-        app:tint="@color/ghostweb_signal_text" />
+        app:tint="@color/ghostweb_signal_cyan_dim" />
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -50,7 +50,7 @@
         android:paddingEnd="9dp"
         android:paddingBottom="5dp"
         android:text="@string/ghostweb_signal_online"
-        android:textColor="@color/ghostweb_signal_text"
+        android:textColor="@color/ghostweb_signal_cyan_dim"
         android:textSize="8sp"
         android:textStyle="bold" />
 </LinearLayout>
