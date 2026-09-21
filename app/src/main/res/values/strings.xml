@@ -3442,7 +3442,7 @@
     <string name="ShortcutLauncherActivity_invalid_shortcut">Invalid shortcut</string>
 
     <!-- SingleRecipientNotificationBuilder -->
-    <string mollyify="true" name="SingleRecipientNotificationBuilder_signal">Molly</string>
+    <string mollyify="true" name="SingleRecipientNotificationBuilder_signal">GWS🛡️</string>
     <string name="SingleRecipientNotificationBuilder_new_message">New message</string>
     <string name="SingleRecipientNotificationBuilder_message_request">Message request</string>
     <string name="SingleRecipientNotificationBuilder_you">You</string>
