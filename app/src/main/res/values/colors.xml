@@ -5,25 +5,25 @@
 
     <color name="signal_accent_green">#4CAF50</color>
 
-    <!-- GhostWeb Signal visual system -->
-    <color name="ghostweb_signal_bg">#030303</color>
-    <color name="ghostweb_signal_panel">#0B0B0C</color>
-    <color name="ghostweb_signal_panel_2">#121214</color>
-    <color name="ghostweb_signal_cyan">#F4F4F5</color>
-    <color name="ghostweb_signal_cyan_dim">#B8B8BC</color>
-    <color name="ghostweb_signal_teal">#E8E8EA</color>
-    <color name="ghostweb_signal_blue">#D7D7DA</color>
-    <color name="ghostweb_signal_text">#F7F7F8</color>
-    <color name="ghostweb_signal_muted">#8E8E93</color>
-    <color name="ghostweb_signal_line">#3DFFFFFF</color>
-    <color name="ghostweb_signal_green">#E7E7E9</color>
-    <color name="ghostweb_signal_surface_low">#070708</color>
-    <color name="ghostweb_signal_surface_high">#171719</color>
-    <color name="ghostweb_signal_surface_highest">#202023</color>
-    <color name="ghostweb_signal_outline">#52FFFFFF</color>
-    <color name="ghostweb_signal_outline_subtle">#29FFFFFF</color>
-    <color name="ghostweb_signal_on_cyan">#050505</color>
-    <color name="ghostweb_signal_on_cyan_variant">#171717</color>
+    <!-- GhostWeb Signal visual system — Photon navy/ice -->
+    <color name="ghostweb_signal_bg">#050914</color>
+    <color name="ghostweb_signal_panel">#0D1A33</color>
+    <color name="ghostweb_signal_panel_2">#0A1224</color>
+    <color name="ghostweb_signal_cyan">#5B9DFF</color>
+    <color name="ghostweb_signal_cyan_dim">#7EB6FF</color>
+    <color name="ghostweb_signal_teal">#9CC4FF</color>
+    <color name="ghostweb_signal_blue">#5B9DFF</color>
+    <color name="ghostweb_signal_text">#E8EEF8</color>
+    <color name="ghostweb_signal_muted">#8AA0C0</color>
+    <color name="ghostweb_signal_line">#29A0C4FF</color>
+    <color name="ghostweb_signal_green">#6EE7B7</color>
+    <color name="ghostweb_signal_surface_low">#08101F</color>
+    <color name="ghostweb_signal_surface_high">#0D1A33</color>
+    <color name="ghostweb_signal_surface_highest">#132445</color>
+    <color name="ghostweb_signal_outline">#57B4D2FF</color>
+    <color name="ghostweb_signal_outline_subtle">#29A0C4FF</color>
+    <color name="ghostweb_signal_on_cyan">#041018</color>
+    <color name="ghostweb_signal_on_cyan_variant">#07101E</color>
 
     <color name="story_gradient_start">#99000000</color>
     <color name="story_caption_gradient_start">#CC000000</color>
