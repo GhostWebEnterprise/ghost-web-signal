@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Picker RGBA #8465FFD4 becomes Android ARGB #D48465FF. -->
-    <color name="ghostweb_startup_accent">#D48465FF</color>
+    <color name="ghostweb_startup_accent">#F4F4F5</color>
+    <color name="ghostweb_startup_track">#3DFFFFFF</color>
 </resources>
