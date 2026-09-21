@@ -9,18 +9,15 @@
 **Private by design. Secure by default. Open source.**
 
 [![GitHub](https://img.shields.io/badge/GitHub-GhostWebEnterprise-181717?style=plastic&logo=github&logoColor=white)](https://github.com/GhostWebEnterprise)
-[![Android](https://img.shields.io/badge/Platform-Android-3DDC84?style=plastic&logo=android&logoColor=white)](https://github.com/GhostWebEnterprise/ghostweb.signal)
-[![Release](https://img.shields.io/github/v/release/GhostWebEnterprise/ghostweb.signal?style=plastic&label=GhostWeb)](https://github.com/GhostWebEnterprise/ghostweb.signal/releases)
-[![License](https://img.shields.io/badge/License-AGPL_v3-blue?style=plastic)](https://github.com/GhostWebEnterprise/ghostweb.signal/blob/GWSignal.main/LICENSE)
-
-[![Test](https://img.shields.io/github/actions/workflow/status/GhostWebEnterprise/ghostweb.signal/test.yml?branch=GWSignal.main&style=plastic&label=Test)](https://github.com/GhostWebEnterprise/ghostweb.signal/actions/workflows/test.yml)
-[![Website](https://img.shields.io/github/actions/workflow/status/GhostWebEnterprise/ghostweb.signal/pages.yml?branch=GWSignal.main&style=plastic&label=Website)](https://ghostwebenterprise.github.io/ghostweb.signal/)
-[![Release](https://img.shields.io/github/v/release/GhostWebEnterprise/ghostweb.signal?style=plastic&label=Release)](https://github.com/GhostWebEnterprise/ghostweb.signal/releases)
-
-[![Dependabot](https://img.shields.io/github/issues/GhostWebEnterprise/ghostweb.signal/dependabot?style=plastic&label=Dependabot)](https://github.com/GhostWebEnterprise/ghostweb.signal/network/updates)
-
-[![Lint](https://img.shields.io/github/actions/workflow/status/GhostWebEnterprise/ghostweb.signal/super-linter.yml?branch=GWSignal.main&style=plastic&label=Super-Linter)](https://github.com/GhostWebEnterprise/ghostweb.signal/actions/workflows/super-linter.yml)
-[![Reproducible Build](https://img.shields.io/github/actions/workflow/status/GhostWebEnterprise/ghostweb.signal/reprocheck.yml?style=plastic&label=Reproducible%20Build)](https://github.com/GhostWebEnterprise/ghostweb.signal/actions/workflows/reprocheck.yml)
+[![Android](https://img.shields.io/badge/Platform-Android-3DDC84?style=plastic&logo=android&logoColor=white)](https://github.com/GhostWebEnterprise/ghost-web-signal)
+[![Release](https://img.shields.io/github/v/release/GhostWebEnterprise/ghost-web-signal?style=plastic&label=GhostWeb)](https://github.com/GhostWebEnterprise/ghost-web-signal/releases)
+[![License](https://img.shields.io/badge/License-AGPL_v3-blue?style=plastic)](https://github.com/GhostWebEnterprise/ghost-web-signal/blob/GWSignal.main/LICENSE)
+[![Test](https://img.shields.io/github/actions/workflow/status/GhostWebEnterprise/ghost-web-signal/test.yml?branch=GWSignal.main&style=plastic&label=Test)](https://github.com/GhostWebEnterprise/ghost-web-signal/actions/workflows/test.yml)
+[![Website](https://img.shields.io/badge/Website-ghostweb.bot.cd-0b57d0?style=plastic&logo=googlechrome&logoColor=white)](https://ghostweb.bot.cd)
+[![Release](https://img.shields.io/github/v/release/GhostWebEnterprise/ghost-web-signal?style=plastic&label=Release)](https://github.com/GhostWebEnterprise/ghost-web-signal/releases)
+[![Dependabot](https://img.shields.io/github/issues/GhostWebEnterprise/ghost-web-signal/dependabot?style=plastic&label=Dependabot)](https://github.com/GhostWebEnterprise/ghost-web-signal/network/updates)
+[![Lint](https://img.shields.io/github/actions/workflow/status/GhostWebEnterprise/ghost-web-signal/super-linter.yml?branch=GWSignal.main&style=plastic&label=Super-Linter)](https://github.com/GhostWebEnterprise/ghost-web-signal/actions/workflows/super-linter.yml)
+[![Reproducible Build](https://img.shields.io/github/actions/workflow/status/GhostWebEnterprise/ghost-web-signal/reprocheck.yml?style=plastic&label=Reproducible%20Build)](https://github.com/GhostWebEnterprise/ghost-web-signal/actions/workflows/reprocheck.yml)
 
 </div>
 
@@ -28,30 +25,16 @@
 
 ## **GhostWeb Eco System**
 
-**GhostWeb** is an independent open-source software ecosystem focused on privacy, secure communication, network protection, and AI tooling.
+**GhostWeb** is an independent open-source software ecosystem focused on privacy, secure communication, network protection, AI tooling, and privacy-focused Android development.
 
-The central website is the project hub for discovering the GhostWeb applications, source code, releases, downloads, and documentation.
-
-**Project hub:** [ghostwebenterprise.github.io/ghostweb.signal](https://ghostwebenterprise.github.io/ghostweb.signal/)
+**Official project hub:** [ghostweb.bot.cd](https://ghostweb.bot.cd)
 
 | Project | Purpose | Status |
 | --- | --- | --- |
 | **GhostWeb Signal** | Privacy-focused Android messaging and calling | **Available** |
 | **GhostWeb VPN** | Privacy-focused browser and network protection | **Available** |
 | **GhostWeb AI** | Privacy-focused AI client and tooling | **Available** |
-
-### Downloads
-
-- **GhostWeb VPN** — under development
-- **GhostWeb AI** — under development
-
-All GhostWeb projects are available through the central website:
-
-- **GhostWeb Signal** — Android messaging client and releases
-- **GhostWeb VPN** — browser VPN/proxy protection project and releases
-- **GhostWeb AI** — AI client, agents, and releases
-
----
+| **GhostOS** | Privacy-focused custom Android ROM | **In development** |
 
 ## **GhostWeb Signal**
 
@@ -62,48 +45,28 @@ All GhostWeb projects are available through the central website:
 - End-to-end encrypted messaging, groups, voice, and video calls
 - Encrypted media and file attachments
 - Disappearing messages, reactions, and replies
-- Multi-device support where supported by the underlying implementation
 - Encrypted local storage and secure application access
 - Privacy-focused notifications, blocking, and reporting
 - GhostWeb branding and customization
 
 ## Privacy & security
 
-**GhostWeb Signal** uses established cryptographic protocols and libraries from the Signal ecosystem, including libsignal, RingRTC, and SQLCipher, rather than custom cryptography.
+GhostWeb Signal uses established cryptographic protocols and libraries from the Signal ecosystem, including libsignal, RingRTC, and SQLCipher, rather than custom cryptography.
 
-The project prioritizes:
+## Download GhostWeb Signal
 
-- Strong end-to-end encryption by default
-- Protection of sensitive local data
-- Reduced notification exposure
-- Privacy-focused defaults and configuration
-- Compatibility with the Signal/Molly architecture
+Get signed Android APKs from the [**Releases**](https://github.com/GhostWebEnterprise/ghost-web-signal/releases) page. Before installing an APK, verify the release signature and published checksums.
 
-## Download GhostWeb: Signal
-
-Get signed Android APKs from the [**Releases**](https://github.com/GhostWebEnterprise/ghostweb.signal/releases) page.
-
-Before installing an APK from any source, verify the release signature and published checksums. See [Reproducible Builds](reproducible-builds/README.md) to compile the source yourself and verify the distributed APK.
-
-## Building GhostWeb: Signal
+## Building GhostWeb Signal
 
 Requirements: JDK 21 and the Android SDK (see [BUILDING.md](BUILDING.md)).
 
 ```shell
-# Assemble release APK + AAB
 ./gradlew -PCI=true :app:assembleRelease :app:bundleRelease
-
-# Run unit tests
 make test
 ```
 
-Alternatively:
-
-```shell
-make assemble   # release APK + AAB
-```
-
-Build flavors include `prodWebsiteRelease` (in-app updater), `prodStoreRelease` (no updater), and `stagingWebsiteRelease` (Signal staging network).
+Build flavors include `prodWebsiteRelease`, `prodStoreRelease`, and `stagingWebsiteRelease`.
 
 ## Platform status
 
@@ -115,55 +78,21 @@ Build flavors include `prodWebsiteRelease` (in-app updater), `prodStoreRelease` 
 | Windows | In development |
 | Linux | In development |
 
----
+## Related GhostWeb projects
 
-## GhostWeb VPN (still in testing phase)
-
-**GhostWeb VPN** is the GhostWeb privacy/network-protection project, providing browser-based proxy and traffic-protection functionality.
-
-**Repository:** [GhostWeb VPN](https://github.com/GhostWebEnterprise/ghost-web-vpn)
-
-**Releases:** [GhostWeb VPN releases](https://github.com/GhostWebEnterprise/ghost-web-vpn/releases)
-
-## GhostWeb AI (still in testing phase)
-
-**GhostWeb AI** is the GhostWeb AI client and tooling project for AI models, agents, and related workflows.
-
-**Repository:** [GhostWeb AI](https://github.com/GhostWebEnterprise/ghost-web-ai)
-
-**Releases:** [GhostWeb AI releases](https://github.com/GhostWebEnterprise/ghost-web-ai/releases)
-
-## Central GhostWeb website
-
-The GhostWeb website brings the projects together in one place for downloads and project discovery:
-
-[ghostwebenterprise.github.io/ghostweb.signal](https://ghostwebenterprise.github.io/ghostweb.signal/)
-
----
+- [GhostWeb VPN](https://github.com/GhostWebEnterprise/ghost-web-vpn)
+- [GhostWeb AI](https://github.com/GhostWebEnterprise/ghost-web-ai)
+- [GhostOS](https://github.com/GhostWebEnterprise/GhostOS)
+- [GhostWeb project hub](https://ghostweb.bot.cd)
 
 ## Upstream & attribution
 
-GhostWeb is built from the Molly Android concept and uses [johanw666/mollyim-android](https://github.com/johanw666/mollyim-android) as its upstream reference (branch `main`). Molly and Signal remain the upstream projects.
-
-- [Signal Android](https://github.com/signalapp/Signal-Android)
-- [Molly](https://github.com/mollyim/mollyim-android)
-
-Migration policy and the build gate are documented in [UPSTREAM.md](UPSTREAM.md).
-
-## Contributing
-
-Security-focused improvements, bug reports, documentation improvements, and thoughtful contributions are welcome.
-
-- [Issues](https://github.com/GhostWebEnterprise/ghostweb.signal/issues)
-- [Pull requests](https://github.com/GhostWebEnterprise/ghostweb.signal/pulls)
-- [Releases](https://github.com/GhostWebEnterprise/ghostweb.signal/releases)
-
-For GhostWeb VPN and GhostWeb AI, use the respective repositories linked above.
+GhostWeb is built from the Molly Android concept and uses [johanw666/mollyim-android](https://github.com/johanw666/mollyim-android) as its upstream reference. Molly and Signal remain upstream projects.
 
 ## License & legal
 
-GhostWeb is free software licensed under the **GNU Affero General Public License v3.0 only** (AGPL-3.0-only). See [LICENSE](LICENSE), [NOTICE](NOTICE), and [LEGAL.md](LEGAL.md) for copyright, third-party notices, and export information.
+GhostWeb is free software licensed under the **GNU Affero General Public License v3.0 only** (AGPL-3.0-only). See [LICENSE](LICENSE), [NOTICE](NOTICE), and [LEGAL.md](LEGAL.md).
 
 ## Disclaimer
 
-GhostWeb projects are independently developed and are not affiliated with, sponsored by, or endorsed by Signal Messenger LLC or the Signal Foundation. They are provided as-is; users should independently evaluate releases, security implications, and compatibility before relying on the software for sensitive communications.
+GhostWeb projects are independently developed and are not affiliated with, sponsored by, or endorsed by Signal Messenger LLC or the Signal Foundation.
