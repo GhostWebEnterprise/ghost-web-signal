@@ -14,9 +14,10 @@ jobs:
     runs-on: ubuntu-24.04
 
     steps:
-      - uses: actions/checkout@v6
+      - name: Checkout GhostWeb base
+        uses: actions/checkout@v6
         with:
-          ref: upstream-main
+          ref: GWSignal.main
           fetch-depth: 0
           lfs: true
           persist-credentials: false
@@ -25,14 +26,21 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - run: git remote add upstream https://github.com/signalapp/Signal-Android.git
-      - run: git pull --ff-only upstream main
+      - name: Fetch Signal upstream
+        run: |
+          git remote add upstream https://github.com/signalapp/Signal-Android.git
+          git fetch --prune upstream main
+          git fetch --tags upstream
         env:
           GIT_LFS_SKIP_SMUDGE: 1
 
-      - run: git fetch --tags upstream
+      - name: Recreate upstream-main from upstream/main
+        run: git checkout -B upstream-main upstream/main
+
       - run: git lfs fetch --all upstream
-      - run: git push origin upstream-main
+
+      - name: Publish upstream-main
+        run: git push --force-with-lease origin upstream-main
         env:
           GH_TOKEN: ${{ secrets.SYNC_PAT }}
 
