@@ -5,53 +5,57 @@
     android:background="@color/ghostweb_signal_bg"
     android:clickable="true"
     android:importantForAccessibility="noHideDescendants">
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
         android:orientation="vertical"
-        android:padding="24dp">
-
+        android:padding="28dp">
         <FrameLayout
-            android:layout_width="240dp"
-            android:layout_height="180dp"
+            android:layout_width="208dp"
+            android:layout_height="160dp"
             android:clipChildren="false">
-
             <View
                 android:id="@+id/ghostweb_startup_halo"
-                android:layout_width="240dp"
-                android:layout_height="180dp"
+                android:layout_width="208dp"
+                android:layout_height="160dp"
                 android:background="@drawable/ghostweb_startup_halo" />
-
             <ImageView
                 android:id="@+id/ghostweb_startup_logo"
-                android:layout_width="112dp"
-                android:layout_height="112dp"
+                android:layout_width="104dp"
+                android:layout_height="104dp"
                 android:layout_gravity="center"
-                android:contentDescription="@null"
+                android:contentDescription="@string/ghostweb_signal_logo"
                 android:src="@drawable/ghostweb_startup_icon" />
         </FrameLayout>
-
         <TextView
             android:id="@+id/ghostweb_startup_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:letterSpacing="0.08"
             android:text="@string/ghostweb_signal_title"
             android:textColor="@color/ghostweb_signal_text"
-            android:textSize="28sp" />
-
+            android:textSize="25sp"
+            android:textStyle="bold" />
         <TextView
             android:id="@+id/ghostweb_startup_tagline"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="10dp"
             android:gravity="center"
-            android:letterSpacing="0.12"
+            android:letterSpacing="0.16"
             android:text="@string/ghostweb_signal_tagline"
-            android:textColor="@color/ghostweb_startup_accent"
-            android:textSize="11sp" />
+            android:textColor="@color/ghostweb_signal_muted"
+            android:textSize="9sp" />
+        <ProgressBar
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="168dp"
+            android:layout_height="2dp"
+            android:layout_marginTop="18dp"
+            android:indeterminate="true"
+            android:indeterminateTint="@color/ghostweb_signal_text"
+            android:progressBackgroundTint="@color/ghostweb_startup_track" />
     </LinearLayout>
 </FrameLayout>
