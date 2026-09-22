@@ -6,7 +6,7 @@ on:
     - cron: '0 2,18,22 * * *'
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   sync:
@@ -20,7 +20,14 @@ jobs:
           ref: GWSignal.main
           fetch-depth: 0
           lfs: true
-          persist-credentials: true
+          persist-credentials: false
+
+      - name: Configure authenticated origin
+        env:
+          SYNC_PAT: ${{ secrets.SYNC_PAT }}
+        run: |
+          test -n "$SYNC_PAT" || { echo "::error::SYNC_PAT GitHub secret is missing"; exit 1; }
+          git remote set-url origin "https://x-access-token:${SYNC_PAT}@github.com/${GITHUB_REPOSITORY}.git"
 
       - name: Fetch Signal upstream
         run: |
