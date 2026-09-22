@@ -6,7 +6,7 @@ on:
     - cron: '0 2,18,22 * * *'
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   sync:
@@ -20,11 +20,7 @@ jobs:
           ref: GWSignal.main
           fetch-depth: 0
           lfs: true
-          persist-credentials: false
-
-      - run: gh auth setup-git
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          persist-credentials: true
 
       - name: Fetch Signal upstream
         run: |
@@ -41,8 +37,6 @@ jobs:
 
       - name: Publish upstream-main
         run: git push --force-with-lease origin upstream-main
-        env:
-          GH_TOKEN: ${{ secrets.SYNC_PAT }}
 
       - name: Track upstream stable release
         run: |
@@ -53,5 +47,3 @@ jobs:
             exit 0
           fi
           git push -f origin "${tag}^{commit}:refs/heads/upstream-stable"
-        env:
-          GH_TOKEN: ${{ secrets.SYNC_PAT }}
