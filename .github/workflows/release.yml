@@ -57,7 +57,7 @@ jobs:
           for var in APP_TITLE APP_FILENAME PACKAGE_ID BUILD_VARIANTS FORCE_INTERNAL_USER_FLAG MAPS_API_KEY; do
             if [ -n "${!var}" ]; then
               echo "Setting CI_$var=${!var}"
-              echo "CI_$var=${!var}" >> $GITHUB_ENV
+              echo "CI_$var=${!var}" >> "$GITHUB_ENV"
             fi
           done
         working-directory: reproducible-builds
@@ -89,7 +89,7 @@ jobs:
           set -euo pipefail
           shopt -s nullglob
           apks=(outputs/apk/*/release/*.apk)
-          [ ${#apks[@]} -gt 0 ] || { echo "::error::No release APKs produced"; exit 1; }
+          [ "${#apks[@]}" -gt 0 ] || { echo "::error::No release APKs produced"; exit 1; }
           for apk in "${apks[@]}"; do
             if [[ "$(basename "$apk")" == *-unsigned-* ]]; then
               echo "::error::Unsigned APK produced: $apk"
@@ -134,7 +134,7 @@ jobs:
       - name: Check if release exists
         id: check_release
         run: |
-          if gh release view "$TAG_REF"; then echo "release_exists=true" >> $GITHUB_OUTPUT; else echo "release_exists=false" >> $GITHUB_OUTPUT; fi
+          if gh release view "$TAG_REF"; then echo "release_exists=true" >> "$GITHUB_OUTPUT"; else echo "release_exists=false" >> "$GITHUB_OUTPUT"; fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Create release draft
@@ -159,7 +159,7 @@ jobs:
           set -euo pipefail
           shopt -s nullglob
           apks=(apk/*/release/*.apk)
-          [ ${#apks[@]} -gt 0 ] || { echo "::error::No APK artifacts downloaded"; exit 1; }
+          [ "${#apks[@]}" -gt 0 ] || { echo "::error::No APK artifacts downloaded"; exit 1; }
           for apk in "${apks[@]}"; do
             [[ "$(basename "$apk")" != *-unsigned-* ]] || { echo "::error::Refusing to publish unsigned APK: $apk"; exit 1; }
           done
