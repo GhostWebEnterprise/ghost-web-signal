@@ -2,6 +2,12 @@
 <resources>
 
     <style name="Theme.Molly.Dynamic.Light" parent="TextSecure.BaseLightTheme">
+        <!-- GhostWeb Signal: one dark Photon surface — keep system bars on-brand even with dynamic colors. -->
+        <item name="android:navigationBarColor">@color/ghostweb_signal_bg</item>
+        <item name="android:statusBarColor">@color/ghostweb_signal_bg</item>
+        <item name="android:windowLightNavigationBar">false</item>
+        <item name="android:windowLightStatusBar">false</item>
+
         <!-- Material You colors (overrides Theme.Molly.Material3.Light) -->
         <item name="colorPrimaryInverse">@color/dynamic_primary_inverse_light</item>
         <item name="colorPrimary">@color/dynamic_primary_light</item>
@@ -9,16 +15,16 @@
         <item name="colorOnPrimary">@color/dynamic_on_primary_light</item>
         <item name="colorPrimaryContainer">@color/dynamic_primary_container_light</item>
         <item name="colorOnPrimaryContainer">@color/dynamic_on_primary_container_light</item>
-        <item name="colorPrimaryFixed">@color/molly_primary_fixed</item>
-        <item name="colorPrimaryFixedDim">@color/molly_primary_fixed_dim</item>
-        <item name="colorOnPrimaryFixed">@color/molly_on_primary_fixed</item>
+        <item name="colorPrimaryFixed">@color/ghostweb_signal_cyan</item>
+        <item name="colorPrimaryFixedDim">@color/ghostweb_signal_cyan_dim</item>
+        <item name="colorOnPrimaryFixed">@color/ghostweb_signal_on_cyan</item>
         <item name="colorSecondary">@color/dynamic_secondary_light</item>
         <item name="colorOnSecondary">@color/dynamic_on_secondary_light</item>
         <item name="colorSecondaryContainer">@color/dynamic_secondary_container_light</item>
         <item name="colorOnSecondaryContainer">@color/dynamic_on_secondary_container_light</item>
-        <item name="colorSecondaryFixed">@color/molly_secondary_fixed</item>
-        <item name="colorSecondaryFixedDim">@color/molly_secondary_fixed_dim</item>
-        <item name="colorOnSecondaryFixed">@color/molly_on_secondary_fixed</item>
+        <item name="colorSecondaryFixed">@color/ghostweb_signal_panel</item>
+        <item name="colorSecondaryFixedDim">@color/ghostweb_signal_panel_2</item>
+        <item name="colorOnSecondaryFixed">@color/ghostweb_signal_text</item>
         <item name="colorSurfaceInverse">@color/dynamic_surface_inverse_light</item>
         <item name="colorSurfaceVariant">@color/dynamic_surface_variant_light</item>
         <item name="colorSurface">@color/dynamic_surface_light</item>
@@ -43,10 +49,10 @@
         <item name="colorOnTertiary">@color/dynamic_on_tertiary_light</item>
         <item name="colorTertiaryContainer">@color/dynamic_tertiary_container_light</item>
         <item name="colorOnTertiaryContainer">@color/dynamic_on_tertiary_container_light</item>
-        <item name="colorTertiaryFixed">@color/molly_tertiary_fixed</item>
-        <item name="colorTertiaryFixedDim">@color/molly_tertiary_fixed_dim</item>
-        <item name="colorOnTertiaryFixed">@color/molly_on_tertiary_fixed</item>
-        <item name="colorOnTertiaryFixedVariant">@color/molly_on_tertiary_fixed_variant</item>
+        <item name="colorTertiaryFixed">@color/ghostweb_signal_cyan</item>
+        <item name="colorTertiaryFixedDim">@color/ghostweb_signal_cyan_dim</item>
+        <item name="colorOnTertiaryFixed">@color/ghostweb_signal_on_cyan</item>
+        <item name="colorOnTertiaryFixedVariant">@color/ghostweb_signal_on_cyan_variant</item>
         <item name="colorAccent">@color/dynamic_primary_light</item>
         <item name="colorControlActivated">@color/dynamic_primary_light</item>
 
@@ -67,10 +73,6 @@
         <item name="context_menu_container_color">@color/dynamic_surface_container_light</item>
         <item name="navbar_active_indicator_color">@color/dynamic_secondary_container_light</item>
         <item name="navbar_container_color">@color/dynamic_surface_container_high_light</item>
-
-        <!-- System Bars -->
-        <item name="android:navigationBarColor">@color/dynamic_surface_light</item>
-        <item name="android:statusBarColor">@color/dynamic_surface_light</item>
     </style>
 
     <style name="Theme.Molly.Dynamic.Dark" parent="TextSecure.BaseDarkTheme">
@@ -81,16 +83,16 @@
         <item name="colorOnPrimary">@color/dynamic_on_primary_dark</item>
         <item name="colorPrimaryContainer">@color/dynamic_primary_container_dark</item>
         <item name="colorOnPrimaryContainer">@color/dynamic_on_primary_container_dark</item>
-        <item name="colorPrimaryFixed">@color/molly_primary_fixed</item>
-        <item name="colorPrimaryFixedDim">@color/molly_primary_fixed_dim</item>
-        <item name="colorOnPrimaryFixed">@color/molly_on_primary_fixed</item>
+        <item name="colorPrimaryFixed">@color/ghostweb_signal_cyan</item>
+        <item name="colorPrimaryFixedDim">@color/ghostweb_signal_cyan_dim</item>
+        <item name="colorOnPrimaryFixed">@color/ghostweb_signal_on_cyan</item>
         <item name="colorSecondary">@color/dynamic_secondary_dark</item>
         <item name="colorOnSecondary">@color/dynamic_on_secondary_dark</item>
         <item name="colorSecondaryContainer">@color/dynamic_secondary_container_dark</item>
         <item name="colorOnSecondaryContainer">@color/dynamic_on_secondary_container_dark</item>
-        <item name="colorSecondaryFixed">@color/molly_secondary_fixed</item>
-        <item name="colorSecondaryFixedDim">@color/molly_secondary_fixed_dim</item>
-        <item name="colorOnSecondaryFixed">@color/molly_on_secondary_fixed</item>
+        <item name="colorSecondaryFixed">@color/ghostweb_signal_panel</item>
+        <item name="colorSecondaryFixedDim">@color/ghostweb_signal_panel_2</item>
+        <item name="colorOnSecondaryFixed">@color/ghostweb_signal_text</item>
         <item name="colorSurfaceInverse">@color/dynamic_surface_inverse_dark</item>
         <item name="colorSurfaceVariant">@color/dynamic_surface_variant_dark</item>
         <item name="colorSurface">@color/dynamic_surface_dark</item>
@@ -115,10 +117,10 @@
         <item name="colorOnTertiary">@color/dynamic_on_tertiary_dark</item>
         <item name="colorTertiaryContainer">@color/dynamic_tertiary_container_dark</item>
         <item name="colorOnTertiaryContainer">@color/dynamic_on_tertiary_container_dark</item>
-        <item name="colorTertiaryFixed">@color/molly_tertiary_fixed</item>
-        <item name="colorTertiaryFixedDim">@color/molly_tertiary_fixed_dim</item>
-        <item name="colorOnTertiaryFixed">@color/molly_on_tertiary_fixed</item>
-        <item name="colorOnTertiaryFixedVariant">@color/molly_on_tertiary_fixed_variant</item>
+        <item name="colorTertiaryFixed">@color/ghostweb_signal_cyan</item>
+        <item name="colorTertiaryFixedDim">@color/ghostweb_signal_cyan_dim</item>
+        <item name="colorOnTertiaryFixed">@color/ghostweb_signal_on_cyan</item>
+        <item name="colorOnTertiaryFixedVariant">@color/ghostweb_signal_on_cyan_variant</item>
         <item name="colorAccent">@color/dynamic_primary_dark</item>
         <item name="colorControlActivated">@color/dynamic_primary_dark</item>
 
@@ -139,10 +141,6 @@
         <item name="context_menu_container_color">@color/dynamic_surface_container_high_dark</item>
         <item name="navbar_active_indicator_color">@color/dynamic_secondary_container_dark</item>
         <item name="navbar_container_color">@color/dynamic_surface_container_high_dark</item>
-
-        <!-- System Bars -->
-        <item name="android:navigationBarColor">@color/dynamic_surface_dark</item>
-        <item name="android:statusBarColor">@color/dynamic_surface_dark</item>
     </style>
 
     <style name="Theme.Molly.Dynamic.BaseNoActionBar.Light" parent="Theme.Molly.Dynamic.Light">
@@ -160,8 +158,9 @@
     </style>
 
     <style name="Theme.Molly.Dynamic.NoActionBar.Light" parent="Theme.Molly.Dynamic.BaseNoActionBar.Light">
-        <item name="android:windowLightNavigationBar">true</item>
-        <item name="android:windowLightStatusBar">true</item>
+        <!-- GhostWeb Signal: dark Photon chrome in both system modes. -->
+        <item name="android:windowLightNavigationBar">false</item>
+        <item name="android:windowLightStatusBar">false</item>
     </style>
 
     <style name="Theme.Molly.Dynamic.NoActionBar.Dark" parent="Theme.Molly.Dynamic.BaseNoActionBar.Dark">
@@ -171,7 +170,7 @@
 
     <style name="Theme.Molly.Dynamic.Registration.Light" parent="Theme.Molly.Dynamic.BaseNoActionBar.Light">
         <item name="android:windowLightNavigationBar">false</item>
-        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightStatusBar">false</item>
     </style>
 
     <style name="Theme.Molly.Dynamic.Registration.Dark" parent="Theme.Molly.Dynamic.BaseNoActionBar.Dark">

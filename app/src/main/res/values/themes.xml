@@ -16,13 +16,14 @@
     <!-- MOLLY: Theme.Signal.DayNight.NoActionBar now in light_themes.xml -->
 
     <style name="Theme.Molly.Starting.Light" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">@color/core_ultramarine_icon</item>
-        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
+        <!-- GhostWeb Signal: Photon navy/ice splash instead of upstream Signal ultramarine. -->
+        <item name="windowSplashScreenBackground">@color/ghostweb_signal_bg</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ghostweb_startup_icon</item>
     </style>
 
     <style name="Theme.Molly.Starting.Dark" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">@color/core_ultramarine_icon_dark</item>
-        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
+        <item name="windowSplashScreenBackground">@color/ghostweb_signal_bg</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ghostweb_startup_icon</item>
     </style>
 
     <style name="TextSecure.LightNoActionBar" parent="@style/TextSecure.BaseLightNoActionBar">
@@ -84,9 +85,9 @@
     <style name="TextSecure.LightIntroTheme" parent="@style/Signal.DayNight.Registration">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="android:windowBackground">@color/white</item>
-        <item name="android:statusBarColor">@color/core_ultramarine</item>
-        <item name="android:navigationBarColor">@color/core_grey_95</item>
+        <item name="android:windowBackground">?attr/colorSurface</item>
+        <item name="android:statusBarColor">@color/ghostweb_signal_bg</item>
+        <item name="android:navigationBarColor">@color/ghostweb_signal_bg</item>
         <item name="android:windowLightStatusBar">false</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="27">false</item>
     </style>
@@ -102,10 +103,10 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="windowActionModeOverlay">true</item>
-        <item name="colorAccent">@color/core_ultramarine_light</item>
+        <item name="colorAccent">@color/ghostweb_signal_cyan_dim</item>
 
         <item name="android:textColorHint">@color/white</item>
-        <item name="android:windowBackground">@color/core_grey_95</item>
+        <item name="android:windowBackground">@color/ghostweb_signal_bg</item>
     </style>
 
     <style name="TextSecure.LightTheme.Popup" parent="TextSecure.LightTheme">
@@ -176,16 +177,16 @@
         <item name="colorOnPrimary">@color/ghostweb_signal_on_cyan</item>
         <item name="colorPrimaryContainer">@color/ghostweb_signal_panel_2</item>
         <item name="colorOnPrimaryContainer">@color/ghostweb_signal_text</item>
-        <item name="colorPrimaryFixed">@color/molly_primary_fixed</item>
-        <item name="colorPrimaryFixedDim">@color/molly_primary_fixed_dim</item>
-        <item name="colorOnPrimaryFixed">@color/molly_on_primary_fixed</item>
+        <item name="colorPrimaryFixed">@color/ghostweb_signal_cyan</item>
+        <item name="colorPrimaryFixedDim">@color/ghostweb_signal_cyan_dim</item>
+        <item name="colorOnPrimaryFixed">@color/ghostweb_signal_on_cyan</item>
         <item name="colorSecondary">@color/ghostweb_signal_teal</item>
         <item name="colorOnSecondary">@color/ghostweb_signal_on_cyan</item>
         <item name="colorSecondaryContainer">@color/ghostweb_signal_panel</item>
         <item name="colorOnSecondaryContainer">@color/ghostweb_signal_text</item>
-        <item name="colorSecondaryFixed">@color/molly_secondary_fixed</item>
-        <item name="colorSecondaryFixedDim">@color/molly_secondary_fixed_dim</item>
-        <item name="colorOnSecondaryFixed">@color/molly_on_secondary_fixed</item>
+        <item name="colorSecondaryFixed">@color/ghostweb_signal_panel</item>
+        <item name="colorSecondaryFixedDim">@color/ghostweb_signal_panel_2</item>
+        <item name="colorOnSecondaryFixed">@color/ghostweb_signal_text</item>
         <item name="colorSurfaceInverse">@color/ghostweb_signal_text</item>
         <item name="colorSurfaceVariant">@color/ghostweb_signal_panel</item>
         <item name="colorSurface">@color/ghostweb_signal_bg</item>
@@ -315,7 +316,7 @@
         <item name="signal_text_toolbar_title">?attr/colorSurface</item>
         <item name="signal_icon_tint_primary">?attr/colorOnSurface</item>
         <item name="signal_icon_tint_secondary">?attr/colorOnSurfaceVariant</item>
-        <item name="signal_icon_tint_action">@color/core_black</item>
+        <item name="signal_icon_tint_action">?attr/colorOnSurface</item>
         <item name="signal_icon_tint_tab_selected">?attr/colorOnSurface</item>
         <item name="signal_icon_tint_tab_unselected">?attr/colorOnSurfaceVariant</item>
         <item name="signal_button_primary">@color/ghostweb_signal_cyan</item>
@@ -379,15 +380,15 @@
 
         <!-- signal_styles.xml -->
         <item name="switchThemeOverlay">@style/ThemeOverlay.MaterialSwitch.DayNight</item>
-        <item name="extended_action_button_container_color">@color/molly_tertiary_container_light</item>
-        <item name="extended_action_button_icon_color">@color/molly_on_tertiary_container_light</item>
+        <item name="extended_action_button_container_color">@color/ghostweb_signal_panel_2</item>
+        <item name="extended_action_button_icon_color">@color/ghostweb_signal_text</item>
 
         <!-- contact_selection_*_item.xml -->
-        <item name="filled_tonal_icon_button_container_color">@color/molly_surface_container_highest_light</item>
-        <item name="filled_tonal_icon_button_icon_color">@color/molly_on_surface_light</item>
+        <item name="filled_tonal_icon_button_container_color">@color/ghostweb_signal_surface_highest</item>
+        <item name="filled_tonal_icon_button_icon_color">@color/ghostweb_signal_text</item>
 
         <!-- signal_context_menu_background.xml -->
-        <item name="context_menu_container_color">@color/molly_surface_container_light</item>
+        <item name="context_menu_container_color">@color/ghostweb_signal_surface_high</item>
 
         <!-- MainNavigation.kt -->
         <item name="navbar_active_indicator_color">@color/ghostweb_signal_surface_high</item>
@@ -482,32 +483,32 @@
         <item name="signal_accent_primary">@color/ghostweb_signal_cyan</item>
         <item name="signal_background_primary">?attr/colorSurface</item>
         <item name="signal_background_secondary">?attr/colorSurfaceContainerLow</item>
-        <item name="signal_background_dialog">@color/core_grey_75</item>
-        <item name="signal_background_dialog_secondary">@color/core_grey_65</item>
+        <item name="signal_background_dialog">?attr/colorSurfaceContainer</item>
+        <item name="signal_background_dialog_secondary">?attr/colorSurfaceContainerHigh</item>
         <item name="signal_text_primary">?attr/colorOnSurface</item>
         <item name="signal_text_secondary">?attr/colorOnSurfaceVariant</item>
         <item name="signal_text_toolbar_title">@color/transparent_white_90</item>
         <item name="signal_icon_tint_primary">?attr/colorOnSurface</item>
-        <item name="signal_icon_tint_secondary">@color/core_grey_25</item>
+        <item name="signal_icon_tint_secondary">?attr/colorOnSurfaceVariant</item>
         <item name="signal_icon_tint_action">?attr/signal_icon_tint_primary</item>
         <item name="signal_icon_tint_tab_selected">?attr/colorOnSurface</item>
         <item name="signal_icon_tint_tab_unselected">?attr/colorOnSurfaceVariant</item>
-        <item name="signal_button_primary">@color/core_ultramarine_light</item>
+        <item name="signal_button_primary">@color/ghostweb_signal_cyan</item>
         <item name="signal_button_primary_ripple">@color/transparent_black_15</item>
-        <item name="signal_button_primary_text">@color/core_white</item>
+        <item name="signal_button_primary_text">@color/ghostweb_signal_on_cyan</item>
         <item name="signal_button_primary_text_disabled">@color/transparent_white_20</item>
-        <item name="signal_button_secondary">@color/core_grey_75</item>
-        <item name="signal_button_secondary_ripple">@color/core_grey_80</item>
-        <item name="signal_button_secondary_text">@color/core_ultramarine_light</item>
-        <item name="signal_button_secondary_text_disabled">@color/core_grey_45</item>
-        <item name="signal_button_secondary_stroke">@color/core_grey_45</item>
+        <item name="signal_button_secondary">@color/ghostweb_signal_surface_high</item>
+        <item name="signal_button_secondary_ripple">@color/ghostweb_signal_surface_highest</item>
+        <item name="signal_button_secondary_text">@color/ghostweb_signal_cyan_dim</item>
+        <item name="signal_button_secondary_text_disabled">@color/ghostweb_signal_muted</item>
+        <item name="signal_button_secondary_stroke">@color/ghostweb_signal_outline_subtle</item>
         <item name="conversation_compose_background">?attr/colorSurfaceContainerHigh</item>
         <item name="contact_filter_edit_background">?attr/colorSurfaceContainerHighest</item>
         <item name="reactions_pill_selected_color">?attr/colorSurfaceContainer</item>
-        <item name="qr_card_color">@color/molly_on_primary_light</item>
+        <item name="qr_card_color">@color/ghostweb_signal_surface_high</item>
         <item name="qr_card_text_color">?attr/colorOnSurfaceVariant</item>
         <item name="conversation_item_update_text_color">?attr/colorOnSurfaceVariant</item>
-        <item name="conversation_item_quote_text_color">@color/core_grey_05</item>
+        <item name="conversation_item_quote_text_color">@color/ghostweb_signal_text</item>
         <item name="conversation_item_quote_text_color_sent">?attr/colorOnSurface</item>
         <item name="conversation_item_recv_bubble_color_normal">?attr/colorSurfaceContainerHigh</item>
         <item name="conversation_item_incoming_audio_foreground_tint_normal">?attr/colorOnSurface</item>
@@ -577,8 +578,9 @@
     </style>
 
     <style name="TextSecure.LightRegistrationTheme" parent="TextSecure.LightNoActionBar">
+        <!-- GhostWeb Signal: one dark Photon surface, so status icons stay light. -->
         <item name="android:windowLightNavigationBar">false</item>
-        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightStatusBar">false</item>
     </style>
 
     <style name="TextSecure.DarkRegistrationTheme" parent="TextSecure.DarkNoActionBar">
@@ -610,7 +612,7 @@
 
     <style name="TextSecure.DarkTheme.WebRTCCall">
         <item name="android:forceDarkAllowed" tools:targetApi="29">false</item>
-        <item name="android:statusBarColor" tools:ignore="NewApi">@color/core_ultramarine</item>
+        <item name="android:statusBarColor" tools:ignore="NewApi">@color/ghostweb_signal_bg</item>
         <item name="android:windowActionBar">false</item>
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowLightStatusBar" tools:ignore="NewApi">false</item>
@@ -621,11 +623,13 @@
     </style>
 
     <style name="Theme.Signal.Light.BottomSheetDialog" parent="Theme.Material3.Light.BottomSheetDialog">
-        <item name="android:navigationBarColor">?attr/colorSurfaceContainerLow</item>
+        <!-- GhostWeb Signal: dark Photon sheet chrome in both system modes. -->
+        <item name="android:navigationBarColor">@color/ghostweb_signal_surface_low</item>
+        <item name="android:windowLightNavigationBar">false</item>
     </style>
 
     <style name="Theme.Signal.BottomSheetDialog" parent="Theme.Material3.Dark.BottomSheetDialog">
-        <item name="android:navigationBarColor">?attr/colorSurfaceContainerLow</item>
+        <item name="android:navigationBarColor">@color/ghostweb_signal_surface_low</item>
     </style>
 
     <style name="Theme.Signal.BottomSheetDialog.Fixed" parent="Theme.Design.BottomSheetDialog">
@@ -766,7 +770,7 @@
 
         <item name="android:textColorPrimary">?attr/colorOnSurface</item>
 
-        <item name="colorAccent">@color/core_ultramarine</item>
+        <item name="colorAccent">@color/ghostweb_signal_cyan</item>
 
         <item name="android:navigationBarColor" tools:ignore="NewApi">?attr/colorSurfaceContainerLow</item>
         <item name="android:windowLightNavigationBar" tools:ignore="NewApi">true</item>
@@ -781,7 +785,7 @@
 
         <item name="android:textColorPrimary">?attr/colorOnSurface</item>
 
-        <item name="colorAccent">@color/core_ultramarine_light</item>
+        <item name="colorAccent">@color/ghostweb_signal_cyan_dim</item>
 
         <item name="android:navigationBarColor" tools:ignore="NewApi">?attr/colorSurfaceContainerLow</item>
         <item name="android:windowLightNavigationBar" tools:ignore="NewApi">false</item>

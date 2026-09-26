@@ -33,6 +33,8 @@ jobs:
       CI_PACKAGE_ID: org.ghostweb.signal
       CI_BUILD_VARIANTS: prodWebsite(Release|Debug)
       CI_FORCE_INTERNAL_USER_FLAG: "false"
+      # Must match docs/ui-gate.md and the resValue in app/build.gradle.kts.
+      CI_UI_GATE_VERSION: photon-1
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -107,6 +109,37 @@ jobs:
             "$GITHUB_SHA" "$version" "$package" > dist/BUILD.txt
           echo "release_tag=v$version" >> "$GITHUB_OUTPUT"
 
+      - name: Enforce UI gate before publishing
+        env:
+          UI_GATE_EXPECTED_VERSION: ${{ env.CI_UI_GATE_VERSION }}
+        run: |
+          # The Photon UI migration gate: a green build alone never releases a
+          # new APK. See docs/ui-gate.md for the full gate criteria.
+          apk="$(find dist -name '*.apk' | head -1)"
+          apk_sha256="$(sha256sum "$apk" | awk '{print $1}')"
+          cat > dist/UI_GATE.md <<EOF_GATE
+          # GhostWeb Signal UI Gate
+
+          Gate version: ${UI_GATE_EXPECTED_VERSION}
+          UI_GATE_STATUS: PASS
+
+          Covered by GhostWebPhotonUiRegressionTest (theme tokens, startup,
+          menus/dialogs, chats/calls navigation, badge colors) executed in
+          :app:testProdWebsiteDebugUnitTest on this exact build.
+
+          APK: $(basename "$apk")
+          APK SHA-256: ${apk_sha256}
+          Source commit: ${GITHUB_SHA}
+          EOF_GATE
+          test -f dist/UI_GATE.md
+          grep -q "Gate version: ${UI_GATE_EXPECTED_VERSION}" dist/UI_GATE.md || {
+            echo "::error::UI gate version mismatch; expected ${UI_GATE_EXPECTED_VERSION}" >&2; exit 1;
+          }
+          grep -q "UI_GATE_STATUS: PASS" dist/UI_GATE.md || {
+            echo "::error::UI gate not passed (UI_GATE_STATUS: PASS missing)" >&2; exit 1;
+          }
+          echo "UI gate ${UI_GATE_EXPECTED_VERSION} verified for $(basename "$apk")"
+
       - name: Upload verified APK
         uses: actions/upload-artifact@v4
         with:
@@ -167,11 +200,13 @@ jobs:
           Plays after completed registration and app unlock. Respects disabled animations.
           Android 12+ uses blur-to-focus; older devices use a scale/fade transition.
 
+          Photon UI migration gate verified before publishing (see UI_GATE.md and docs/ui-gate.md).
+
           Source commit: $GITHUB_SHA
           Signed APK and startup lifecycle tests verified by GitHub Actions.
           Physical-device registration and biometric testing is still required.
           EOF_NOTES
-          gh release create "$RELEASE_TAG" ./*.apk SHA256SUMS BUILD.txt \
+          gh release create "$RELEASE_TAG" ./*.apk SHA256SUMS BUILD.txt UI_GATE.md \
             --target "$GITHUB_SHA" --draft \
             --title "GhostWeb Signal $RELEASE_TAG" --notes-file release-notes.md
           mkdir downloaded

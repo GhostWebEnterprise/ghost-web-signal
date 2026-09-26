@@ -62,7 +62,8 @@
     <color name="conversation_compose_divider">#32000000</color>
     <color name="touch_highlight">#400099cc</color>
     <color name="touch_highlight_material3">#14E3E1E6</color>
-    <color name="ConversationListTabs__unread">#FFCE4A40</color>
+    <!-- GhostWeb Signal: Photon ice-blue unread badge (replaces upstream's red badge). -->
+    <color name="ConversationListTabs__unread">#FF5B9DFF</color>
     <color name="transparent">#00FFFFFF</color>
     <color name="transparent_black">#00000000</color>
     <color name="media_preview_bar_background">@color/signal_dark_colorNeutral_87</color>

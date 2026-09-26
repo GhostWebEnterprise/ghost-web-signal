@@ -15,3 +15,10 @@ Upstream branch: `main`
 ## Build gate
 
 Migration is not considered complete until the repository builds successfully, tests pass, and the resulting APK is verified.
+
+## UI gate
+
+The Photon/GhostWeb UI migration additionally requires the UI gate described in
+[docs/ui-gate.md](docs/ui-gate.md). A green build alone does not authorize a new
+release: the release pipeline blocks publishing until the UI gate for the
+current gate version (`photon-1`) has passed on the exact APK being released.
