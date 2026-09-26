@@ -12,6 +12,7 @@ on:
 
 permissions:
   contents: write
+  actions: read
 
 env:
   TAG_REF: "${{ inputs.version || github.ref_name }}"
@@ -154,6 +155,26 @@ jobs:
       - uses: actions/checkout@v6
         with:
           ref: "${{ env.TAG_REF }}"
+      - name: Require passing UI gate build for this commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          # The Photon UI migration gate: a release tag may only produce
+          # published APKs if the gated build (including
+          # GhostWebPhotonUiRegressionTest, see docs/ui-gate.md) passed on
+          # this exact commit. A green release build alone is not enough.
+          gate_run=$(gh run list --repo "$GITHUB_REPOSITORY" \
+            --workflow=ghostweb-signal-build.yml \
+            --commit "$GITHUB_SHA" \
+            --status success \
+            --limit 1 --json databaseId --jq '.[0].databaseId')
+          if [ -z "$gate_run" ]; then
+            echo "::error::UI gate build has not passed for $GITHUB_SHA; refusing to publish (docs/ui-gate.md)" >&2
+            exit 1
+          fi
+          echo "UI gate build passed for $GITHUB_SHA (run $gate_run)"
+        env:
+          GH_TOKEN: ${{ github.token }}
       - name: Download artifacts
         uses: actions/download-artifact@v4
       - name: Reject unsigned artifacts before publishing
