@@ -40,14 +40,16 @@ jobs:
       - name: Require release signing secrets
         shell: bash
         env:
-          KEYSTORE: ${{ secrets.SECRET_KEYSTORE }}
-          KEYSTORE_ALIAS: ${{ secrets.SECRET_KEYSTORE_ALIAS }}
-          KEYSTORE_PASSWORD: ${{ secrets.SECRET_KEYSTORE_PASSWORD }}
+          KEYSTORE: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          KEYSTORE_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: |
           set -euo pipefail
-          test -n "$KEYSTORE" || { echo "::error::SECRET_KEYSTORE is missing"; exit 1; }
-          test -n "$KEYSTORE_ALIAS" || { echo "::error::SECRET_KEYSTORE_ALIAS is missing"; exit 1; }
-          test -n "$KEYSTORE_PASSWORD" || { echo "::error::SECRET_KEYSTORE_PASSWORD is missing"; exit 1; }
+          test -n "$KEYSTORE" || { echo "::error::ANDROID_KEYSTORE_BASE64 is missing"; exit 1; }
+          test -n "$KEYSTORE_ALIAS" || { echo "::error::ANDROID_KEY_ALIAS is missing"; exit 1; }
+          test -n "$KEYSTORE_PASSWORD" || { echo "::error::ANDROID_KEYSTORE_PASSWORD is missing"; exit 1; }
+          test -n "$KEY_PASSWORD" || { echo "::error::ANDROID_KEY_PASSWORD is missing"; exit 1; }
       - name: Build Docker image
         run: docker compose build
         working-directory: reproducible-builds
@@ -71,14 +73,15 @@ jobs:
         run: printenv KEYSTORE | base64 -d > certs/keystore.jks
         working-directory: reproducible-builds
         env:
-          KEYSTORE: ${{ secrets.SECRET_KEYSTORE }}
+          KEYSTORE: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
       - name: Build and sign
         run: docker compose run -v "$GRADLE_USER_HOME/caches:/.gradle-ro-cache:ro" assemble
         working-directory: reproducible-builds
         env:
           CI_KEYSTORE_PATH: certs/keystore.jks
-          CI_KEYSTORE_ALIAS: ${{ secrets.SECRET_KEYSTORE_ALIAS }}
-          CI_KEYSTORE_PASSWORD: ${{ secrets.SECRET_KEYSTORE_PASSWORD }}
+          CI_KEYSTORE_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          CI_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          CI_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
       - name: Clean up keystore
         if: always()
         run: rm -f certs/keystore.jks
