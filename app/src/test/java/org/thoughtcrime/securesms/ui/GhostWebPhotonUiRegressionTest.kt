@@ -45,7 +45,7 @@ class GhostWebPhotonUiRegressionTest {
     return typedValue.data
   }
 
-  private fun Context.getDrawableSafe(id: Int): Drawable = getDrawable(id)
+  private fun Context.getDrawableSafe(id: Int): Drawable = requireNotNull(getDrawable(id))
 
   @Test
   fun photonPalette_isPresent() {
@@ -72,7 +72,7 @@ class GhostWebPhotonUiRegressionTest {
   @Test
   fun darkTheme_resolvesGhostWebSurfaceAndAccent() {
     val themed = themedContext()
-    val surface = themed.theme.resolveColor(android.R.attr.colorSurface)
+    val surface = themed.theme.resolveColor(com.google.android.material.R.attr.colorSurface)
     val accent = themed.theme.resolveColor(R.attr.signal_accent_primary)
 
     assertEquals(context.getColor(R.color.ghostweb_signal_bg), surface)
@@ -99,8 +99,8 @@ class GhostWebPhotonUiRegressionTest {
   @Test
   fun darkTheme_primaryFixedColorsArePhotonTokens() {
     val themed = themedContext()
-    val primaryFixed = themed.theme.resolveColor(android.R.attr.colorPrimaryFixed)
-    val onPrimaryFixed = themed.theme.resolveColor(android.R.attr.colorOnPrimaryFixed)
+    val primaryFixed = themed.theme.resolveColor(com.google.android.material.R.attr.colorPrimaryFixed)
+    val onPrimaryFixed = themed.theme.resolveColor(com.google.android.material.R.attr.colorOnPrimaryFixed)
 
     assertEquals(context.getColor(R.color.ghostweb_signal_cyan), primaryFixed)
     assertEquals(context.getColor(R.color.ghostweb_signal_on_cyan), onPrimaryFixed)
