@@ -56,11 +56,14 @@ class GhostWebPhotonUiRegressionTest {
   @Test
   fun photonSurfaces_areDistinctLayers() {
     val bg = context.getColor(R.color.ghostweb_signal_bg)
-    val panel = context.getColor(R.color.ghostweb_signal_panel)
+    val low = context.getColor(R.color.ghostweb_signal_surface_low)
     val high = context.getColor(R.color.ghostweb_signal_surface_high)
     val highest = context.getColor(R.color.ghostweb_signal_surface_highest)
 
-    assertEquals(4, setOf(bg, panel, high, highest).size)
+    // bg, surface_low, surface_high and surface_highest are four distinct Photon layers.
+    assertEquals(4, setOf(bg, low, high, highest).size)
+    // panel shares the surface_high tone by design.
+    assertEquals(context.getColor(R.color.ghostweb_signal_panel), high)
   }
 
   @Test
