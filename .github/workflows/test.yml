@@ -92,6 +92,8 @@ jobs:
       - prepare_release_tag
     permissions:
       contents: write
+      # The called release workflow reads Actions run history for the UI gate.
+      actions: read
     uses: ./.github/workflows/release.yml
     with:
       version: ${{ needs.prepare_release_tag.outputs.version }}
