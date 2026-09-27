@@ -36,7 +36,7 @@ jobs:
           for var in APP_TITLE APP_FILENAME PACKAGE_ID BUILD_VARIANTS FORCE_INTERNAL_USER_FLAG MAPS_API_KEY; do
             if [ -n "${!var}" ]; then
               echo "Setting CI_$var=${!var}"
-              echo "CI_$var=${!var}" >> $GITHUB_ENV
+              echo "CI_$var=${!var}" >> "$GITHUB_ENV"
             fi
           done
         working-directory: reproducible-builds
@@ -98,8 +98,8 @@ jobs:
       - name: Output filenames to compare
         id: set
         run: |
-          apks=$(jq -c -n '[$ARGS.positional[] | sub("-unsigned-";"-")]' --args *.apk)
-          echo "apks=$apks" >> $GITHUB_OUTPUT
+          apks=$(jq -c -n '[$ARGS.positional[] | sub("-unsigned-";"-")]' --args -- ./*.apk)
+          echo "apks=$apks" >> "$GITHUB_OUTPUT"
 
   compare:
     name: Compare
@@ -119,10 +119,10 @@ jobs:
           SHA256: 60d619373c46a5d06b8126c1d61e0adc18b72f2cbb9245ef920d3387e44b86cf
       - name: Normalize APK filenames
         run: |
-          mv -v new/*/release/*.apk new/
+          mv -v -- new/*/release/*.apk new/
           for fn in new/*-unsigned-*.apk; do
             [ -e "$fn" ] || continue
-            mv -v "$fn" "$(sed 's/-unsigned-/-/' <<< "$fn")"
+            mv -v -- "$fn" "${fn/-unsigned-/-}"
           done
       - name: Log diffuse full output
         run: java -jar diffuse.jar diff "original/$APK_FILE" "new/$APK_FILE"
