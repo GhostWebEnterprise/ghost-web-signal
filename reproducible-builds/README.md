@@ -1,6 +1,6 @@
 # Reproducible Builds
 
-[![Reproducible build](https://github.com/GhostWebEnterprise/ghostweb.signal/actions/workflows/reprocheck.yml/badge.svg)](https://github.com/GhostWebEnterprise/ghostweb.signal/actions/workflows/reprocheck.yml)
+[![Reproducible build](https://github.com/GhostWebEnterprise/ghost-web-signal/actions/workflows/reprocheck.yml/badge.svg)](https://github.com/GhostWebEnterprise/ghost-web-signal/actions/workflows/reprocheck.yml)
 
 Follow these instructions to verify that this source code is exactly the same code that was used to compile the APK distributed on the website.
 
@@ -21,10 +21,10 @@ You can compile your own release of GhostWeb inside a Docker container and compa
 export VERSION=v1.0.0
 
 # Clone the source code repository
-git clone https://github.com/GhostWebEnterprise/ghostweb.signal.git
+git clone https://github.com/GhostWebEnterprise/ghost-web-signal.git
 
 # Go to this directory
-cd ghostweb.signal/reproducible-builds
+cd ghost-web-signal/reproducible-builds
 
 # Check out the release tag
 git checkout $VERSION
@@ -36,7 +36,7 @@ git checkout $VERSION
 docker compose up --build
 
 # Download the official APK
-wget https://github.com/GhostWebEnterprise/ghostweb.signal/releases/download/$VERSION/app-prod-website-release.apk
+wget https://github.com/GhostWebEnterprise/ghost-web-signal/releases/download/$VERSION/app-prod-website-release.apk
 
 # Run the diff script to compare the APKs
 python apkdiff/apkdiff.py app-prod-website-release.apk outputs/apk/prodWebsite/release/app-prod-website-release.apk
@@ -47,4 +47,4 @@ docker compose down
 
 If you get `APKs match`, you have **successfully verified** that the official release matches with your own self-built version of GhostWeb. Congratulations!
 
-If you get `APKs don't match`, please [report the issue](https://github.com/GhostWebEnterprise/ghostweb.signal/issues).
+If you get `APKs don't match`, please [report the issue](https://github.com/GhostWebEnterprise/ghost-web-signal/issues).
