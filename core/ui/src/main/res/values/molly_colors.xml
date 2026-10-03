@@ -27,7 +27,7 @@
     <color name="molly_on_primary_fixed">#0A1628</color>
     <color name="stock_on_primary_fixed">#051845</color>
 
-    <color name="molly_on_primary_fixed_variant">#132445</color>
+    <color name="molly_on_primary_fixed_variant">#483B6A</color>
     <color name="stock_on_primary_fixed_variant">#464B5C</color>
 
     <color name="molly_secondary_light">#C5C1DD</color>
@@ -54,7 +54,7 @@
     <color name="molly_on_secondary_fixed_variant">#434159</color>
     <color name="stock_on_secondary_fixed_variant">#414659</color>
 
-    <color name="molly_surface_inverse_light">#132445</color>
+    <color name="molly_surface_inverse_light">#33276A</color>
     <color name="stock_surface_inverse_light">#31343E</color>
 
     <color name="molly_surface_variant_light">#E8F0FF</color>
@@ -81,7 +81,7 @@
     <color name="molly_surface_container_low_light">#F8FAFF</color>
     <color name="stock_surface_container_low_light">#F2F5F9</color>         <!-- Previously signal_light_colorSurface1 -->
 
-    <color name="molly_surface_bright_light">#F0F5FF</color>
+    <color name="molly_surface_bright_light">#FFFFFF</color>
     <color name="stock_surface_bright_light">#FBFCFF</color>
 
     <color name="molly_surface_container_lowest_light">#FFFFFF</color>
@@ -120,13 +120,13 @@
 
     <color name="molly_tertiary_container_light">#D1C6FB</color>
 
-    <color name="molly_on_tertiary_container_light">#0A1628</color>
+    <color name="molly_on_tertiary_container_light">#180D49</color>
 
-    <color name="molly_tertiary_fixed">#E8F0FF</color>
+    <color name="molly_tertiary_fixed">#EAE5FF</color>
 
     <color name="molly_tertiary_fixed_dim">#5A5379</color>
 
-    <color name="molly_on_tertiary_fixed">#0A1628</color>
+    <color name="molly_on_tertiary_fixed">#180D49</color>
 
     <color name="molly_on_tertiary_fixed_variant">#423290</color>
 
@@ -159,7 +159,7 @@
     <color name="molly_on_secondary_container_dark">#E3DCF9</color>
     <color name="stock_on_secondary_container_dark">#DCE1F9</color>
 
-    <color name="molly_surface_inverse_dark">#D6E6FF</color>
+    <color name="molly_surface_inverse_dark">#E5DFFF</color>
     <color name="stock_surface_inverse_dark">#E6EAF3</color>
 
     <color name="molly_surface_variant_dark">#0D1A33</color>
@@ -225,7 +225,7 @@
 
     <color name="molly_tertiary_container_dark">#423290</color>
 
-    <color name="molly_on_tertiary_container_dark">#E8F0FF</color>
+    <color name="molly_on_tertiary_container_dark">#EAE5FF</color>
 
     <!-- material3_colors.xml -->
 
@@ -345,7 +345,7 @@
     <color name="molly_other_12">#7354FF</color>
     <color name="stock_other_12">#505AF2</color>
 
-    <color name="molly_other_13">#F6F5FF</color>    <!-- Variant of #F0F5FF -->
+    <color name="molly_other_13">#F6F5FF</color>    <!-- Variant of #F6F6FF -->
     <color name="stock_other_13">#FBFCFE</color>    <!-- Variant of #FBFCFF -->
 
     <color name="molly_other_14">#5D509E</color>
