@@ -1,0 +1,566 @@
+diff --git a/LIQUID_GLASS_INTEGRATION.md b/LIQUID_GLASS_INTEGRATION.md
+--- a/LIQUID_GLASS_INTEGRATION.md	1970-01-01 00:00:00.000000000 +0000
++++ b/LIQUID_GLASS_INTEGRATION.md	2026-10-03 21:01:40.191000000 +0000
+@@ -0,0 +1,33 @@
++# GhostWeb Signal — Liquid Glass Photon Integration
++
++This package contains the files needed to apply the new **Liquid Glass Photon** UI design to GhostWeb Signal.
++
++## Files included
++
++```
++app/src/main/res/values/colors.xml                          # Expanded dark + light tokens
++core/ui/src/main/res/values/molly_colors.xml                # Photon cyan primary + navy surfaces
++app/src/main/res/drawable/ghostweb_signal_*.xml             # Glass surfaces
++docs/design-system/GhostWeb_Liquid_Glass_Design_System.md   # Design system (Markdown)
++docs/design-system/GhostWeb_Liquid_Glass_Design_System.pdf  # Design system (PDF)
++art/                                                        # Existing GhostWeb icons
++```
++
++## How to apply
++
++1. Extract this archive into the root of your GhostWeb Signal repository (or copy the folders).
++2. Accept overwrites for the listed files.
++3. Rebuild:
++
++```bash
++./gradlew :app:assembleProdWebsiteRelease
++```
++
++## What changed visually
++
++- Primary color: Molly purple → Photon cyan (`#5B9DFF` / `#2B7BFF`)
++- Backgrounds & surfaces: Deep navy Photon palette
++- New light-mode tokens ready for day/night switching
++- Glass-style headers, chips and status badges
++
++See `docs/design-system/` for the full design system.
+diff --git a/app/src/main/res/drawable/ghostweb_signal_chip_background.xml b/app/src/main/res/drawable/ghostweb_signal_chip_background.xml
+--- a/app/src/main/res/drawable/ghostweb_signal_chip_background.xml	2026-10-03 21:01:30.562000000 +0000
++++ b/app/src/main/res/drawable/ghostweb_signal_chip_background.xml	2026-10-03 21:01:38.313000000 +0000
+@@ -1,6 +1,7 @@
+ <?xml version="1.0" encoding="utf-8"?>
++<!-- Liquid Glass chip -->
+ <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+-    <solid android:color="@color/ghostweb_signal_surface_high" />
+-    <corners android:radius="6dp" />
++    <solid android:color="@color/ghostweb_glass_20" />
++    <corners android:radius="20dp" />
+     <stroke android:width="1dp" android:color="@color/ghostweb_signal_outline_subtle" />
+ </shape>
+diff --git a/app/src/main/res/drawable/ghostweb_signal_header_background.xml b/app/src/main/res/drawable/ghostweb_signal_header_background.xml
+--- a/app/src/main/res/drawable/ghostweb_signal_header_background.xml	2026-10-03 21:01:30.957000000 +0000
++++ b/app/src/main/res/drawable/ghostweb_signal_header_background.xml	2026-10-03 21:01:37.874000000 +0000
+@@ -1,6 +1,7 @@
+ <?xml version="1.0" encoding="utf-8"?>
++<!-- Liquid Glass header surface -->
+ <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+-    <solid android:color="@color/ghostweb_signal_panel" />
+-    <corners android:radius="14dp" />
++    <solid android:color="@color/ghostweb_glass_surface" />
++    <corners android:radius="16dp" />
+     <stroke android:width="1dp" android:color="@color/ghostweb_signal_outline_subtle" />
+ </shape>
+diff --git a/app/src/main/res/drawable/ghostweb_signal_status_background.xml b/app/src/main/res/drawable/ghostweb_signal_status_background.xml
+--- a/app/src/main/res/drawable/ghostweb_signal_status_background.xml	2026-10-03 21:01:31.236000000 +0000
++++ b/app/src/main/res/drawable/ghostweb_signal_status_background.xml	2026-10-03 21:01:38.802000000 +0000
+@@ -1,6 +1,7 @@
+ <?xml version="1.0" encoding="utf-8"?>
++<!-- Liquid Glass status / badge -->
+ <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+-    <solid android:color="@color/ghostweb_signal_surface_high" />
+-    <corners android:radius="6dp" />
++    <solid android:color="@color/ghostweb_glass_30" />
++    <corners android:radius="12dp" />
+     <stroke android:width="1dp" android:color="@color/ghostweb_signal_outline" />
+ </shape>
+diff --git a/app/src/main/res/values/colors.xml b/app/src/main/res/values/colors.xml
+--- a/app/src/main/res/values/colors.xml	2026-10-03 21:01:29.732000000 +0000
++++ b/app/src/main/res/values/colors.xml	2026-10-03 21:01:36.903000000 +0000
+@@ -5,7 +5,12 @@
+ 
+     <color name="signal_accent_green">#4CAF50</color>
+ 
+-    <!-- GhostWeb Signal visual system — Photon navy/ice -->
++    <!-- ============================================================
++         GhostWeb Signal — Liquid Glass Photon Design System
++         Dark + Light tokens
++         ============================================================ -->
++
++    <!-- Dark (default) -->
+     <color name="ghostweb_signal_bg">#050914</color>
+     <color name="ghostweb_signal_panel">#0D1A33</color>
+     <color name="ghostweb_signal_panel_2">#0A1224</color>
+@@ -25,6 +30,39 @@
+     <color name="ghostweb_signal_on_cyan">#041018</color>
+     <color name="ghostweb_signal_on_cyan_variant">#07101E</color>
+ 
++    <!-- Light mode tokens (Liquid Glass Light) -->
++    <color name="ghostweb_signal_bg_light">#F0F5FF</color>
++    <color name="ghostweb_signal_panel_light">#FFFFFF</color>
++    <color name="ghostweb_signal_panel_2_light">#E8F0FF</color>
++    <color name="ghostweb_signal_cyan_light">#2B7BFF</color>
++    <color name="ghostweb_signal_cyan_dim_light">#5B9DFF</color>
++    <color name="ghostweb_signal_teal_light">#4A8CFF</color>
++    <color name="ghostweb_signal_text_light">#0A1628</color>
++    <color name="ghostweb_signal_muted_light">#5A6F8C</color>
++    <color name="ghostweb_signal_line_light">#335B9DFF</color>
++    <color name="ghostweb_signal_green_light">#10B981</color>
++    <color name="ghostweb_signal_surface_low_light">#F8FAFF</color>
++    <color name="ghostweb_signal_surface_high_light">#FFFFFF</color>
++    <color name="ghostweb_signal_surface_highest_light">#E8F0FF</color>
++    <color name="ghostweb_signal_outline_light">#665B9DFF</color>
++    <color name="ghostweb_signal_outline_subtle_light">#335B9DFF</color>
++    <color name="ghostweb_signal_on_cyan_light">#FFFFFF</color>
++
++    <!-- Glass alpha helpers (dark) -->
++    <color name="ghostweb_glass_10">#1A5B9DFF</color>
++    <color name="ghostweb_glass_20">#335B9DFF</color>
++    <color name="ghostweb_glass_30">#4D5B9DFF</color>
++    <color name="ghostweb_glass_40">#665B9DFF</color>
++    <color name="ghostweb_glass_surface">#CC0D1A33</color>
++    <color name="ghostweb_glass_surface_elevated">#E6132445</color>
++
++    <!-- Glass alpha helpers (light) -->
++    <color name="ghostweb_glass_10_light">#1A2B7BFF</color>
++    <color name="ghostweb_glass_20_light">#332B7BFF</color>
++    <color name="ghostweb_glass_30_light">#4D2B7BFF</color>
++    <color name="ghostweb_glass_surface_light">#E6FFFFFF</color>
++    <color name="ghostweb_glass_surface_elevated_light">#F2FFFFFF</color>
++
+     <color name="story_gradient_start">#99000000</color>
+     <color name="story_caption_gradient_start">#CC000000</color>
+ 
+@@ -62,7 +100,7 @@
+     <color name="conversation_compose_divider">#32000000</color>
+     <color name="touch_highlight">#400099cc</color>
+     <color name="touch_highlight_material3">#14E3E1E6</color>
+-    <!-- GhostWeb Signal: Photon ice-blue unread badge (replaces upstream's red badge). -->
++    <!-- GhostWeb Signal: Photon ice-blue unread badge -->
+     <color name="ConversationListTabs__unread">#FF5B9DFF</color>
+     <color name="transparent">#00FFFFFF</color>
+     <color name="transparent_black">#00000000</color>
+@@ -72,8 +110,6 @@
+     <color name="storage_color_videos">#FF68B0A8</color>
+     <color name="storage_color_audio">#FF5A83EC</color>
+     <color name="storage_color_files">#FFC7518B</color>
+-    <!-- <color name="conversation_list_archive_background_start">@color/signal_colorPrimary</color> -->
+-    <!-- <color name="conversation_list_archive_background_end">@color/signal_colorPrimary</color> -->
+     <color name="safety_number_card_grey">@color/molly_tertiary_fixed</color>
+     <color name="safety_number_card_blue">@color/molly_core_ultramarine</color>
+     <color name="notification_background_ultramarine">#6341FF</color>
+diff --git a/core/ui/src/main/res/values/molly_colors.xml b/core/ui/src/main/res/values/molly_colors.xml
+--- a/core/ui/src/main/res/values/molly_colors.xml	2026-10-03 21:01:30.159000000 +0000
++++ b/core/ui/src/main/res/values/molly_colors.xml	2026-10-03 21:01:37.353000000 +0000
+@@ -3,28 +3,28 @@
+ 
+     <!-- material3_colors_light.xml -->
+ 
+-    <color name="molly_primary_inverse_light">#AA98FF</color>
++    <color name="molly_primary_inverse_light">#5B9DFF</color>
+     <color name="stock_primary_inverse_light">#B6C5FA</color>
+ 
+-    <color name="molly_primary_light">#5335DD</color>
++    <color name="molly_primary_light">#2B7BFF</color>
+     <color name="stock_primary_light">#2C58C3</color>
+ 
+     <color name="molly_on_primary_light">#FFFFFF</color>
+     <color name="stock_on_primary_light">#FFFFFF</color>
+ 
+-    <color name="molly_primary_container_light">#C1B4FB</color>
++    <color name="molly_primary_container_light">#D6E6FF</color>
+     <color name="stock_primary_container_light">#D2DFFB</color>
+ 
+-    <color name="molly_on_primary_container_light">#180D49</color>
++    <color name="molly_on_primary_container_light">#0A1628</color>
+     <color name="stock_on_primary_container_light">#051845</color>
+ 
+-    <color name="molly_primary_fixed">#C1B4FB</color>
++    <color name="molly_primary_fixed">#D6E6FF</color>
+     <color name="stock_primary_fixed">#D2DFFB</color>
+ 
+-    <color name="molly_primary_fixed_dim">#AA98FF</color>
++    <color name="molly_primary_fixed_dim">#5B9DFF</color>
+     <color name="stock_primary_fixed_dim">#B6C5FA</color>
+ 
+-    <color name="molly_on_primary_fixed">#180D49</color>
++    <color name="molly_on_primary_fixed">#0A1628</color>
+     <color name="stock_on_primary_fixed">#051845</color>
+ 
+     <color name="molly_on_primary_fixed_variant">#483B6A</color>
+@@ -57,34 +57,34 @@
+     <color name="molly_surface_inverse_light">#33276A</color>
+     <color name="stock_surface_inverse_light">#31343E</color>
+ 
+-    <color name="molly_surface_variant_light">#E7E6F2</color>
++    <color name="molly_surface_variant_light">#E8F0FF</color>
+     <color name="stock_surface_variant_light">#E7EBF3</color>
+ 
+-    <color name="molly_surface_light">#F6F6FF</color>
++    <color name="molly_surface_light">#F0F5FF</color>
+     <color name="stock_surface_light">#FBFCFF</color>
+ 
+-    <color name="molly_background_light">#F6F6FF</color>
++    <color name="molly_background_light">#F0F5FF</color>
+     <color name="stock_background_light">#FBFCFF</color>
+ 
+     <color name="molly_surface_dim_light">#DED6FF</color>
+     <color name="stock_surface_dim_light">#E3E7F1</color>    <!-- Previously signal_light_colorSurface5 -->
+ 
+-    <color name="molly_surface_container_highest_light">#E5DFFF</color>
++    <color name="molly_surface_container_highest_light">#D6E6FF</color>
+     <color name="stock_surface_container_highest_light">#E6EAF3</color>     <!-- Previously signal_light_colorSurface4 -->
+ 
+-    <color name="molly_surface_container_high_light">#EAE5FF</color>
++    <color name="molly_surface_container_high_light">#E8F0FF</color>
+     <color name="stock_surface_container_high_light">#E8ECF4</color>        <!-- Previously signal_light_colorSurface3 -->
+ 
+-    <color name="molly_surface_container_light">#EEEAFF</color>
++    <color name="molly_surface_container_light">#FFFFFF</color>
+     <color name="stock_surface_container_light">#EDF0F6</color>             <!-- Previously signal_light_colorSurface2 -->
+ 
+-    <color name="molly_surface_container_low_light">#F3F0FF</color>
++    <color name="molly_surface_container_low_light">#F8FAFF</color>
+     <color name="stock_surface_container_low_light">#F2F5F9</color>         <!-- Previously signal_light_colorSurface1 -->
+ 
+-    <color name="molly_surface_bright_light">#F6F6FF</color>
++    <color name="molly_surface_bright_light">#FFFFFF</color>
+     <color name="stock_surface_bright_light">#FBFCFF</color>
+ 
+-    <color name="molly_surface_container_lowest_light">#F9F8FF</color>
++    <color name="molly_surface_container_lowest_light">#FFFFFF</color>
+ 
+     <color name="molly_on_surface_inverse_light">#F1EDF6</color>
+     <!-- <color name="stock_on_surface_inverse_light">#EDF0F6</color> -->   <!-- Conflicts with stock_surface_container_light -->
+@@ -132,19 +132,19 @@
+ 
+     <!-- material3_colors_dark.xml -->
+ 
+-    <color name="molly_primary_inverse_dark">#5335DD</color>
++    <color name="molly_primary_inverse_dark">#2B7BFF</color>
+     <color name="stock_primary_inverse_dark">#2C58C3</color>
+ 
+-    <color name="molly_primary_dark">#AA98FF</color>
++    <color name="molly_primary_dark">#5B9DFF</color>
+     <color name="stock_primary_dark">#B6C5FA</color>
+ 
+-    <color name="molly_on_primary_dark">#1E1B38</color>
++    <color name="molly_on_primary_dark">#041018</color>
+     <color name="stock_on_primary_dark">#1E2438</color>
+ 
+-    <color name="molly_primary_container_dark">#483B6A</color>
++    <color name="molly_primary_container_dark">#132445</color>
+     <color name="stock_primary_container_dark">#464B5C</color>
+ 
+-    <color name="molly_on_primary_container_dark">#DDDCFC</color>
++    <color name="molly_on_primary_container_dark">#E8EEF8</color>
+     <color name="stock_on_primary_container_dark">#DBE1FC</color>
+ 
+     <color name="molly_secondary_dark">#CBC4DE</color>
+@@ -162,34 +162,34 @@
+     <color name="molly_surface_inverse_dark">#E5DFFF</color>
+     <color name="stock_surface_inverse_dark">#E6EAF3</color>
+ 
+-    <color name="molly_surface_variant_dark">#302F33</color>
++    <color name="molly_surface_variant_dark">#0D1A33</color>
+     <color name="stock_surface_variant_dark">#303133</color>
+ 
+-    <color name="molly_surface_dark">#100E1F</color>
++    <color name="molly_surface_dark">#050914</color>
+     <color name="stock_surface_dark">#1B1C1F</color>
+ 
+-    <color name="molly_background_dark">#100E1F</color>
++    <color name="molly_background_dark">#050914</color>
+     <color name="stock_background_dark">#1B1C1F</color>
+ 
+-    <color name="molly_surface_bright_dark">#33276A</color>
++    <color name="molly_surface_bright_dark">#132445</color>
+     <color name="stock_surface_bright_dark">#31343E</color>      <!-- Previously signal_dark_colorSurface5 -->
+ 
+-    <color name="molly_surface_container_highest_dark">#281E57</color>
++    <color name="molly_surface_container_highest_dark">#132445</color>
+     <color name="stock_surface_container_highest_dark">#2E3039</color>      <!-- Previously signal_dark_colorSurface4 -->
+ 
+-    <color name="molly_surface_container_high_dark">#231A4E</color>
++    <color name="molly_surface_container_high_dark">#0D1A33</color>
+     <color name="stock_surface_container_high_dark">#2C2F37</color>         <!-- Previously signal_dark_colorSurface3 -->
+ 
+-    <color name="molly_surface_container_dark">#1E1645</color>
++    <color name="molly_surface_container_dark">#0D1A33</color>
+     <color name="stock_surface_container_dark">#272A31</color>              <!-- Previously signal_dark_colorSurface2 -->
+ 
+-    <color name="molly_surface_container_low_dark">#181137</color>
++    <color name="molly_surface_container_low_dark">#08101F</color>
+     <color name="stock_surface_container_low_dark">#23242A</color>          <!-- Previously signal_dark_colorSurface1 -->
+ 
+-    <color name="molly_surface_dim_dark">#100E1F</color>
++    <color name="molly_surface_dim_dark">#050914</color>
+     <color name="stock_surface_dim_dark">#1B1C1F</color>
+ 
+-    <color name="molly_surface_container_lowest_dark">#0C0919</color>
++    <color name="molly_surface_container_lowest_dark">#050914</color>
+ 
+     <color name="molly_on_surface_inverse_dark">#31303D</color>
+     <!-- <color name="stock_on_surface_inverse_dark">#31343E</color> -->    <!-- Conflicts with stock_surface_bright_dark -->
+diff --git a/docs/design-system/GhostWeb_Liquid_Glass_Design_System.md b/docs/design-system/GhostWeb_Liquid_Glass_Design_System.md
+--- a/docs/design-system/GhostWeb_Liquid_Glass_Design_System.md	1970-01-01 00:00:00.000000000 +0000
++++ b/docs/design-system/GhostWeb_Liquid_Glass_Design_System.md	2026-10-03 21:01:39.346000000 +0000
+@@ -0,0 +1,161 @@
++# GhostWeb Signal — Liquid Glass Design System
++**Version 2.0 · Photon Edition**
++
++---
++
++## 1. Brand Overview
++
++**GhostWeb Signal** is a privacy-first messaging app built on the Signal protocol.  
++The new **Liquid Glass Photon** visual language combines:
++
++- Deep navy / ice-blue dark theme (Photon)
++- Soft, translucent **Liquid Glass** surfaces
++- Clean Signal-inspired information architecture
++- Modern tech aesthetic with high legibility
++
++**Tagline:** Secure. Private. Untraceable.
++
++---
++
++## 2. Color System
++
++### 2.1 Core Palette — Dark Mode (Default)
++
++| Token                        | Hex / Value          | Usage                              |
++|-----------------------------|----------------------|------------------------------------|
++| `bg`                        | `#050914`            | App background                     |
++| `surface / panel`           | `#0D1A33`            | Cards, headers, bottom sheets      |
++| `surface_high`              | `#132445`            | Elevated surfaces                  |
++| `surface_low`               | `#08101F`            | Recessed areas                     |
++| `primary / cyan`            | `#5B9DFF`            | Primary actions, unread, accents   |
++| `primary_dim`               | `#7EB6FF`            | Hover / secondary accent           |
++| `teal`                      | `#9CC4FF`            | Soft highlights                    |
++| `text`                      | `#E8EEF8`            | Primary text                       |
++| `text_muted`                | `#8AA0C0`            | Secondary text                     |
++| `success / online`          | `#6EE7B7`            | Online status, success             |
++| `outline`                   | `#57B4D2FF` (35%)    | Glass borders                      |
++| `outline_subtle`            | `#29A0C4FF` (16%)    | Subtle dividers                    |
++| `on_cyan`                   | `#041018`            | Text on primary buttons            |
++
++### 2.2 Core Palette — Light Mode
++
++| Token                        | Hex / Value          | Usage                              |
++|-----------------------------|----------------------|------------------------------------|
++| `bg_light`                  | `#F0F5FF`            | App background                     |
++| `panel_light`               | `#FFFFFF`            | Cards, headers                     |
++| `surface_highest_light`     | `#E8F0FF` / `#D6E6FF`| Elevated / selected                |
++| `primary_light`             | `#2B7BFF`            | Primary actions                    |
++| `text_light`                | `#0A1628`            | Primary text                       |
++| `text_muted_light`          | `#5A6F8C`            | Secondary text                     |
++| `outline_light`             | `#665B9DFF`          | Glass borders                      |
++
++### 2.3 Glass Alpha Tokens
++
++| Token                     | Value              | Usage                        |
++|--------------------------|--------------------|------------------------------|
++| `glass_10`               | 10% cyan           | Very subtle overlays         |
++| `glass_20`               | 20% cyan           | Chips, light glass           |
++| `glass_30`               | 30% cyan           | Status badges                |
++| `glass_surface`          | ~80% panel         | Main glass panels            |
++| `glass_surface_elevated` | ~90% elevated      | Floating elements            |
++
++---
++
++## 3. Typography
++
++- **Primary font:** System / Inter / SF Pro (platform default)
++- **Display / Logo:** Clean geometric sans
++- **Weights:** Regular (400), Medium (500), Semibold (600)
++- **Sizes (mobile):**
++  - Display: 28–34 sp
++  - Title: 20–22 sp
++  - Body: 15–16 sp
++  - Caption: 12–13 sp
++  - Overline: 11 sp
++
++---
++
++## 4. Spacing & Radius
++
++| Token          | Value     |
++|----------------|-----------|
++| `radius.sm`    | 8–10 dp   |
++| `radius.md`    | 14–16 dp  |
++| `radius.lg`    | 20–24 dp  |
++| `radius.full`  | 999 dp    |
++| Spacing scale  | 4 / 8 / 12 / 16 / 20 / 24 / 32 dp |
++
++---
++
++## 5. Components
++
++### 5.1 Glass Card / Surface
++- Background: `glass_surface` or `panel`
++- Border: 1 dp `outline_subtle`
++- Corner radius: 16 dp
++- Optional subtle inner glow / elevation
++
++### 5.2 Primary Button
++- Background: `primary` (`#5B9DFF`)
++- Text: `on_cyan`
++- Radius: 14–16 dp
++- Height: 48–52 dp
++
++### 5.3 Message Bubbles
++- **Outgoing:** Soft cyan-tinted glass + primary text
++- **Incoming:** Dark glass panel + light text
++- Radius: 16–18 dp (with tail)
++
++### 5.4 Bottom Navigation
++- Floating glass bar
++- Active item: cyan icon + label
++- Inactive: muted
++
++### 5.5 Avatars
++- Circular
++- Online: thin cyan ring + green status dot
++
++### 5.6 Unread Badge
++- Background: `#5B9DFF`
++- Text: white
++- Pill shape
++
++---
++
++## 6. Elevation & Effects
++
++- Prefer **glass + border** over heavy shadows
++- Soft blur on headers and bottom sheets when supported
++- Subtle cyan glow on focused / active elements
++- No harsh drop shadows
++
++---
++
++## 7. Iconography
++
++- **App icon:** Updated Ghost with liquid glass ring and soft cyan glow
++- System icons: outlined style, 1.5–2 px stroke
++- Accent icons use primary cyan
++
++---
++
++## 8. Accessibility
++
++- Minimum contrast ratio 4.5:1 for body text
++- Interactive targets ≥ 48 × 48 dp
++- Support for system font scaling
++- High-contrast mode should increase border opacity
++
++---
++
++## 9. Implementation Notes (Android)
++
++- Tokens live in `res/values/colors.xml` and `core/ui/.../molly_colors.xml`
++- Primary and surface colors overridden to Photon cyan/navy
++- Custom drawables: `ghostweb_signal_*_background.xml` use glass alpha
++- Material 3 `ColorScheme` consumes the updated molly tokens
++- Splash screen uses `ghostweb_signal_bg`
++
++---
++
++**GhostWeb Enterprise · Liquid Glass Photon Design System v2.0**
+diff --git a/docs/design-system/GhostWeb_Liquid_Glass_Design_System.pdf b/docs/design-system/GhostWeb_Liquid_Glass_Design_System.pdf
+--- a/docs/design-system/GhostWeb_Liquid_Glass_Design_System.pdf	1970-01-01 00:00:00.000000000 +0000
++++ b/docs/design-system/GhostWeb_Liquid_Glass_Design_System.pdf	2026-10-03 21:01:39.860000000 +0000
+@@ -0,0 +1,93 @@
++%PDF-1.4
++%���� ReportLab Generated PDF document (opensource)
++1 0 obj
++<<
++/F1 2 0 R /F2 3 0 R
++>>
++endobj
++2 0 obj
++<<
++/BaseFont /Helvetica /Encoding /WinAnsiEncoding /Name /F1 /Subtype /Type1 /Type /Font
++>>
++endobj
++3 0 obj
++<<
++/BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding /Name /F2 /Subtype /Type1 /Type /Font
++>>
++endobj
++4 0 obj
++<<
++/Contents 9 0 R /MediaBox [ 0 0 595.2756 841.8898 ] /Parent 8 0 R /Resources <<
++/Font 1 0 R /ProcSet [ /PDF /Text /ImageB /ImageC /ImageI ]
++>> /Rotate 0 /Trans <<
++
++>> 
++  /Type /Page
++>>
++endobj
++5 0 obj
++<<
++/Contents 10 0 R /MediaBox [ 0 0 595.2756 841.8898 ] /Parent 8 0 R /Resources <<
++/Font 1 0 R /ProcSet [ /PDF /Text /ImageB /ImageC /ImageI ]
++>> /Rotate 0 /Trans <<
++
++>> 
++  /Type /Page
++>>
++endobj
++6 0 obj
++<<
++/PageMode /UseNone /Pages 8 0 R /Type /Catalog
++>>
++endobj
++7 0 obj
++<<
++/Author (\(anonymous\)) /CreationDate (D:20261003205402+00'00') /Creator (\(unspecified\)) /Keywords () /ModDate (D:20261003205402+00'00') /Producer (ReportLab PDF Library - \(opensource\)) 
++  /Subject (\(unspecified\)) /Title (\(anonymous\)) /Trapped /False
++>>
++endobj
++8 0 obj
++<<
++/Count 2 /Kids [ 4 0 R 5 0 R ] /Type /Pages
++>>
++endobj
++9 0 obj
++<<
++/Filter [ /ASCII85Decode /FlateDecode ] /Length 1881
++>>
++stream
++Gb"/'9lJcG&A@sB%,adi85tc3LNIVN]8K)ogMYg7V*H0HN3--H;FtbqJ%n?RP3"TbQ%TIJ^a;SrAk9V'a5NEW-kQ<RjmR-jE'B'/1CBA_r!"Qn36^9sF?]O^EX;=an\?<N?p;WGb2Y+.Cc+i-jh_fD;aQ)VWT/9<#FU=9haWVVUaKGe,W-)<p@k$gFTd*4Kn;@=\WVM6>t8kcKae=5*@=tiMW&=B*aPG(ZU.ZMUf%]a^-pR7-:lNXpj.uKkWD=.)\UGpK_Yg$@)0F<!bM_2N&uoA$tmeNE:RV3k/BQ2!E[Yu$0##?rs\MVE:Lb$AF4f#='XGJb$g6*j]5-iNP9;*-+o(e4GS.HZq(k?e2_g\=*Jq`2iX<f?t#+cb]c0A]?-nL[UU#';lV*4_%[\"*+cG:f3$*HOs\-tI\l*#ZKCnVcLM7sB+BJg9IdR#iAT-p]Z[$f6%KOgOs19#*@t[e[-2GCV)p<'0I^8YmgMm/^R9V7q8E"5-G8f90DqjfcM/\@.P[j%i-b-PdCCU8P6l'RV9Y7Q.UgU<6*?QYd<Qe7U1=F);X!HO"+ou=Z%f++[u^aMmco4*#2'e@ep=)e!<Z-gGT5qDJG,Sd1n<X]nl>K7"N_8X#\+l#;!;j-J^3d;72.YUorpi`6`J\NrS2I`$%oONf1Bf,\_d/rlG,h,Vcf:]\D^,tV$Zom,ji+6>dCdW"#nEjg8k$Q,QB^=2D.8p\CF`X'ASpkY&iZE^GCcjr3FJn/Q,jA=VU/-n.(9b6F/Op8cDG=K`ZIE<?B;/A%Kc``:9Y!*14j`I8E=><8^SOK(3NZ]'(p/!uFt&4JR@2EJa!;,T063&Y<.84.FbMlB?j#jDiA3<?9@^73CP0(B+Q4i3Z"I+NG!Yn\l_<nED)569PCfocD-(rV=l]G0O0,IGU4?J3$\M(1%%H*dtL]q7F,`h+:8SkbReui4_6=q"2Z^++ngm>t13_Wn^N]5%#i>)5b.cRG---XqD8HBQZIRHaQrb+P7%LfVBMK",OAe2n?V=Q/GD:jAAGUE48--@sD:Gn,]=gJK9qI3cWsVUfr>]#dPa_)qI'cgBp.*CTWN-O'GahJ?;AU?:V'h!+r?@NiC2](B^&4!]Q+H\[X8]4$Xmee?b:B=gSL@43UiK.iCUQ("BKJpFg0c!OQ$]HWL@gKE_&WR'DQW\`tKmJ)I0;O5&u3ZoLm_'u[AGT$&:i>!`$KrMDALm<"^BfR)EH&F'i8J;*u"*,!\,e9L7QV_dd$P?-&q"RQXp@OH#L`9YY`X3>Q5XT4Bpab3o\j&B2J];h(b(n$msq+SX`0(5qg%?ji>`c=+?kNY$j<m^h<i[E49D5KNg$-]f-QYm05GaqDWB\@,4Hogf^.2D-4$#rT,7fV`'EGhnOn)UrHR[G*o?]s.$27Xe%fkpn.9K73Z"6u`mYW8:o8/%pcB^Z!#"+NLqp0o7iC.poB/N^UEQ?VW8B&E'GTi$tsC3@]b%fT1+'3eBr?=ZHdQH9OSPG/:/*&].[%SSiu9Vhm+2c]Em/R#MU335igBNoFT)jG.XE)[d0C)_+k)dKR`^sP?q_al9[ASRQCL59HGk6R.,/hr<u):\BS?*YMmNN>WPVu4UAD^IS4IUr2pO)M9:.Ji_X7]MYiksh6;c`0q&k^RmDV<"bU6[<!`l\R;_jfKoIfTs"JoI5^KF_jh<9/U-61(u=lKFLtlX>DE'^bq?N4,qmor-G&+lqlD^mT-D)#R9j6V]0./l?il0<mZ:n?CnbL.sp$%Cte-paFm/DjLT+/D4jR1V*iqZ"@EL'!]q/23V+k0W!s[u(0K.kFZq'<D=Dg"Vh5[L)dl`.etJ50?\>MGlppb[4mbs^:UZm?Io#cFm?@6mhqog3p0F9nUON=*^bo<~>endstream
++endobj
++10 0 obj
++<<
++/Filter [ /ASCII85Decode /FlateDecode ] /Length 1360
++>>
++stream
++Gatm:gMYb*&:O:S%'W"UV?nj>mK38^-Zp#;g8;7oI5,-V&hS/LM$cg7omV=EPjP?IEku3*=E6m\baFl?L8<bd+*H2:!gq2?1o3HcR'2'q,_Yt.]Uo^P#K3CtfLpd?60+(o]I.D1:f,-(G-=ErM"jOU6Q/jcVW/@)L\8c>"At]/!K`]&*uOA1LB/\5gu4/'-(Z3s5,:"X;&BF45no'lO7&E.QjpbP"M+gW-2X$l"BY@iN6iYL&4X\D[f]<a*qMP4e1-gK'rL="NGZhQK2i'`!s8(",7DJZbmn'rXC7NqMq9Z_#NdDB5%"0Ha6BAh6Q\s/&Hi=A@r"=8@rIl`=Q"1,5Bp!%-lb;k;d#U!0!+Hgre2N>G1uEmEkZ.&Bj`[.X:85bK%Uj@Q,H.&ZDr/?o6g(s^c*m'NR;YfoK6@m\SLPW`-Jd/h1IMRM1<)($$mb:;mIG=l,*2T+G>Fj-SQ@6jPYC9k51]d,4ci%aI9?Uc?.>M,@lf,GLiFnIbo*FMOFXD]hlGK>dSo]F9N-Xof>TCNo[kqY:L0Np,LZ@=[F@UZ9RNT_4WSbnt((L(+dEXdV!*Y1ICR(@dS^WH1M)Pi3/d&ki5qj?[ji=A*u#rn/'uu\Z?]Po@iEk,=`&gN0J>Y+%Z4$A6NJ5<SgZR$-R2n-/1J9_QI,.<ioNE:P%X;aO]!mUN'jZZ]Zg$$6R7^9Y"d0F7NLkMQ%Ui>%;+!'D@K#1;9,N@>u9k"^*Lb*NR$Gn)j8`N+7fF#T\79+&*\%NrH7)\^mk?(j<;:HU[J822/E]q%IS_1F#_Qqp[^e?.PsnDFMk#c2LSXC0hNHgd+T*8Uhp=m0Z%^D%D;6.@IFA3mT=2"a/M)b_RhUD4';\IfHPcB0#Z:0D\e#-u.e"HFFK@]9;kLHadR@WP0RI$^J+G;t(!e)[!2.&1S(bDSp8VR%"1rTMQX.[?t/-\_P5ORbqQCIjcfkE*5%Ea17&SmBBb&hpo9#!f-"2.)NoL9P%)nX30X!<48G+:02_YCMa;><[S,LK*0Q:CFQDV>?81Wb@E&e-JtkAgcZAW(eXH-YF/@;e;=h]A5p[Vgaun$gfCLLj<3A^Yb)0IGl`b+J.d-f9fE]f2\Pf>O^eMOg[:)$lhm9^g+"7Im#G4?5)$Z%88[eiC8jXQPZs_1=3':lZI6+Kmo@?LB#>Ztq1uU[!kB</36#K@f`oQNM:K2>&=V9kBUbOFJRD_-+#oYHI]>=bMM?mo="cOMKL&4D9'N+kU!Sj]$W%^<81>19`'0cV.$2@gm!dQAf?*&t.Wk6;Og:ZV'DjW,4i"r5``MZdSido;YYoAo?&@<:jO!9+qfZ:bS(-EHZLs&uaR/=q\,0-5n,jMk^=<~>endstream
++endobj
++xref
++0 11
++0000000000 65535 f 
++0000000061 00000 n 
++0000000102 00000 n 
++0000000209 00000 n 
++0000000321 00000 n 
++0000000524 00000 n 
++0000000728 00000 n 
++0000000796 00000 n 
++0000001076 00000 n 
++0000001141 00000 n 
++0000003113 00000 n 
++trailer
++<<
++/ID 
++[<bbf0a78f2d52b517893aee5eec3fff23><bbf0a78f2d52b517893aee5eec3fff23>]
++% ReportLab generated PDF document -- digest (opensource)
++
++/Info 7 0 R
++/Root 6 0 R
++/Size 11
++>>
++startxref
++4565
++%%EOF
