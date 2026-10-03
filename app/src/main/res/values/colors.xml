@@ -5,7 +5,12 @@
 
     <color name="signal_accent_green">#4CAF50</color>
 
-    <!-- GhostWeb Signal visual system — Photon navy/ice -->
+    <!-- ============================================================
+         GhostWeb Signal — Liquid Glass Photon Design System
+         Dark + Light tokens
+         ============================================================ -->
+
+    <!-- Dark (default) -->
     <color name="ghostweb_signal_bg">#050914</color>
     <color name="ghostweb_signal_panel">#0D1A33</color>
     <color name="ghostweb_signal_panel_2">#0A1224</color>
@@ -24,6 +29,39 @@
     <color name="ghostweb_signal_outline_subtle">#29A0C4FF</color>
     <color name="ghostweb_signal_on_cyan">#041018</color>
     <color name="ghostweb_signal_on_cyan_variant">#07101E</color>
+
+    <!-- Light mode tokens (Liquid Glass Light) -->
+    <color name="ghostweb_signal_bg_light">#F0F5FF</color>
+    <color name="ghostweb_signal_panel_light">#FFFFFF</color>
+    <color name="ghostweb_signal_panel_2_light">#E8F0FF</color>
+    <color name="ghostweb_signal_cyan_light">#2B7BFF</color>
+    <color name="ghostweb_signal_cyan_dim_light">#5B9DFF</color>
+    <color name="ghostweb_signal_teal_light">#4A8CFF</color>
+    <color name="ghostweb_signal_text_light">#0A1628</color>
+    <color name="ghostweb_signal_muted_light">#5A6F8C</color>
+    <color name="ghostweb_signal_line_light">#335B9DFF</color>
+    <color name="ghostweb_signal_green_light">#10B981</color>
+    <color name="ghostweb_signal_surface_low_light">#F8FAFF</color>
+    <color name="ghostweb_signal_surface_high_light">#FFFFFF</color>
+    <color name="ghostweb_signal_surface_highest_light">#E8F0FF</color>
+    <color name="ghostweb_signal_outline_light">#665B9DFF</color>
+    <color name="ghostweb_signal_outline_subtle_light">#335B9DFF</color>
+    <color name="ghostweb_signal_on_cyan_light">#FFFFFF</color>
+
+    <!-- Glass alpha helpers (dark) -->
+    <color name="ghostweb_glass_10">#1A5B9DFF</color>
+    <color name="ghostweb_glass_20">#335B9DFF</color>
+    <color name="ghostweb_glass_30">#4D5B9DFF</color>
+    <color name="ghostweb_glass_40">#665B9DFF</color>
+    <color name="ghostweb_glass_surface">#CC0D1A33</color>
+    <color name="ghostweb_glass_surface_elevated">#E6132445</color>
+
+    <!-- Glass alpha helpers (light) -->
+    <color name="ghostweb_glass_10_light">#1A2B7BFF</color>
+    <color name="ghostweb_glass_20_light">#332B7BFF</color>
+    <color name="ghostweb_glass_30_light">#4D2B7BFF</color>
+    <color name="ghostweb_glass_surface_light">#E6FFFFFF</color>
+    <color name="ghostweb_glass_surface_elevated_light">#F2FFFFFF</color>
 
     <color name="story_gradient_start">#99000000</color>
     <color name="story_caption_gradient_start">#CC000000</color>
@@ -62,7 +100,7 @@
     <color name="conversation_compose_divider">#32000000</color>
     <color name="touch_highlight">#400099cc</color>
     <color name="touch_highlight_material3">#14E3E1E6</color>
-    <!-- GhostWeb Signal: Photon ice-blue unread badge (replaces upstream's red badge). -->
+    <!-- GhostWeb Signal: Photon ice-blue unread badge -->
     <color name="ConversationListTabs__unread">#FF5B9DFF</color>
     <color name="transparent">#00FFFFFF</color>
     <color name="transparent_black">#00000000</color>
