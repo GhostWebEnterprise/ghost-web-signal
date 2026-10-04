@@ -25,6 +25,37 @@
     <color name="ghostweb_signal_on_cyan">#041018</color>
     <color name="ghostweb_signal_on_cyan_variant">#07101E</color>
 
+    <!-- Liquid Glass light-mode tokens -->
+    <color name="ghostweb_signal_bg_light">#F0F5FF</color>
+    <color name="ghostweb_signal_panel_light">#FFFFFF</color>
+    <color name="ghostweb_signal_panel_2_light">#E8F0FF</color>
+    <color name="ghostweb_signal_cyan_light">#2B7BFF</color>
+    <color name="ghostweb_signal_cyan_dim_light">#5B9DFF</color>
+    <color name="ghostweb_signal_teal_light">#4A8CFF</color>
+    <color name="ghostweb_signal_text_light">#0A1628</color>
+    <color name="ghostweb_signal_muted_light">#5A6F8C</color>
+    <color name="ghostweb_signal_line_light">#335B9DFF</color>
+    <color name="ghostweb_signal_green_light">#10B981</color>
+    <color name="ghostweb_signal_surface_low_light">#F8FAFF</color>
+    <color name="ghostweb_signal_surface_high_light">#FFFFFF</color>
+    <color name="ghostweb_signal_surface_highest_light">#E8F0FF</color>
+    <color name="ghostweb_signal_outline_light">#665B9DFF</color>
+    <color name="ghostweb_signal_outline_subtle_light">#335B9DFF</color>
+    <color name="ghostweb_signal_on_cyan_light">#FFFFFF</color>
+
+    <!-- Liquid Glass alpha surfaces -->
+    <color name="ghostweb_glass_10">#1A5B9DFF</color>
+    <color name="ghostweb_glass_20">#335B9DFF</color>
+    <color name="ghostweb_glass_30">#4D5B9DFF</color>
+    <color name="ghostweb_glass_40">#665B9DFF</color>
+    <color name="ghostweb_glass_surface">#CC0D1A33</color>
+    <color name="ghostweb_glass_surface_elevated">#E6132445</color>
+    <color name="ghostweb_glass_10_light">#1A2B7BFF</color>
+    <color name="ghostweb_glass_20_light">#332B7BFF</color>
+    <color name="ghostweb_glass_30_light">#4D2B7BFF</color>
+    <color name="ghostweb_glass_surface_light">#E6FFFFFF</color>
+    <color name="ghostweb_glass_surface_elevated_light">#F2FFFFFF</color>
+
     <color name="story_gradient_start">#99000000</color>
     <color name="story_caption_gradient_start">#CC000000</color>
 
