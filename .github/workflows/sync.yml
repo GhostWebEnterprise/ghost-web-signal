@@ -45,7 +45,14 @@ jobs:
       - run: git lfs fetch --all upstream
 
       - name: Publish upstream-main
-        run: git push --force-with-lease origin upstream-main
+        run: |
+          remote_sha="$(git ls-remote --heads origin refs/heads/upstream-main | awk '{print $1}')"
+          if [ -n "$remote_sha" ]; then
+            git push origin "HEAD:refs/heads/upstream-main" \
+              --force-with-lease="refs/heads/upstream-main:${remote_sha}"
+          else
+            git push origin "HEAD:refs/heads/upstream-main"
+          fi
 
       - name: Track upstream stable release
         run: |
