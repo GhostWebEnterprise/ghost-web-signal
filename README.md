@@ -4,8 +4,7 @@
 
 <img src="art/file_0000000000348246b3644cb184d2d66e.png" width="220" alt="GhostWeb Signal logo" />
 
-### Privacy-focused secure messaging for Android
-
+## Privacy-focused secure messaging for Android
 
 **Private by design · Secure by default · Open source**
 
@@ -18,7 +17,7 @@
 [![Super-Linter](https://img.shields.io/github/actions/workflow/status/GhostWebEnterprise/ghost-web-signal/super-linter.yml?branch=GWSignal.main&style=plastic&label=Lint&logo=githubactions&logoColor=white)](https://github.com/GhostWebEnterprise/ghost-web-signal/actions/workflows/super-linter.yml)
 [![Reproducible Build](https://img.shields.io/github/actions/workflow/status/GhostWebEnterprise/ghost-web-signal/reprocheck.yml?branch=GWSignal.main&style=plastic&label=Reproducible%20Build&logo=githubactions&logoColor=white)](https://github.com/GhostWebEnterprise/ghost-web-signal/actions/workflows/reprocheck.yml)
 [![AGPL-3.0](https://img.shields.io/badge/License-AGPL--3.0--only-blue?style=plastic)](LICENSE)
-[![Website](https://img.shields.io/badge/Website-ghostweb.bot.cd-0B57D0?style=plastic&logo=googlechrome&logoColor=white)](https://ghostweb.bot.cd)[![Need support?](https://img.shields.io/badge/Need%20support%3F-Contact%3A%20support--ghostweb%40proton.me-6D4AFF?style=plastic&logo=protonmail&logoColor=white)](mailto:support-ghostweb@proton.me) 
+[![Website](https://img.shields.io/badge/Website-ghostweb.bot.cd-0B57D0?style=plastic&logo=googlechrome&logoColor=white)](https://ghostweb.bot.cd)[![Need support?](https://img.shields.io/badge/Need%20support%3F-Contact%3A%20support--ghostweb%40proton.me-6D4AFF?style=plastic&logo=protonmail&logoColor=white)](mailto:support-ghostweb@proton.me)
 [![Project Hub](https://img.shields.io/badge/Project%20Hub-ghostweb.bot.cd-0B57D0?style=plastic&logo=googlechrome&logoColor=white)](https://ghostweb.bot.cd/signal.html)
 
 </div>
@@ -117,7 +116,7 @@ Only Android should currently be treated as the primary GhostWeb Signal implemen
 | **GhostWeb AI** | AI, agents, and software-building tools | **Under development · not release-ready** |
 | **GhostOS** | Privacy-focused Android operating system | **Under development · not release-ready** |
 
-Project hub: **https://ghostweb.bot.cd**
+Project hub: [ghostweb.bot.cd](https://ghostweb.bot.cd)
 
 ### Related repositories
 
@@ -141,9 +140,9 @@ See [LICENSE](LICENSE), [NOTICE](NOTICE), and [LEGAL.md](LEGAL.md) for applicabl
 
 For GhostWeb project support and development-related contact:
 
-**support-ghostweb@proton.me**
+[support-ghostweb@proton.me](mailto:support-ghostweb@proton.me)
 
-Website: **https://ghostweb.bot.cd**
+Website: [ghostweb.bot.cd](https://ghostweb.bot.cd)
 
 ---
 
