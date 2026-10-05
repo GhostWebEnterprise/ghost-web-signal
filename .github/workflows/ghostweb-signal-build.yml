@@ -34,7 +34,7 @@ jobs:
       CI_BUILD_VARIANTS: prodWebsite(Release|Debug)
       CI_FORCE_INTERNAL_USER_FLAG: "false"
       # Must match docs/ui-gate.md and the resValue in app/build.gradle.kts.
-      CI_UI_GATE_VERSION: photon-1
+      CI_UI_GATE_VERSION: photon-2
     steps:
       - name: Checkout
         uses: actions/checkout@v4
