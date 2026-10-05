@@ -158,8 +158,30 @@ class GhostWebPhotonUiRegressionTest {
   }
 
   @Test
+  fun photon2_coreProductLayoutsArePresent() {
+    val layouts = listOf(
+      R.layout.conversation_list_fragment,
+      R.layout.v2_conversation_fragment,
+      R.layout.conversation_input_panel,
+      R.layout.call_log_fragment,
+      R.layout.add_group_details_fragment,
+      R.layout.conversation_settings_fragment,
+      R.layout.dsl_settings_fragment,
+      R.layout.base_kbs_pin_fragment
+    )
+    assertEquals(8, layouts.distinct().size)
+  }
+
+  @Test
+  fun photon2_conversationListContainsGhostWebHeader() {
+    val themed = themedContext()
+    val view = LayoutInflater.from(themed).inflate(R.layout.conversation_list_fragment, null)
+    assertNotNull(view.findViewById<View>(R.id.ghostweb_signal_header))
+  }
+
+  @Test
   fun gateVersion_isRegisteredForReleaseVerification() {
     val version = context.getString(R.string.ghostweb_ui_gate_version)
-    assertEquals("photon-1", version)
+    assertEquals("photon-2", version)
   }
 }
