@@ -17,7 +17,7 @@
 [![Super-Linter](https://img.shields.io/github/actions/workflow/status/GhostWebEnterprise/ghost-web-signal/super-linter.yml?branch=GWSignal.main&style=plastic&label=Lint&logo=githubactions&logoColor=white)](https://github.com/GhostWebEnterprise/ghost-web-signal/actions/workflows/super-linter.yml)
 [![Reproducible Build](https://img.shields.io/github/actions/workflow/status/GhostWebEnterprise/ghost-web-signal/reprocheck.yml?branch=GWSignal.main&style=plastic&label=Reproducible%20Build&logo=githubactions&logoColor=white)](https://github.com/GhostWebEnterprise/ghost-web-signal/actions/workflows/reprocheck.yml)
 [![AGPL-3.0](https://img.shields.io/badge/License-AGPL--3.0--only-blue?style=plastic)](LICENSE)
-[![Website](https://img.shields.io/badge/GhostWeb-ghostweb.bot.cd-111827?style=plastic&logo=googlechrome&logoColor=white)](https://ghostweb.bot.cd)
+[![Website](https://img.shields.io/badge/Website-ghostweb.bot.cd-0B57D0?style=plastic&logo=googlechrome&logoColor=white)](https://ghostweb.bot.cd)\n[![Need support?](https://img.shields.io/badge/Need%20support%3F-Contact%3A%20support--ghostweb%40proton.me-6D4AFF?style=plastic&logo=protonmail&logoColor=white)](mailto:support-ghostweb@proton.me)
 
 </div>
 
