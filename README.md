@@ -1,98 +1,152 @@
-# GhostWeb
+# GhostWeb Signal 🛡️
 
 <div align="center">
 
-<img src="art/ghostweb-icon-512.png" width="128" alt="GhostWeb icon" />
+<img src="art/ghostweb-icon-512.png" width="128" alt="GhostWeb Signal icon" />
 
-## GhostWeb Signal 🛡️
+### Privacy-focused secure messaging for Android
 
-**Private by design. Secure by default. Open source.**
+**Private by design · Secure by default · Open source**
+
+> **Development status:** GhostWeb Signal is under active development. Features, builds, UI components, and releases may change and may not always work as expected. Review release notes and verify APK signatures before installation.
 
 [![Android](https://img.shields.io/badge/Platform-Android-3DDC84?style=plastic&logo=android&logoColor=white)](https://github.com/GhostWebEnterprise/ghost-web-signal)
-[![Signal compatible](https://img.shields.io/badge/Network-Signal-3A76F0?style=plastic&logo=signal&logoColor=white)](https://signal.org/)
 [![Release](https://img.shields.io/github/v/release/GhostWebEnterprise/ghost-web-signal?style=plastic&label=Release)](https://github.com/GhostWebEnterprise/ghost-web-signal/releases)
 [![APK](https://img.shields.io/badge/Download-APK-34A853?style=plastic&logo=android&logoColor=white)](https://github.com/GhostWebEnterprise/ghost-web-signal/releases)
-[![Test](https://img.shields.io/github/actions/workflow/status/GhostWebEnterprise/ghost-web-signal/test.yml?branch=GWSignal.main&style=plastic&label=Tests&logo=githubactions&logoColor=white)](https://github.com/GhostWebEnterprise/ghost-web-signal/actions/workflows/test.yml)
+[![Tests](https://img.shields.io/github/actions/workflow/status/GhostWebEnterprise/ghost-web-signal/test.yml?branch=GWSignal.main&style=plastic&label=Tests&logo=githubactions&logoColor=white)](https://github.com/GhostWebEnterprise/ghost-web-signal/actions/workflows/test.yml)
 [![Super-Linter](https://img.shields.io/github/actions/workflow/status/GhostWebEnterprise/ghost-web-signal/super-linter.yml?branch=GWSignal.main&style=plastic&label=Lint&logo=githubactions&logoColor=white)](https://github.com/GhostWebEnterprise/ghost-web-signal/actions/workflows/super-linter.yml)
 [![Reproducible Build](https://img.shields.io/github/actions/workflow/status/GhostWebEnterprise/ghost-web-signal/reprocheck.yml?branch=GWSignal.main&style=plastic&label=Reproducible%20Build&logo=githubactions&logoColor=white)](https://github.com/GhostWebEnterprise/ghost-web-signal/actions/workflows/reprocheck.yml)
-[![AGPL-3.0](https://img.shields.io/badge/License-AGPL--3.0--only-blue?style=plastic)](https://github.com/GhostWebEnterprise/ghost-web-signal/blob/GWSignal.main/LICENSE)
-[![Signal Protocol](https://img.shields.io/badge/E2EE-Signal%20Protocol-3A76F0?style=plastic&logo=signal&logoColor=white)](https://signal.org/docs/)
+[![AGPL-3.0](https://img.shields.io/badge/License-AGPL--3.0--only-blue?style=plastic)](LICENSE)
 [![Website](https://img.shields.io/badge/GhostWeb-ghostweb.bot.cd-111827?style=plastic&logo=googlechrome&logoColor=white)](https://ghostweb.bot.cd)
 
 </div>
 
 ---
 
-## **GhostWeb Ecosystem**
+## About GhostWeb Signal
 
-GhostWeb Signal is part of the **GhostWeb Enterprise** privacy ecosystem.
+**GhostWeb Signal** is an independent, open-source, privacy-focused secure messenger for Android developed as part of the **GhostWeb Enterprise** ecosystem.
 
-| Project | Purpose | Current status |
-| --- | --- | --- |
-| **GhostWeb Signal** | Private Android messaging and calling | **Available / active development** |
-| **GhostWeb VPN** | Browser, Android and desktop network protection | **Under active development · not release-ready** |
-| **GhostWeb AI** | Multi-model AI, agents and software delivery | **Under active development · not release-ready** |
-| **GhostOS** | Privacy-focused custom Android ROM | **Under development · not release-ready** |
+The project builds on the Signal/Molly Android technology stack while introducing GhostWeb branding, interface work, privacy-focused configuration, release automation, and project-specific enhancements. It is designed to preserve compatibility with the Signal ecosystem while avoiding custom cryptography in favor of established upstream security components.
 
-**Project hub:** [ghostweb.bot.cd](https://ghostweb.bot.cd)
+GhostWeb Signal is an independent project and is **not affiliated with, sponsored by, or endorsed by Signal Messenger LLC or the Signal Foundation**.
 
-## **GhostWeb Signal**
+## Project status
 
-**GhostWeb Signal** is an independent, privacy-focused messaging app for Android, built on the **Signal/Molly** technology stack with its own branding, configuration, and privacy enhancements. It provides end-to-end encrypted messaging and calling while connecting to the standard Signal service network.
+🚧 **Under active development**
 
-### Highlights
+GhostWeb Enterprise is still developing GhostWeb Signal. Development builds and individual features may be incomplete, experimental, unstable, or subject to change. A published build should not automatically be interpreted as production-ready.
 
-- End-to-end encrypted messaging, groups, voice, and video calls
-- Encrypted media and file attachments
-- Disappearing messages, reactions, and replies
-- Encrypted local storage and secure application access
-- Privacy-focused notifications, blocking, and reporting
-- GhostWeb branding and customization
+Current focus includes:
 
-## Privacy & security
+- GhostWeb-branded Android experience and application identity
+- Full GhostWeb UI migration across conversations, calls, groups, settings, privacy, security, and appearance
+- Privacy and application-lock experience, including optional biometric protection where supported
+- Android build, test, lint, signing, and release automation
+- Signed APK verification before GitHub Release publication
+- Upstream synchronization and compatibility maintenance
 
-GhostWeb Signal uses established cryptographic protocols and libraries from the Signal ecosystem, including libsignal, RingRTC, and SQLCipher, rather than custom cryptography.
+## Core capabilities
 
-## Download GhostWeb Signal
+The Android codebase builds on established Signal/Molly functionality, including:
 
-Get signed Android APKs from the [**Releases**](https://github.com/GhostWebEnterprise/ghost-web-signal/releases) page. Before installing an APK, verify the release signature and published checksums.
+- End-to-end encrypted private messaging
+- Encrypted group conversations
+- Voice and video calling
+- Media and file attachments
+- Disappearing messages
+- Message reactions and replies
+- Privacy-oriented notification and application controls
+- Secure local application data
+- GhostWeb-specific branding and interface customization
 
-## Building GhostWeb Signal
+Exact functionality can vary by development branch and release.
 
-Requirements: JDK 21 and the Android SDK (see [BUILDING.md](BUILDING.md)).
+## Security model
+
+GhostWeb Signal does **not** aim to invent its own cryptography. The project builds on established components from the Signal ecosystem, including **libsignal**, **RingRTC**, and encrypted local-storage technologies used by its upstream codebase.
+
+Release automation is designed to fail closed for signed production APKs: release builds must use the configured Android signing credentials, unsigned release artifacts must not be published, and APK signatures should be verified before a release asset is distributed.
+
+Users should independently review release information and verify artifacts before relying on development builds for sensitive communications.
+
+## Download
+
+Android builds are distributed through [**GitHub Releases**](https://github.com/GhostWebEnterprise/ghost-web-signal/releases).
+
+For release builds:
+
+1. Download the APK from the matching GitHub Release.
+2. Review the release notes and development status.
+3. Verify the APK signature and any published checksum.
+4. Avoid installing APK files redistributed by unknown third parties.
+
+## Build from source
+
+See [BUILDING.md](BUILDING.md) for the repository's complete build requirements.
+
+Typical requirements include **JDK 21** and the Android SDK.
 
 ```shell
 ./gradlew -PCI=true :app:assembleRelease :app:bundleRelease
 make test
 ```
 
-Build flavors include `prodWebsiteRelease`, `prodStoreRelease`, and `stagingWebsiteRelease`.
+Available build variants can include `prodWebsiteRelease`, `prodStoreRelease`, and `stagingWebsiteRelease`. Check the current Gradle configuration before building because the project is actively evolving.
 
-## Platform status
+## Platform roadmap
 
 | Platform | Status |
 | --- | --- |
-| Android | **Available** |
-| iOS | In development |
-| macOS | In development |
-| Windows | In development |
-| Linux | In development |
+| Android | **Active development / primary platform** |
+| iOS | Planned / in development |
+| macOS | Planned / in development |
+| Windows | Planned / in development |
+| Linux | Planned / in development |
 
-## Related GhostWeb projects
+Only Android should currently be treated as the primary GhostWeb Signal implementation in this repository.
+
+## GhostWeb ecosystem
+
+| Project | Purpose | Status |
+| --- | --- | --- |
+| **GhostWeb Signal** | Secure private messaging and calling | **Active development** |
+| **GhostWeb VPN** | Network privacy and protection | **Under development · not release-ready** |
+| **GhostWeb AI** | AI, agents, and software-building tools | **Under development · not release-ready** |
+| **GhostOS** | Privacy-focused Android operating system | **Under development · not release-ready** |
+
+Project hub: **https://ghostweb.bot.cd**
+
+### Related repositories
 
 - [GhostWeb VPN](https://github.com/GhostWebEnterprise/ghost-web-vpn)
 - [GhostWeb AI](https://github.com/GhostWebEnterprise/ghost-web-ai)
 - [GhostOS](https://github.com/GhostWebEnterprise/GhostOS)
-- [GhostWeb project hub](https://ghostweb.bot.cd)
 
 ## Upstream & attribution
 
-GhostWeb is built from the Molly Android concept and uses [johanw666/mollyim-android](https://github.com/johanw666/mollyim-android) as its upstream reference. Molly and Signal remain upstream projects.
+GhostWeb Signal builds on work from the Signal and Molly open-source ecosystems. The project uses **johanw666/mollyim-android** as an upstream reference while maintaining GhostWeb-specific changes and branding.
 
-## License & legal
+Upstream projects retain their respective names, trademarks, copyrights, and licenses.
 
-GhostWeb is free software licensed under the **GNU Affero General Public License v3.0 only** (AGPL-3.0-only). See [LICENSE](LICENSE), [NOTICE](NOTICE), and [LEGAL.md](LEGAL.md).
+## License
 
-## Disclaimer
+GhostWeb Signal is distributed under the **GNU Affero General Public License v3.0 only (AGPL-3.0-only)**.
 
-GhostWeb projects are independently developed and are not affiliated with, sponsored by, or endorsed by Signal Messenger LLC or the Signal Foundation.
+See [LICENSE](LICENSE), [NOTICE](NOTICE), and [LEGAL.md](LEGAL.md) for applicable licensing, attribution, and legal information.
+
+## Support
+
+For GhostWeb project support and development-related contact:
+
+**support-ghostweb@proton.me**
+
+Website: **https://ghostweb.bot.cd**
+
+---
+
+<div align="center">
+
+**GhostWeb Enterprise · Privacy-focused software under active development**
+
+</div>
