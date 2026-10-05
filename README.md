@@ -6,6 +6,8 @@
 
 ### Privacy-focused secure messaging for Android
 
+
+[![Project Hub](https://img.shields.io/badge/Project%20Hub-ghostweb.bot.cd-0B57D0?style=plastic&logo=googlechrome&logoColor=white)](https://ghostweb.bot.cd/signal.html)
 **Private by design · Secure by default · Open source**
 
 > **Development status:** GhostWeb Signal is under active development. Features, builds, UI components, and releases may change and may not always work as expected. Review release notes and verify APK signatures before installation.
