@@ -8,7 +8,7 @@ verified on the exact APK bytes being released.
 
 ## Gate version
 
-Current gate version: **`photon-1`**
+Current gate version: **`photon-2`**
 
 The gate version is registered in the build (`ghostweb_ui_gate_version` res
 value in `app/build.gradle.kts`) and is asserted by
@@ -56,7 +56,7 @@ The CI build job runs this suite as part of
 
 - Refuses to publish when the gate summary file (`dist/UI_GATE.md`) is missing.
 - Refuses to publish when the gate version in `UI_GATE.md` does not match
-  `photon-1` (the expectation is injected as `UI_GATE_EXPECTED_VERSION`).
+  `photon-2` (the expectation is injected as `UI_GATE_EXPECTED_VERSION`).
 - Refuses to publish when the gate marker `UI_GATE_STATUS: PASS` is absent.
 
 The publish job downloads the gate summary together with the APK and only then
