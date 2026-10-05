@@ -173,7 +173,7 @@ android {
 
     // GhostWeb Signal UI gate: the Photon migration gate this build was verified against.
     // The release gate refuses to publish unless this matches the value in docs/ui-gate.md.
-    resValue("string", "ghostweb_ui_gate_version", "photon-1")
+    resValue("string", "ghostweb_ui_gate_version", "photon-2")
 
     buildConfigField("String", "SIGNAL_PACKAGE_NAME", "\"org.thoughtcrime.securesms\"")
     buildConfigField("String", "SIGNAL_CANONICAL_VERSION_NAME", "\"$canonicalVersionName\"")
