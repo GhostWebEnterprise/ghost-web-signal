@@ -2,7 +2,7 @@
 
 <div align="center">
 
-<img src="art/ghostweb-icon-512.png" width="128" alt="GhostWeb Signal icon" />
+<img src="file_000000007ed4824699efec1a8c68d075.png" width="220" alt="GhostWeb Signal logo" />
 
 ### Privacy-focused secure messaging for Android
 
