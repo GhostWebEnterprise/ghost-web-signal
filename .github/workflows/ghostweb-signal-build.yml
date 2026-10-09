@@ -26,9 +26,9 @@ jobs:
       release_tag: ${{ steps.verify.outputs.release_tag }}
     env:
       CI_KEYSTORE_PATH: ${{ github.workspace }}/ghostweb-release.jks
-      CI_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD || secrets.SECRET_KEYSTORE_PASSWORD }}
-      CI_KEYSTORE_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS || secrets.SECRET_KEYSTORE_ALIAS }}
-      CI_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD || secrets.ANDROID_KEYSTORE_PASSWORD || secrets.SECRET_KEYSTORE_PASSWORD }}
+      CI_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+      CI_KEYSTORE_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+      CI_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
       CI_APP_TITLE: GhostWeb Signal
       CI_PACKAGE_ID: org.ghostweb.signal
       CI_BUILD_VARIANTS: prodWebsite(Release|Debug)
@@ -62,11 +62,12 @@ jobs:
 
       - name: Prepare release keystore
         env:
-          KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 || secrets.SECRET_KEYSTORE }}
+          KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
         run: |
           test -n "$KEYSTORE_B64"
           test -n "$CI_KEYSTORE_PASSWORD"
           test -n "$CI_KEYSTORE_ALIAS"
+          test -n "$CI_KEY_PASSWORD"
           umask 077
           printf '%s' "$KEYSTORE_B64" | base64 --decode > "$CI_KEYSTORE_PATH"
           test -s "$CI_KEYSTORE_PATH"
@@ -88,6 +89,28 @@ jobs:
             -PbasePackageId="$CI_PACKAGE_ID" \
             -PbuildVariants="$CI_BUILD_VARIANTS" \
             -PforceInternalUserFlag="$CI_FORCE_INTERNAL_USER_FLAG"
+
+      - name: Verify Photon UI regression test results
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import glob
+          import sys
+          import xml.etree.ElementTree as ET
+          reports = glob.glob('app/build/test-results/testProdWebsiteDebugUnitTest/**/*.xml', recursive=True)
+          found = False
+          for report in reports:
+              root = ET.parse(report).getroot()
+              for case in root.iter('testcase'):
+                  if 'GhostWebPhotonUiRegressionTest' in case.attrib.get('classname', ''):
+                      found = True
+                      if any(child.tag in ('failure', 'error', 'skipped') for child in case):
+                          sys.exit('Photon UI regression test failed or skipped: ' + report)
+          if not found:
+              sys.exit('Photon UI regression tests were not executed; blocking release')
+          print('Photon UI regression tests executed successfully')
+          PY
 
       - name: Verify release APK and signature
         id: verify
