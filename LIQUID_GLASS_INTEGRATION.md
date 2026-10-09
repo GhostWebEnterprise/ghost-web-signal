@@ -4,7 +4,7 @@ This package contains the files needed to apply the new **Liquid Glass Photon** 
 
 ## Files included
 
-```
+```text
 app/src/main/res/values/colors.xml                          # Expanded dark + light tokens
 core/ui/src/main/res/values/molly_colors.xml                # Photon cyan primary + navy surfaces
 app/src/main/res/drawable/ghostweb_signal_*.xml             # Glass surfaces
