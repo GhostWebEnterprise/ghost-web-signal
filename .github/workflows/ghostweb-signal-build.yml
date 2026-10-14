@@ -83,6 +83,7 @@ jobs:
             :app:assembleProdWebsiteRelease \
             :app:testProdWebsiteDebugUnitTest \
             --tests 'org.thoughtcrime.securesms.main.GhostWebStartupAnimationTest' \
+            --tests 'org.thoughtcrime.securesms.ui.GhostWebPhotonUiRegressionTest' \
             --stacktrace \
             -PbaseAppTitle="$CI_APP_TITLE" \
             -PbaseAppFileName="GhostWeb-Signal" \
