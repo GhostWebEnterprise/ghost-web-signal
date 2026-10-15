@@ -31,9 +31,15 @@ limited palette check, not full accessibility certification. Full app review
 must cover large fonts, small screens, dynamic colors, RTL, notifications,
 wallpapers and all interaction states on an Android device.
 
-Java/JDK and Android SDK downloads were attempted, but network timeouts prevented
-toolchain setup. No Android compile, emulator run or physical-device test has
-completed. Do not describe the design-reference illustration as a built app.
+Local Java/JDK and Android SDK downloads were blocked by network timeouts.
+GitHub Actions subsequently built prodWebsiteDebug, prodStoreDebug and
+stagingWebsiteDebug successfully at commit c43b095aeca46673dc659189ccc86b356fa3ce30.
+The app unit-test report contains 2,615 tests: 2,516 passed, 99 skipped, zero
+failures and zero errors. All 19 startup/design/contrast tests executed and passed.
+Run: https://github.com/GhostWebEnterprise/ghost-web-signal/actions/runs/38804856536
+
+No emulator or physical-device tests were requested for this verification.
+The design-reference illustration remains a mockup, not a screenshot of the APK.
 
 References: https://grapheneos.org/source#grapheneos and the existing Molly-based
 GhostWeb components in this repository. No GrapheneOS OS repositories were

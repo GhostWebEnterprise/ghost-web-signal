@@ -79,6 +79,12 @@ Do not disable GrapheneOS exploit protections globally as a compatibility workar
 
 ## Verification
 
+GitHub Actions verification at c43b095aeca46673dc659189ccc86b356fa3ce30 succeeded:
+prodWebsiteDebug, prodStoreDebug and stagingWebsiteDebug APKs built; 2,516 app
+unit tests passed, 99 were skipped, and none failed. All 19 startup/design/contrast
+tests executed and passed. This is not device-level privacy certification.
+Run: https://github.com/GhostWebEnterprise/ghost-web-signal/actions/runs/38804856536
+
 Run `python tools/check_graphene_privacy.py` for source-level backup and navigation
 contracts. These checks do not compile an APK or prove runtime behavior.
 
