@@ -28,21 +28,42 @@ jobs:
           java-version: '21'
       - uses: gradle/actions/setup-gradle@v6
       - uses: android-actions/setup-android@v4
+      - name: Configure memory for the Kotlin compiler
+        run: |
+          if ! sudo swapon --show --noheadings | grep -q .; then
+            sudo fallocate -l 4G /mnt/ghostweb-debug-swap
+            sudo chmod 600 /mnt/ghostweb-debug-swap
+            sudo mkswap /mnt/ghostweb-debug-swap
+            sudo swapon /mnt/ghostweb-debug-swap
+          fi
+          free -h
       - name: Install the pinned Android SDK packages
         run: sdkmanager 'platforms;android-36.1' 'build-tools;36.0.0' 'ndk;28.0.13004108'
       - name: Check privacy source contracts
         run: python3 tools/check_graphene_privacy.py
-      - name: Build debug variants and run unit tests
+      - name: Build production website debug APK
         run: |
           chmod +x ./gradlew
-          ./gradlew --no-daemon --no-configuration-cache --max-workers=2 \
-            -Dorg.gradle.jvmargs='-Xmx5g -XX:+UseParallelGC' \
+          ./gradlew --no-daemon --no-configuration-cache --no-parallel --max-workers=1 \
+            -Dorg.gradle.jvmargs='-Xmx10g -XX:+UseG1GC' \
             -Pkotlin.compiler.execution.strategy=in-process \
             -PbuildVariants="$CI_BUILD_VARIANTS" \
-            :app:assembleProdWebsiteDebug \
-            :app:assembleProdStoreDebug \
-            :app:assembleStagingWebsiteDebug \
+            :app:assembleProdWebsiteDebug --stacktrace
+      - name: Run production website unit tests
+        run: |
+          ./gradlew --no-daemon --no-configuration-cache --no-parallel --max-workers=1 \
+            -Dorg.gradle.jvmargs='-Xmx10g -XX:+UseG1GC' \
+            -Pkotlin.compiler.execution.strategy=in-process \
+            -PbuildVariants="$CI_BUILD_VARIANTS" \
             :app:testProdWebsiteDebugUnitTest --stacktrace
+      - name: Build store and staging debug variants
+        run: |
+          ./gradlew --no-daemon --no-configuration-cache --no-parallel --max-workers=1 \
+            -Dorg.gradle.jvmargs='-Xmx10g -XX:+UseG1GC' \
+            -Pkotlin.compiler.execution.strategy=in-process \
+            -PbuildVariants="$CI_BUILD_VARIANTS" \
+            :app:assembleProdStoreDebug \
+            :app:assembleStagingWebsiteDebug --stacktrace
       - name: Upload debug APKs
         if: success()
         uses: actions/upload-artifact@v7
