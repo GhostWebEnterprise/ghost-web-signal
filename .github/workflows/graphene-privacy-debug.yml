@@ -1,0 +1,59 @@
+name: GhostWeb privacy and design debug build
+
+on:
+  push:
+    branches:
+      - codex/graphene-privacy-design
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: graphene-privacy-debug-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  debug-build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    env:
+      CI_BUILD_VARIANTS: prod(Website|Store)Debug|stagingWebsiteDebug
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/disk-cleanup
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Install the pinned Android SDK packages
+        run: sdkmanager 'platforms;android-36.1' 'build-tools;36.0.0' 'ndk;28.0.13004108'
+      - name: Check privacy source contracts
+        run: python3 tools/check_graphene_privacy.py
+      - name: Build debug variants and run unit tests
+        run: |
+          chmod +x ./gradlew
+          ./gradlew --no-daemon --no-configuration-cache --max-workers=2 \
+            -Dorg.gradle.jvmargs='-Xmx5g -XX:+UseParallelGC' \
+            -Pkotlin.compiler.execution.strategy=in-process -PCI=true \
+            :app:assembleProdWebsiteDebug \
+            :app:assembleProdStoreDebug \
+            :app:assembleStagingWebsiteDebug \
+            :app:testProdWebsiteDebugUnitTest --stacktrace
+      - name: Upload debug APKs
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ghostweb-privacy-design-debug-apks
+          path: app/build/outputs/apk/**/*.apk
+          if-no-files-found: error
+      - name: Upload diagnostic reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ghostweb-privacy-design-test-reports
+          path: |
+            **/build/reports/
+            **/build/test-results/
+          if-no-files-found: ignore

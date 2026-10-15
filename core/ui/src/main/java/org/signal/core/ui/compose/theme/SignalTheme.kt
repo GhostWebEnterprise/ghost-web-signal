@@ -245,11 +245,23 @@ fun SignalTheme(
         else systemAlignedLightColorScheme()
       }
     }
-    isDarkMode -> darkColorScheme
-    else -> lightColorScheme
+    isDarkMode -> ghostWebDarkColorScheme()
+    else -> ghostWebLightColorScheme()
   }
 
-  val extendedColors = extendedColors(colorScheme, isDarkMode = isDarkMode, isDynamic = dynamicColors)
+  val extendedColors = extendedColors(colorScheme, isDarkMode = isDarkMode, isDynamic = dynamicColors).copy(
+    colorSurface1 = colorScheme.surfaceContainerLow,
+    colorSurface2 = colorScheme.surfaceContainer,
+    colorSurface3 = colorScheme.surfaceContainerHigh,
+    colorSurface4 = colorScheme.surfaceContainerHighest,
+    colorSurface5 = if (isDarkMode) colorScheme.surfaceBright else colorScheme.surfaceDim
+  ).copy(
+    colorSurface1 = colorScheme.surfaceContainerLow,
+    colorSurface2 = colorScheme.surfaceContainer,
+    colorSurface3 = colorScheme.surfaceContainerHigh,
+    colorSurface4 = colorScheme.surfaceContainerHighest,
+    colorSurface5 = if (isDarkMode) colorScheme.surfaceBright else colorScheme.surfaceDim
+  )
   val snackbarColors = snackbarColors(colorScheme, isDarkMode = isDarkMode, isDynamic = dynamicColors)
 
   ProvideIncognitoKeyboard(enabled = incognitoKeyboardEnabled) {
@@ -262,6 +274,74 @@ fun SignalTheme(
     }
   }
 }
+
+@Composable
+private fun ghostWebLightColorScheme() = lightColorScheme.copy(
+  primary = colorResource(R.color.molly_primary_light),
+  onPrimary = colorResource(R.color.molly_on_primary_light),
+  primaryContainer = colorResource(R.color.molly_primary_container_light),
+  onPrimaryContainer = colorResource(R.color.molly_on_primary_container_light),
+  secondary = colorResource(R.color.molly_secondary_light),
+  onSecondary = colorResource(R.color.molly_on_secondary_light),
+  secondaryContainer = colorResource(R.color.molly_secondary_container_light),
+  onSecondaryContainer = colorResource(R.color.molly_on_secondary_container_light),
+  tertiary = colorResource(R.color.molly_tertiary_light),
+  onTertiary = colorResource(R.color.molly_on_tertiary_light),
+  tertiaryContainer = colorResource(R.color.molly_tertiary_container_light),
+  onTertiaryContainer = colorResource(R.color.molly_on_tertiary_container_light),
+  surface = colorResource(R.color.molly_surface_light),
+  background = colorResource(R.color.molly_background_light),
+  onSurface = colorResource(R.color.molly_on_surface_light),
+  onBackground = colorResource(R.color.molly_on_background_light),
+  surfaceVariant = colorResource(R.color.molly_surface_variant_light),
+  onSurfaceVariant = colorResource(R.color.molly_on_surface_variant_light),
+  outline = colorResource(R.color.molly_outline_light),
+  outlineVariant = colorResource(R.color.molly_outline_variant_light),
+  surfaceDim = colorResource(R.color.molly_surface_dim_light),
+  surfaceBright = colorResource(R.color.molly_surface_bright_light),
+  surfaceContainerLowest = colorResource(R.color.molly_surface_container_lowest_light),
+  surfaceContainerLow = colorResource(R.color.molly_surface_container_low_light),
+  surfaceContainer = colorResource(R.color.molly_surface_container_light),
+  surfaceContainerHigh = colorResource(R.color.molly_surface_container_high_light),
+  surfaceContainerHighest = colorResource(R.color.molly_surface_container_highest_light),
+  inverseSurface = colorResource(R.color.molly_surface_inverse_light),
+  inverseOnSurface = colorResource(R.color.molly_on_surface_inverse_light),
+  inversePrimary = colorResource(R.color.molly_primary_inverse_light),
+)
+
+@Composable
+private fun ghostWebDarkColorScheme() = darkColorScheme.copy(
+  primary = colorResource(R.color.molly_primary_dark),
+  onPrimary = colorResource(R.color.molly_on_primary_dark),
+  primaryContainer = colorResource(R.color.molly_primary_container_dark),
+  onPrimaryContainer = colorResource(R.color.molly_on_primary_container_dark),
+  secondary = colorResource(R.color.molly_secondary_dark),
+  onSecondary = colorResource(R.color.molly_on_secondary_dark),
+  secondaryContainer = colorResource(R.color.molly_secondary_container_dark),
+  onSecondaryContainer = colorResource(R.color.molly_on_secondary_container_dark),
+  tertiary = colorResource(R.color.molly_tertiary_dark),
+  onTertiary = colorResource(R.color.molly_on_tertiary_dark),
+  tertiaryContainer = colorResource(R.color.molly_tertiary_container_dark),
+  onTertiaryContainer = colorResource(R.color.molly_on_tertiary_container_dark),
+  surface = colorResource(R.color.molly_surface_dark),
+  background = colorResource(R.color.molly_background_dark),
+  onSurface = colorResource(R.color.molly_on_surface_dark),
+  onBackground = colorResource(R.color.molly_on_background_dark),
+  surfaceVariant = colorResource(R.color.molly_surface_variant_dark),
+  onSurfaceVariant = colorResource(R.color.molly_on_surface_variant_dark),
+  outline = colorResource(R.color.molly_outline_dark),
+  outlineVariant = colorResource(R.color.molly_outline_variant_dark),
+  surfaceDim = colorResource(R.color.molly_surface_dim_dark),
+  surfaceBright = colorResource(R.color.molly_surface_bright_dark),
+  surfaceContainerLowest = colorResource(R.color.molly_surface_container_lowest_dark),
+  surfaceContainerLow = colorResource(R.color.molly_surface_container_low_dark),
+  surfaceContainer = colorResource(R.color.molly_surface_container_dark),
+  surfaceContainerHigh = colorResource(R.color.molly_surface_container_high_dark),
+  surfaceContainerHighest = colorResource(R.color.molly_surface_container_highest_dark),
+  inverseSurface = colorResource(R.color.molly_surface_inverse_dark),
+  inverseOnSurface = colorResource(R.color.molly_on_surface_inverse_dark),
+  inversePrimary = colorResource(R.color.molly_primary_inverse_dark),
+)
 
 @Composable
 private fun systemAlignedLightColorScheme() = lightColorScheme(

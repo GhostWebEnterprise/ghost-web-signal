@@ -75,10 +75,12 @@
 
     <application
         android:name=".ApplicationContext"
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:backupAgent=".absbackup.SignalBackupAgent"
+        android:dataExtractionRules="@xml/ghostweb_data_extraction_rules"
         android:enableOnBackInvokedCallback="false"
         android:fullBackupOnly="false"
+        android:fullBackupContent="@xml/ghostweb_backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="GraphenePrivacy__title">Device privacy</string>
+    <string name="GraphenePrivacy__entry_summary">App lock, notification privacy and screen protection</string>
+    <string name="GraphenePrivacy__intro">These app protections work on supported Android devices, including GrapheneOS. Device-specific guidance is optional and does not enable system features.</string>
+    <string name="GraphenePrivacy__app_protection">App protection</string>
+    <string name="GraphenePrivacy__keyboard_summary">Ask your keyboard to avoid learning from messages. This depends on the keyboard respecting the request.</string>
+    <string name="GraphenePrivacy__permissions">Permissions and scopes</string>
+    <string name="GraphenePrivacy__contacts">Contact access</string>
+    <string name="GraphenePrivacy__contacts_summary">Open app info, then Permissions → Contacts. On GrapheneOS, use Contact Scopes to share selected contacts. Other contacts stay hidden and editing device contacts is blocked.</string>
+    <string name="GraphenePrivacy__storage">Photo and file access</string>
+    <string name="GraphenePrivacy__storage_summary">Open app info to manage photo and storage permissions. On GrapheneOS, Storage Scopes can limit shared files. You can also attach files using the system picker.</string>
+    <string name="GraphenePrivacy__network">Network and exploit protection</string>
+    <string name="GraphenePrivacy__network_summary">Open app info to review device controls. On GrapheneOS, keep Network enabled for messages and calls. Leave exploit protection compatibility mode off unless needed to resolve a specific failure.</string>
+    <string name="GraphenePrivacy__notifications">Notification privacy</string>
+    <string name="GraphenePrivacy__notifications_summary">Manage system notifications and lock-screen visibility. Use GhostWeb notification settings to choose whether names and message text appear.</string>
+    <string name="GraphenePrivacy__backup">Automatic system backup disabled</string>
+    <string name="GraphenePrivacy__backup_summary">Android cloud backup and automatic device transfer are excluded, including account recovery tokens. This does not delete older backups. Signal and Molly backup or transfer features that you start yourself remain separate.</string>
+    <string name="GraphenePrivacy__learn_more">GrapheneOS privacy guide</string>
+    <string name="GraphenePrivacy__learn_more_summary">Read about scopes and system protections on grapheneos.org</string>
+    <string name="GraphenePrivacy__device_controls">Optional device guides</string>
+    <string name="GraphenePrivacy__device_lock">Device password, fingerprint and auto reboot</string>
+    <string name="GraphenePrivacy__device_lock_summary">Open Security settings. On GrapheneOS, configure a long device password, fingerprint unlock and auto reboot there. These protect the device and are separate from the Molly passphrase and app lock under Privacy.</string>
+    <string name="GraphenePrivacy__profiles">User profiles and end session</string>
+    <string name="GraphenePrivacy__profiles_summary">Open system Settings, then System → Multiple users. On GrapheneOS, manage profiles, installation restrictions and available apps there. Ending a secondary profile session stops its apps, including message delivery until it starts again. Signal registration and contacts belong to each profile separately.</string>
+    <string name="GraphenePrivacy__vpn">VPN leak protection</string>
+    <string name="GraphenePrivacy__vpn_summary">Open VPN settings. Where supported, enable Always-on VPN and Block connections without VPN for your trusted VPN app. A blocked or disconnected VPN can prevent Signal messages and calls. GhostWeb does not configure a VPN or verify leak protection.</string>
+    <string name="GraphenePrivacy__location">Location access and indicator</string>
+    <string name="GraphenePrivacy__location_summary">Open app info to review Location permission. Grant access only when needed to share your location. On GrapheneOS, the system shows an indicator during location access; GhostWeb does not control that indicator.</string>
+    <string name="GraphenePrivacy__disable_app">Disable GhostWeb in system settings</string>
+    <string name="GraphenePrivacy__disable_app_summary">Open app info. GrapheneOS supports disabling user-installed apps. Disabling GhostWeb stops messages, calls and background work until you enable it again.</string>
+    <string name="GraphenePrivacy__companion_apps">GrapheneOS Camera and PDF Viewer</string>
+    <string name="GraphenePrivacy__companion_apps_summary">Read about these separate apps in the GrapheneOS feature guide. Install and select them through your device when appropriate. The existing GhostWeb camera and attachment handling stay available.</string>
+    <string name="GraphenePrivacy__diagnostics">System logs and crash reports</string>
+    <string name="GraphenePrivacy__diagnostics_summary">Read about the GrapheneOS log viewer and crash reporting. Review logs before sharing. GhostWeb debug logs remain under Settings → Help; opening this guide does not upload a report.</string>
+    <string name="GraphenePrivacy__os_updates">Automatic OS updates</string>
+    <string name="GraphenePrivacy__os_updates_summary">Read the GrapheneOS update guide. GrapheneOS installs OS updates in the background and supports automatic rollback if the first boot fails. Update settings and restart timing are managed by the OS. GhostWeb app updates are separate.</string>
+    <string name="GraphenePrivacy__quick_settings">Unlock for sensitive quick settings</string>
+    <string name="GraphenePrivacy__quick_settings_summary">Read about GrapheneOS protections for sensitive system quick settings. The OS requires unlocking for protected actions. GhostWeb does not control system tiles or add a quick-settings tile.</string>
+    <string name="GraphenePrivacy__app_lock">App lock and automatic lockdown</string>
+    <string name="GraphenePrivacy__app_lock_summary">Return to Privacy to configure the existing Molly passphrase lock, automatic lockdown and biometric app lock. These protect GhostWeb on supported Android devices without GrapheneOS.</string>
+    <string name="GraphenePrivacy__message_preview">Message notification content</string>
+    <string name="GraphenePrivacy__show_system_guides">Show device feature guides</string>
+    <string name="GraphenePrivacy__show_system_guides_summary">Optional instructions for GrapheneOS system features. These are not app switches and do not change device settings.</string>
+</resources>

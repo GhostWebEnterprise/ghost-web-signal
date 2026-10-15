@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="GraphenePrivacy__title">Enhetsintegritet</string>
+    <string name="GraphenePrivacy__entry_summary">Applås, aviseringsintegritet och skärmskydd</string>
+    <string name="GraphenePrivacy__intro">Dessa appskydd fungerar på Android-enheter som stöds, inklusive GrapheneOS. Enhetsspecifik vägledning är valfri och aktiverar inga systemfunktioner.</string>
+    <string name="GraphenePrivacy__app_protection">Appskydd</string>
+    <string name="GraphenePrivacy__keyboard_summary">Be tangentbordet att inte lära sig av meddelanden. Det kräver att tangentbordet respekterar begäran.</string>
+    <string name="GraphenePrivacy__permissions">Behörigheter och begränsad åtkomst</string>
+    <string name="GraphenePrivacy__contacts">Kontaktåtkomst</string>
+    <string name="GraphenePrivacy__contacts_summary">Öppna appinformationen och sedan Behörigheter → Kontakter. På GrapheneOS kan Contact Scopes dela valda kontakter. Övriga kontakter förblir dolda och redigering av enhetens kontakter blockeras.</string>
+    <string name="GraphenePrivacy__storage">Åtkomst till bilder och filer</string>
+    <string name="GraphenePrivacy__storage_summary">Öppna appinformationen för att hantera bild- och lagringsbehörigheter. På GrapheneOS kan Storage Scopes begränsa delade filer. Du kan också bifoga filer med systemets filväljare.</string>
+    <string name="GraphenePrivacy__network">Nätverk och exploateringsskydd</string>
+    <string name="GraphenePrivacy__network_summary">Öppna appinformationen för att granska enhetens skydd. På GrapheneOS behöver Nätverk vara aktiverat för meddelanden och samtal. Låt kompatibilitetsläget för exploateringsskydd vara avstängt om det inte behövs för att lösa ett specifikt fel.</string>
+    <string name="GraphenePrivacy__notifications">Aviseringsintegritet</string>
+    <string name="GraphenePrivacy__notifications_summary">Hantera systemaviseringar och synlighet på låsskärmen. Välj i GhostWebs aviseringsinställningar om namn och meddelandetext ska visas.</string>
+    <string name="GraphenePrivacy__backup">Automatisk systembackup är avstängd</string>
+    <string name="GraphenePrivacy__backup_summary">Androids molnbackup och automatiska enhetsöverföring är undantagna, inklusive återställningstoken för kontot. Äldre säkerhetskopior raderas inte. Signals och Mollys egna funktioner för backup eller överföring som du startar själv är separata.</string>
+    <string name="GraphenePrivacy__learn_more">GrapheneOS integritetsguide</string>
+    <string name="GraphenePrivacy__learn_more_summary">Läs om begränsad åtkomst och systemskydd på grapheneos.org</string>
+    <string name="GraphenePrivacy__device_controls">Valfria enhetsguider</string>
+    <string name="GraphenePrivacy__device_lock">Enhetslösenord, fingeravtryck och autoomstart</string>
+    <string name="GraphenePrivacy__device_lock_summary">Öppna säkerhetsinställningarna. På GrapheneOS ställer du in långt enhetslösenord, fingeravtrycksupplåsning och autoomstart där. De skyddar enheten och är separata från Mollys lösenfras och applås under Integritet.</string>
+    <string name="GraphenePrivacy__profiles">Användarprofiler och avsluta session</string>
+    <string name="GraphenePrivacy__profiles_summary">Öppna systemets Inställningar och sedan System → Flera användare. På GrapheneOS hanterar du profiler, installationsbegränsningar och tillgängliga appar där. När en sekundär profils session avslutas stoppas dess appar och meddelandeleverans tills profilen startas igen. Signalregistrering och kontakter hör till varje profil separat.</string>
+    <string name="GraphenePrivacy__vpn">Skydd mot VPN-läckor</string>
+    <string name="GraphenePrivacy__vpn_summary">Öppna VPN-inställningarna. Aktivera Alltid aktivt VPN och Blockera anslutningar utan VPN för din betrodda VPN-app om enheten stöder det. Blockerat eller frånkopplat VPN kan hindra Signalmeddelanden och samtal. GhostWeb konfigurerar inget VPN och verifierar inte läckskyddet.</string>
+    <string name="GraphenePrivacy__location">Platsåtkomst och indikator</string>
+    <string name="GraphenePrivacy__location_summary">Öppna appinformationen för att granska platsbehörigheten. Ge bara åtkomst när du behöver dela din plats. På GrapheneOS visar systemet en indikator vid platsåtkomst; GhostWeb styr inte indikatorn.</string>
+    <string name="GraphenePrivacy__disable_app">Inaktivera GhostWeb i systeminställningarna</string>
+    <string name="GraphenePrivacy__disable_app_summary">Öppna appinformationen. GrapheneOS stöder inaktivering av användarinstallerade appar. Inaktivering av GhostWeb stoppar meddelanden, samtal och bakgrundsarbete tills du aktiverar appen igen.</string>
+    <string name="GraphenePrivacy__companion_apps">GrapheneOS-kamera och PDF-visare</string>
+    <string name="GraphenePrivacy__companion_apps_summary">Läs om dessa separata appar i GrapheneOS funktionsguide. Installera och välj dem via enheten vid behov. GhostWebs befintliga kamera och bilagehantering finns kvar.</string>
+    <string name="GraphenePrivacy__diagnostics">Systemloggar och kraschrapporter</string>
+    <string name="GraphenePrivacy__diagnostics_summary">Läs om GrapheneOS loggvisare och kraschrapportering. Granska loggar innan du delar dem. GhostWebs felsökningsloggar finns kvar under Inställningar → Hjälp; att öppna guiden laddar inte upp någon rapport.</string>
+    <string name="GraphenePrivacy__os_updates">Automatiska OS-uppdateringar</string>
+    <string name="GraphenePrivacy__os_updates_summary">Läs GrapheneOS uppdateringsguide. GrapheneOS installerar OS-uppdateringar i bakgrunden och stöder automatisk återställning om första uppstarten misslyckas. Operativsystemet hanterar uppdateringsinställningar och omstartstid. Uppdateringar av GhostWeb-appen är separata.</string>
+    <string name="GraphenePrivacy__quick_settings">Upplåsning för känsliga snabbinställningar</string>
+    <string name="GraphenePrivacy__quick_settings_summary">Läs om GrapheneOS skydd för känsliga snabbinställningar i systemet. Operativsystemet kräver upplåsning för skyddade åtgärder. GhostWeb styr inte systemets snabbinställningar och lägger inte till någon egen snabbinställningsruta.</string>
+    <string name="GraphenePrivacy__app_lock">Applås och automatisk låsning</string>
+    <string name="GraphenePrivacy__app_lock_summary">Återgå till Integritet för att ställa in Mollys befintliga lösenfraslås, automatiska låsning och biometriska applås. De skyddar GhostWeb på Android-enheter som stöds utan krav på GrapheneOS.</string>
+    <string name="GraphenePrivacy__message_preview">Innehåll i meddelandeaviseringar</string>
+    <string name="GraphenePrivacy__show_system_guides">Visa guider för enhetsfunktioner</string>
+    <string name="GraphenePrivacy__show_system_guides_summary">Valfria instruktioner för GrapheneOS systemfunktioner. De är inte appreglage och ändrar inte enhetens inställningar.</string>
+</resources>

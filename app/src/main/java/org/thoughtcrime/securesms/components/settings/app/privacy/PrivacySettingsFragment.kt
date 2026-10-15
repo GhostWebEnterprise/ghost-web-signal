@@ -222,6 +222,14 @@ class PrivacySettingsFragment : DSLSettingsFragment(R.string.preferences__privac
 
       sectionHeaderPref(R.string.PrivacySettingsFragment__app_security)
 
+      clickPref(
+        title = DSLSettingsText.from(R.string.GraphenePrivacy__title),
+        summary = DSLSettingsText.from(R.string.GraphenePrivacy__entry_summary),
+        onClick = {
+          Navigation.findNavController(requireView()).safeNavigate(R.id.action_privacySettingsFragment_to_graphenePrivacySettingsFragment)
+        }
+      )
+
       switchPref(
         title = DSLSettingsText.from(R.string.preferences_app_protection__screen_lock),
         summary = DSLSettingsText.from(R.string.PrivacySettingsFragment__lock_molly_access_with_fingerprint_or_face_recognition),
