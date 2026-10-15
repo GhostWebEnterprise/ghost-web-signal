@@ -37,7 +37,8 @@ jobs:
           chmod +x ./gradlew
           ./gradlew --no-daemon --no-configuration-cache --max-workers=2 \
             -Dorg.gradle.jvmargs='-Xmx5g -XX:+UseParallelGC' \
-            -Pkotlin.compiler.execution.strategy=in-process -PCI=true \
+            -Pkotlin.compiler.execution.strategy=in-process \
+            -PbuildVariants="$CI_BUILD_VARIANTS" \
             :app:assembleProdWebsiteDebug \
             :app:assembleProdStoreDebug \
             :app:assembleStagingWebsiteDebug \
