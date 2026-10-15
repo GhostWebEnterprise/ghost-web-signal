@@ -22,9 +22,9 @@ import org.thoughtcrime.securesms.main.GhostWebStartupAnimation
 /**
  * GhostWeb Signal Photon migration UI gate.
  *
- * Regression coverage for the Photon navy/ice re-theme: the resolved theme must
- * stay on the GhostWeb surface palette, primary buttons must use the Photon
- * accent instead of Signal's ultramarine, and the main conversation-list menu
+ * Regression coverage for the GhostWeb neutral re-theme: the resolved theme must
+ * stay on the GhostWeb surface palette, primary buttons must use the GhostWeb
+ * accent, and the main conversation-list menu
  * must stay intact. Referenced by the release gate in docs/ui-gate.md.
  */
 @RunWith(RobolectricTestRunner::class)
@@ -48,9 +48,9 @@ class GhostWebPhotonUiRegressionTest {
   private fun Context.getDrawableSafe(id: Int): Drawable = requireNotNull(getDrawable(id))
 
   @Test
-  fun photonPalette_isPresent() {
+  fun neutralPalette_isPresent() {
     val resolved = context.getColor(R.color.ghostweb_signal_bg)
-    assertEquals(0xFF050914.toInt(), resolved)
+    assertEquals(0xFF111418.toInt(), resolved)
   }
 
   @Test

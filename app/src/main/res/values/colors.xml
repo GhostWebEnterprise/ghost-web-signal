@@ -7,8 +7,8 @@
 
     <!-- GhostWeb Signal visual system — Photon navy/ice -->
     <color name="ghostweb_signal_bg">#111418</color>
-    <color name="ghostweb_signal_panel">#1F252D</color>
-    <color name="ghostweb_signal_panel_2">#282F38</color>
+    <color name="ghostweb_signal_panel">#282F38</color>
+    <color name="ghostweb_signal_panel_2">#1F252D</color>
     <color name="ghostweb_signal_cyan">#A7C7ED</color>
     <color name="ghostweb_signal_cyan_dim">#A7C7ED</color>
     <color name="ghostweb_signal_teal">#A7CEC6</color>
@@ -27,8 +27,8 @@
 
     <!-- Liquid Glass light-mode tokens -->
     <color name="ghostweb_signal_bg_light">#F7F8FA</color>
-    <color name="ghostweb_signal_panel_light">#EAEEF3</color>
-    <color name="ghostweb_signal_panel_2_light">#E4E9EF</color>
+    <color name="ghostweb_signal_panel_light">#E4E9EF</color>
+    <color name="ghostweb_signal_panel_2_light">#EAEEF3</color>
     <color name="ghostweb_signal_cyan_light">#365F91</color>
     <color name="ghostweb_signal_cyan_dim_light">#365F91</color>
     <color name="ghostweb_signal_teal_light">#4B6865</color>

@@ -20,13 +20,14 @@ jobs:
     env:
       CI_BUILD_VARIANTS: prod(Website|Store)Debug|stagingWebsiteDebug
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/disk-cleanup
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '21'
-      - uses: gradle/actions/setup-gradle@v4
+      - uses: gradle/actions/setup-gradle@v6
+      - uses: android-actions/setup-android@v4
       - name: Install the pinned Android SDK packages
         run: sdkmanager 'platforms;android-36.1' 'build-tools;36.0.0' 'ndk;28.0.13004108'
       - name: Check privacy source contracts
@@ -43,14 +44,14 @@ jobs:
             :app:testProdWebsiteDebugUnitTest --stacktrace
       - name: Upload debug APKs
         if: success()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ghostweb-privacy-design-debug-apks
           path: app/build/outputs/apk/**/*.apk
           if-no-files-found: error
       - name: Upload diagnostic reports
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ghostweb-privacy-design-test-reports
           path: |
