@@ -61,7 +61,7 @@ fun PhotonActionSurface(
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
   enabled: Boolean = true,
-  content: @Composable () -> Unit
+  content: @Composable () -> Unit,
 ) {
   PhotonGlassSurface(
     modifier = modifier
