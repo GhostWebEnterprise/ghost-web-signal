@@ -3,17 +3,16 @@ package org.thoughtcrime.securesms.ghostweb.photon
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
@@ -65,16 +64,10 @@ fun PhotonActionSurface(
   enabled: Boolean = true,
   content: @Composable () -> Unit
 ) {
-  val interactionSource = remember { MutableInteractionSource() }
   PhotonGlassSurface(
     modifier = modifier
-      .defaultMinSize(minHeight = 48.dp)
-      .clickable(
-        enabled = enabled,
-        interactionSource = interactionSource,
-        indication = null,
-        onClick = onClick
-      ),
+      .heightIn(min = 48.dp)
+      .clickable(enabled = enabled, onClick = onClick),
     elevated = enabled
   ) {
     content()
