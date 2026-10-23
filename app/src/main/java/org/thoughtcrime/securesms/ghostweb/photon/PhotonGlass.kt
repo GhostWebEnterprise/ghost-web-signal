@@ -2,18 +2,17 @@ package org.thoughtcrime.securesms.ghostweb.photon
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.defaultMinSize
-import androidx.compose.foundation.layout.heightIn
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -39,7 +38,7 @@ fun PhotonGlassSurface(
   cornerRadius: Dp = 20.dp,
   padding: PaddingValues = PaddingValues(16.dp),
   elevated: Boolean = false,
-  content: @Composable () -> Unit
+  content: @Composable () -> Unit,
 ) {
   val shape = RoundedCornerShape(cornerRadius)
   Box(
@@ -48,10 +47,10 @@ fun PhotonGlassSurface(
       .clip(shape)
       .background(
         if (elevated) PhotonPalette.RaisedGlass.copy(alpha = 0.94f)
-        else PhotonPalette.Glass.copy(alpha = 0.88f)
+        else PhotonPalette.Glass.copy(alpha = 0.88f),
       )
       .border(BorderStroke(1.dp, PhotonPalette.Accent.copy(alpha = 0.26f)), shape)
-      .padding(padding)
+      .padding(padding),
   ) {
     content()
   }
@@ -68,7 +67,7 @@ fun PhotonActionSurface(
     modifier = modifier
       .heightIn(min = 48.dp)
       .clickable(enabled = enabled, onClick = onClick),
-    elevated = enabled
+    elevated = enabled,
   ) {
     content()
   }
