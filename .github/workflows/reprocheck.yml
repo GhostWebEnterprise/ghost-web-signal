@@ -120,9 +120,9 @@ jobs:
       - name: Normalize APK filenames
         run: |
           mv -v -- new/*/release/*.apk new/
-          for fn in new/*-unsigned-*.apk; do
+          for fn in new/*-unsigned*.apk; do
             [ -e "$fn" ] || continue
-            mv -v -- "$fn" "${fn/-unsigned-/-}"
+            mv -v -- "$fn" "${fn/-unsigned/}"
           done
       - name: Log diffuse full output
         run: java -jar diffuse.jar diff "original/$APK_FILE" "new/$APK_FILE"
