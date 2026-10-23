@@ -187,7 +187,28 @@ jobs:
           for apk in "${apks[@]}"; do
             [[ "$(basename "$apk")" != *-unsigned-* ]] || { echo "::error::Refusing to publish unsigned APK: $apk"; exit 1; }
           done
-      - name: Upload APKs to GitHub release
-        run: gh release upload "$TAG_REF" ./apk/*/release/*.apk --clobber
+      - name: Publish verified immutable signed APKs
+        shell: bash
         env:
           GITHUB_TOKEN: ${{ secrets.PUBLISH_PAT || secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          apks=(./apk/*/release/*.apk)
+          test "${#apks[@]}" -gt 0 || { echo "::error::No APKs to publish"; exit 1; }
+          is_draft="$(gh release view "$TAG_REF" --json isDraft --jq .isDraft)"
+          test "$is_draft" = true || { echo "::error::Refusing to modify an already published release"; exit 1; }
+          APKSIGNER="$(find "$ANDROID_HOME/build-tools" -type f -name apksigner | sort -V | tail -1)"
+          test -x "$APKSIGNER" || { echo "::error::apksigner unavailable"; exit 1; }
+          for apk in "${apks[@]}"; do
+            [[ "$(basename "$apk")" != *unsigned* ]] || { echo "::error::Unsigned APK refused"; exit 1; }
+            "$APKSIGNER" verify --verbose --print-certs "$apk"
+          done
+          gh release upload "$TAG_REF" "${apks[@]}"
+          for apk in "${apks[@]}"; do
+            name="$(basename "$apk")"
+            expected="$(sha256sum "$apk" | cut -d' ' -f1)"
+            actual="$(gh api "repos/$GITHUB_REPOSITORY/releases/tags/$TAG_REF" --jq ".assets[] | select(.name==\"$name\") | .digest" | sed 's/^sha256://')"
+            test -n "$actual" && test "$expected" = "$actual" || { echo "::error::Release checksum mismatch: $name"; exit 1; }
+          done
+          gh release edit "$TAG_REF" --draft=false
