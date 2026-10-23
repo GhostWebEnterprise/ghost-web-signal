@@ -8,7 +8,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Surface
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -39,16 +42,19 @@ fun PhotonGlassSurface(
   elevated: Boolean = false,
   content: @Composable () -> Unit
 ) {
-  Surface(
-    modifier = modifier,
-    shape = RoundedCornerShape(cornerRadius),
-    color = if (elevated) PhotonPalette.RaisedGlass.copy(alpha = 0.94f)
-            else PhotonPalette.Glass.copy(alpha = 0.88f),
-    contentColor = PhotonPalette.Foreground,
-    border = BorderStroke(1.dp, PhotonPalette.Accent.copy(alpha = 0.26f)),
-    shadowElevation = if (elevated) 8.dp else 2.dp
+  val shape = RoundedCornerShape(cornerRadius)
+  Box(
+    modifier = modifier
+      .shadow(if (elevated) 8.dp else 2.dp, shape)
+      .clip(shape)
+      .background(
+        if (elevated) PhotonPalette.RaisedGlass.copy(alpha = 0.94f)
+        else PhotonPalette.Glass.copy(alpha = 0.88f)
+      )
+      .border(BorderStroke(1.dp, PhotonPalette.Accent.copy(alpha = 0.26f)), shape)
+      .padding(padding)
   ) {
-    Box(modifier = Modifier.padding(padding)) { content() }
+    content()
   }
 }
 
@@ -62,6 +68,7 @@ fun PhotonActionSurface(
   val interactionSource = remember { MutableInteractionSource() }
   PhotonGlassSurface(
     modifier = modifier
+      .defaultMinSize(minHeight = 48.dp)
       .clickable(
         enabled = enabled,
         interactionSource = interactionSource,
