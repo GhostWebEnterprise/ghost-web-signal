@@ -1,6 +1,6 @@
 # GhostWeb Signal — Photon Liquid Glass UI specification
 
-Figma source: https://www.figma.com/design/dD6E76OfB9jPoGJhTSDRqq
+Figma source: [Photon Liquid Glass design](https://www.figma.com/design/dD6E76OfB9jPoGJhTSDRqq)
 
 ## Scope
 22 Android screen concepts covering onboarding, registration, chats, conversation, calls, groups, contacts, stories, profile, settings, privacy, security, appearance, media, search, new message, group detail, active call, app lock, linked devices, notifications and about.
