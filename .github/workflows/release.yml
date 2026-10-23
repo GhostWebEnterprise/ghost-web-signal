@@ -95,7 +95,7 @@ jobs:
           apks=(outputs/apk/*/release/*.apk)
           [ "${#apks[@]}" -gt 0 ] || { echo "::error::No release APKs produced"; exit 1; }
           for apk in "${apks[@]}"; do
-            if [[ "$(basename "$apk")" == *-unsigned-* ]]; then
+            if [[ "$(basename "$apk")" == *unsigned* ]]; then
               echo "::error::Unsigned APK produced: $apk"
               exit 1
             fi
@@ -185,7 +185,7 @@ jobs:
           apks=(apk/*/release/*.apk)
           [ "${#apks[@]}" -gt 0 ] || { echo "::error::No APK artifacts downloaded"; exit 1; }
           for apk in "${apks[@]}"; do
-            [[ "$(basename "$apk")" != *-unsigned-* ]] || { echo "::error::Refusing to publish unsigned APK: $apk"; exit 1; }
+            [[ "$(basename "$apk")" != *unsigned* ]] || { echo "::error::Refusing to publish unsigned APK: $apk"; exit 1; }
           done
       - name: Publish verified immutable signed APKs
         shell: bash
