@@ -24,9 +24,24 @@ jobs:
         id: extract_version
         run: |
           ver=$(./gradlew -q :app:printVersion | jq -r .android.versionName)
+          test -n "$ver" || { echo "::error::Could not extract Android version"; exit 1; }
           echo "version=v$ver" >> "$GITHUB_OUTPUT"
 
-      - name: Create and push release tag
+      - name: Create and push immutable release tag
+        env:
+          TAG: ${{ steps.extract_version.outputs.version }}
         run: |
-          git tag -f "${{ steps.extract_version.outputs.version }}"
-          git push -f origin "${{ steps.extract_version.outputs.version }}"
+          set -euo pipefail
+          git check-ref-format "refs/tags/$TAG"
+          # Fail closed if the remote cannot be queried or if the tag already exists.
+          remote_tag="$(git ls-remote --tags origin "refs/tags/$TAG")"
+          if [ -n "$remote_tag" ]; then
+            echo "::error::Refusing to move existing release tag $TAG"
+            exit 1
+          fi
+          if git show-ref --verify --quiet "refs/tags/$TAG"; then
+            echo "::error::Local tag $TAG already exists; refusing to overwrite it"
+            exit 1
+          fi
+          git tag "$TAG"
+          git push origin "refs/tags/$TAG"
