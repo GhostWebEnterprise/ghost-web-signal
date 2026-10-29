@@ -98,7 +98,7 @@ jobs:
       - name: Output filenames to compare
         id: set
         run: |
-          apks=$(jq -c -n '[$ARGS.positional[] | sub("-unsigned";"")]' --args -- ./*.apk)
+          apks=$(jq -c -n '[$ARGS.positional[] | sub("-unsigned\\.apk$"; ".apk")]' --args -- ./*.apk)
           echo "apks=$apks" >> "$GITHUB_OUTPUT"
 
   compare:
@@ -120,9 +120,9 @@ jobs:
       - name: Normalize APK filenames
         run: |
           mv -v -- new/*/release/*.apk new/
-          for fn in new/*-unsigned*.apk; do
+          for fn in new/*-unsigned.apk; do
             [ -e "$fn" ] || continue
-            mv -v -- "$fn" "${fn/-unsigned/}"
+            mv -v -- "$fn" "${fn%-unsigned.apk}.apk"
           done
       - name: Log diffuse full output
         run: java -jar diffuse.jar diff "original/$APK_FILE" "new/$APK_FILE"
