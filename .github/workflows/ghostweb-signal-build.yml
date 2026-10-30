@@ -209,7 +209,8 @@ jobs:
           # Refuse to publish a lower version tag than any already-published
           # GhostWeb Signal release. Version selection remains an explicit
           # release decision; this guard only prevents accidental regression.
-          published_tags="$(gh release list --repo "$GH_REPO" --limit 1000 --json tagName,isDraft --jq '.[] | select(.isDraft == false) | .tagName' | grep -E '^v[0-9]+(\.[0-9]+)*(-[0-9]+)?$' || true)"
+          all_published_tags="$(gh release list --repo "$GH_REPO" --limit 1000 --json tagName,isDraft --jq '.[] | select(.isDraft == false) | .tagName')"
+          published_tags="$(printf '%s\n' "$all_published_tags" | grep -E '^v[0-9]+(\.[0-9]+)*(-[0-9]+)?$' || true)"
           latest_tag="$(printf '%s\n' "$published_tags" | sort -V | tail -n 1)"
           if [ -n "$latest_tag" ]; then
             highest_tag="$(printf '%s\n%s\n' "$latest_tag" "$RELEASE_TAG" | sort -V | tail -n 1)"
