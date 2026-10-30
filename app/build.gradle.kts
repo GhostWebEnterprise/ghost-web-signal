@@ -609,5 +609,5 @@ fun requireCommitTag(): String {
 }
 
 private fun git(vararg args: String): String = providers.exec {
-    commandLine("git", *args)
-  }.standardOutput.asText.get().trim()
+  commandLine("git", *args)
+}.standardOutput.asText.get().trim()
