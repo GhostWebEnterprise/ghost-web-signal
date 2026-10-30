@@ -205,6 +205,49 @@ jobs:
 
       - name: Publish verified release
         run: |
+          set -euo pipefail
+          # Refuse to publish a lower version tag than any already-published
+          # GhostWeb Signal release. Version selection remains an explicit
+          # release decision; this guard only prevents accidental regression.
+          published_tags="$(gh release list --repo "$GH_REPO" --limit 1000 --json tagName,isDraft --jq '.[] | select(.isDraft == false) | .tagName' | grep -E '^v[0-9]+(\\.[0-9]+)*(-[0-9]+)?          if gh release view "$RELEASE_TAG" > /dev/null 2>&1; then
+            echo "Release $RELEASE_TAG already exists; verifying existing release instead of overwriting it."
+            mkdir downloaded
+            gh release download "$RELEASE_TAG" --pattern '*.apk' --dir downloaded
+            if (cd downloaded && sha256sum --check ../SHA256SUMS); then
+              echo "Existing release already contains the verified APK bytes."
+              exit 0
+            fi
+            echo "Existing release tag points to different APK bytes; refusing to overwrite an immutable published release." >&2
+            exit 1
+          fi
+          cat > release-notes.md <<EOF_NOTES
+          GhostWeb Signal startup animation with the original icon and violet Photon-inspired glow.
+
+          Plays after completed registration and app unlock. Respects disabled animations.
+          Android 12+ uses blur-to-focus; older devices use a scale/fade transition.
+
+          Photon UI migration gate verified before publishing (see UI_GATE.md and docs/ui-gate.md).
+
+          Source commit: $GITHUB_SHA
+          Signed APK and startup lifecycle tests verified by GitHub Actions.
+          Physical-device registration and biometric testing is still required.
+          EOF_NOTES
+          gh release create "$RELEASE_TAG" ./*.apk SHA256SUMS BUILD.txt UI_GATE.md \
+            --target "$GITHUB_SHA" --draft \
+            --title "GhostWeb Signal $RELEASE_TAG" --notes-file release-notes.md
+          mkdir downloaded
+          gh release download "$RELEASE_TAG" --pattern '*.apk' --dir downloaded
+          (cd downloaded && sha256sum --check ../SHA256SUMS)
+          gh release edit "$RELEASE_TAG" --draft=false
+ || true)"
+          latest_tag="$(printf '%s\\n' "$published_tags" | sort -V | tail -n 1)"
+          if [ -n "$latest_tag" ]; then
+            highest_tag="$(printf '%s\\n%s\\n' "$latest_tag" "$RELEASE_TAG" | sort -V | tail -n 1)"
+            if [ "$highest_tag" != "$RELEASE_TAG" ]; then
+              echo "::error::Refusing non-monotonic release $RELEASE_TAG; latest published release is $latest_tag" >&2
+              exit 1
+            fi
+          fi
           cd dist
           sha256sum --check SHA256SUMS
           if gh release view "$RELEASE_TAG" > /dev/null 2>&1; then
