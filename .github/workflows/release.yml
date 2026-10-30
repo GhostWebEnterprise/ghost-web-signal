@@ -11,7 +11,7 @@ on:
         type: string
 
 permissions:
-  contents: write
+  contents: read
   actions: read
 
 env:
@@ -21,7 +21,7 @@ env:
 jobs:
   build:
     name: Build signed release
-    if: "github.event.base_ref != 'refs/heads/upstream-main'"
+    if: github.event.base_ref != 'refs/heads/upstream-main' && (github.ref == 'refs/heads/GWSignal.main' || startsWith(github.ref, 'refs/tags/v'))
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v6
@@ -129,7 +129,9 @@ jobs:
 
   prepare_release:
     name: Prepare release
-    if: "github.event.base_ref != 'refs/heads/upstream-main'"
+    if: github.event.base_ref != 'refs/heads/upstream-main' && (github.ref == 'refs/heads/GWSignal.main' || startsWith(github.ref, 'refs/tags/v'))
+    permissions:
+      contents: write
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v6
@@ -149,6 +151,9 @@ jobs:
 
   upload:
     name: Upload verified signed APKs
+    if: github.ref == 'refs/heads/GWSignal.main' || startsWith(github.ref, 'refs/tags/v')
+    permissions:
+      contents: write
     runs-on: ubuntu-24.04
     needs: [build, prepare_release]
     steps:
