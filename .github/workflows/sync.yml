@@ -11,6 +11,7 @@ permissions:
 jobs:
   sync:
     name: Sync
+    if: github.ref == 'refs/heads/GWSignal.main'
     runs-on: ubuntu-24.04
 
     steps:

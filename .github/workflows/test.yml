@@ -52,7 +52,7 @@ jobs:
 
   prepare_release_tag:
     name: Tag release
-    if: github.event_name == 'push' && contains(github.event.head_commit.message, '[release]')
+    if: github.event_name == 'push' && github.ref == 'refs/heads/GWSignal.main' && contains(github.event.head_commit.message, '[release]')
     runs-on: ubuntu-24.04
     permissions:
       contents: write
@@ -103,7 +103,7 @@ jobs:
 
   release:
     name: Build and publish APK
-    if: github.event_name == 'push' && contains(github.event.head_commit.message, '[release]')
+    if: github.event_name == 'push' && github.ref == 'refs/heads/GWSignal.main' && contains(github.event.head_commit.message, '[release]')
     needs:
       - test
       - prepare_release_tag
