@@ -8,6 +8,7 @@ on:
 jobs:
   push_tag:
     name: Push version tag
+    if: github.ref == 'refs/heads/GWSignal.main'
     runs-on: ubuntu-24.04
     permissions:
       contents: write
