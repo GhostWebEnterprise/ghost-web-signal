@@ -154,6 +154,7 @@ jobs:
     if: github.ref == 'refs/heads/GWSignal.main' || startsWith(github.ref, 'refs/tags/v')
     permissions:
       contents: write
+      actions: read
     runs-on: ubuntu-24.04
     needs: [build, prepare_release]
     steps:
