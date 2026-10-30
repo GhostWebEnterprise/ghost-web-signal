@@ -117,9 +117,14 @@ jobs:
       - name: Verify release APK and signature
         id: verify
         run: |
+          set -euo pipefail
           mapfile -t apks < <(find app/build/outputs/apk -type f -name '*.apk')
           test "${#apks[@]}" -eq 1
           apk="${apks[0]}"
+          if [[ "$(basename "$apk")" == *-unsigned-* ]]; then
+            echo "::error::Refusing unsigned APK filename: $(basename "$apk")" >&2
+            exit 1
+          fi
           tools="$ANDROID_HOME/build-tools/36.0.0"
           "$tools/apksigner" verify --verbose --print-certs "$apk"
           badging=$("$tools/aapt" dump badging "$apk")
