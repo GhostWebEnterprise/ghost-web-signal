@@ -137,6 +137,25 @@ jobs:
       - uses: actions/checkout@v6
         with:
           ref: "${{ env.TAG_REF }}"
+      - name: Refuse non-monotonic release tag
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          if [[ ! "$TAG_REF" =~ ^v[0-9]+(\.[0-9]+)*(-[0-9]+)?$ ]]; then
+            echo "::error::Invalid release version tag: $TAG_REF" >&2
+            exit 1
+          fi
+          all_published_tags="$(gh release list --repo "$GITHUB_REPOSITORY" --limit 1000 --json tagName,isDraft --jq '.[] | select(.isDraft == false) | .tagName')"
+          published_tags="$(printf '%s\n' "$all_published_tags" | grep -E '^v[0-9]+(\.[0-9]+)*(-[0-9]+)?$' || true)"
+          latest_tag="$(printf '%s\n' "$published_tags" | sort -V | tail -n 1)"
+          if [ -n "$latest_tag" ]; then
+            highest_tag="$(printf '%s\n%s\n' "$latest_tag" "$TAG_REF" | sort -V | tail -n 1)"
+            if [ "$highest_tag" != "$TAG_REF" ]; then
+              echo "::error::Refusing non-monotonic release $TAG_REF; latest published release is $latest_tag" >&2
+              exit 1
+            fi
+          fi
       - name: Check if release exists
         id: check_release
         run: |
