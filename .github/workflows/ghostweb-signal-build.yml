@@ -153,9 +153,11 @@ jobs:
           Gate version: ${UI_GATE_EXPECTED_VERSION}
           UI_GATE_STATUS: PASS
 
-          Covered by GhostWebPhotonUiRegressionTest (theme tokens, startup,
-          menus/dialogs, chats/calls navigation, badge colors) executed in
-          :app:testProdWebsiteDebugUnitTest on this exact build.
+          Covered by GhostWebPhotonUiRegressionTest (palette and surface tokens,
+          resolved theme/button roles, unread badge, startup overlay lifecycle and
+          drawables/layout, conversation-list menu items, and core layout resource
+          presence) executed in :app:testProdWebsiteDebugUnitTest on this exact build.
+          This automated gate does not replace physical-device or visual-flow testing.
 
           APK: $(basename "$apk")
           APK SHA-256: ${apk_sha256}
