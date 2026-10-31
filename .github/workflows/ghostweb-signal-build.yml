@@ -145,6 +145,11 @@ jobs:
             echo "::error::APK signer differs from the published GhostWeb Signal update identity" >&2
             exit 1
           }
+          badging=$("$tools/aapt" dump badging "$apk")
+          package=$(sed -n "s/^package: name='\\([^']*\\)'.*/\\1/p" <<< "$badging")
+          version=$(sed -n "s/^package: .*versionName='\\([^']*\\)'.*/\\1/p" <<< "$badging")
+          test "$package" = "$CI_PACKAGE_ID"
+          [[ "$version" =~ ^[0-9]+\\.[0-9]+\\.[0-9]+-[0-9]+$ ]]
           cp "$apk" "dist/GhostWeb-Signal-v${version}.apk"
           (cd dist && sha256sum ./*.apk > SHA256SUMS)
           printf 'Commit: %s\nVersion: %s\nPackage: %s\n' \
