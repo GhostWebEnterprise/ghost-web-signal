@@ -107,8 +107,26 @@ jobs:
           set -euo pipefail
           APKSIGNER=$(find "$ANDROID_HOME/build-tools" -type f -name apksigner | sort -V | tail -1)
           test -x "$APKSIGNER" || { echo "::error::apksigner not found"; exit 1; }
-          find outputs/apk -path '*/release/*.apk' -print0 | while IFS= read -r -d '' apk; do
-            "$APKSIGNER" verify --verbose --print-certs "$apk"
+          EXPECTED_SIGNER_SHA256="64bb12f28a7d39d2cf921024c6d36019ea3808481bd4471511bd83ca64f20435"
+          mapfile -d '' apks < <(find outputs/apk -type f -path '*/release/*.apk' -print0 | sort -z)
+          test "${#apks[@]}" -gt 0 || { echo "::error::No release APKs found"; exit 1; }
+          mkdir -p outputs/apk
+          : > outputs/apk/SIGNATURES.txt
+          : > outputs/apk/SHA256SUMS
+          declare -A seen_names=()
+          for apk in "${apks[@]}"; do
+            name="$(basename "$apk")"
+            [[ "$name" != *unsigned* ]] || { echo "::error::Unsigned APK refused: $name"; exit 1; }
+            [[ -z "${seen_names[$name]:-}" ]] || { echo "::error::Duplicate APK asset name: $name"; exit 1; }
+            seen_names["$name"]=1
+            verification="$("$APKSIGNER" verify --verbose --print-certs "$apk")"
+            printf 'APK: %s\n%s\n\n' "$name" "$verification" >> outputs/apk/SIGNATURES.txt
+            grep -Fq "Verifies" <<< "$verification" || { echo "::error::APK signature verification failed: $name"; exit 1; }
+            grep -Fq "Verified using v2 scheme (APK Signature Scheme v2): true" <<< "$verification" || { echo "::error::APK Signature Scheme v2 is required: $name"; exit 1; }
+            grep -Fq "Number of signers: 1" <<< "$verification" || { echo "::error::Expected exactly one signer: $name"; exit 1; }
+            grep -Fq "Signer #1 certificate SHA-256 digest: ${EXPECTED_SIGNER_SHA256}" <<< "$verification" || { echo "::error::APK signer differs from the published GhostWeb Signal identity: $name"; exit 1; }
+            sha256="$(sha256sum "$apk" | cut -d' ' -f1)"
+            printf '%s  %s\n' "$sha256" "$name" >> outputs/apk/SHA256SUMS
           done
         working-directory: reproducible-builds
       - name: Log APK and AAB checksums
@@ -118,7 +136,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: apk
-          path: reproducible-builds/outputs/apk/*/release/*.apk
+          path: reproducible-builds/outputs/apk/
           if-no-files-found: error
       - name: Upload Bundles
         uses: actions/upload-artifact@v7
@@ -209,9 +227,16 @@ jobs:
           shopt -s nullglob
           apks=(apk/*/release/*.apk)
           [ "${#apks[@]}" -gt 0 ] || { echo "::error::No APK artifacts downloaded"; exit 1; }
-          for apk in "${apks[@]}"; do
-            [[ "$(basename "$apk")" != *unsigned* ]] || { echo "::error::Refusing to publish unsigned APK: $apk"; exit 1; }
-          done
+          test -s apk/SHA256SUMS || { echo "::error::APK checksum manifest is missing"; exit 1; }
+          test -s apk/SIGNATURES.txt || { echo "::error::APK signature evidence is missing"; exit 1; }
+          while read -r expected name; do
+            test -n "$expected" && test -n "$name" || { echo "::error::Invalid SHA256SUMS entry"; exit 1; }
+            mapfile -d '' matches < <(find apk -type f -name "$name" -print0)
+            test "${#matches[@]}" -eq 1 || { echo "::error::Expected one artifact for $name"; exit 1; }
+            actual="$(sha256sum "${matches[0]}" | cut -d' ' -f1)"
+            test "$actual" = "$expected" || { echo "::error::APK artifact checksum mismatch: $name"; exit 1; }
+            [[ "$name" != *unsigned* ]] || { echo "::error::Refusing unsigned APK: $name"; exit 1; }
+          done < apk/SHA256SUMS
       - name: Publish verified immutable signed APKs
         shell: bash
         env:
@@ -225,15 +250,37 @@ jobs:
           test "$is_draft" = true || { echo "::error::Refusing to modify an already published release"; exit 1; }
           APKSIGNER="$(find "$ANDROID_HOME/build-tools" -type f -name apksigner | sort -V | tail -1)"
           test -x "$APKSIGNER" || { echo "::error::apksigner unavailable"; exit 1; }
-          for apk in "${apks[@]}"; do
-            [[ "$(basename "$apk")" != *unsigned* ]] || { echo "::error::Unsigned APK refused"; exit 1; }
-            "$APKSIGNER" verify --verbose --print-certs "$apk"
-          done
-          gh release upload "$TAG_REF" "${apks[@]}"
+          EXPECTED_SIGNER_SHA256="64bb12f28a7d39d2cf921024c6d36019ea3808481bd4471511bd83ca64f20435"
           for apk in "${apks[@]}"; do
             name="$(basename "$apk")"
-            expected="$(sha256sum "$apk" | cut -d' ' -f1)"
+            [[ "$name" != *unsigned* ]] || { echo "::error::Unsigned APK refused: $name"; exit 1; }
+            verification="$("$APKSIGNER" verify --verbose --print-certs "$apk")"
+            grep -Fq "Verifies" <<< "$verification" || { echo "::error::APK signature verification failed: $name"; exit 1; }
+            grep -Fq "Verified using v2 scheme (APK Signature Scheme v2): true" <<< "$verification" || { echo "::error::APK Signature Scheme v2 is required: $name"; exit 1; }
+            grep -Fq "Number of signers: 1" <<< "$verification" || { echo "::error::Expected exactly one signer: $name"; exit 1; }
+            grep -Fq "Signer #1 certificate SHA-256 digest: ${EXPECTED_SIGNER_SHA256}" <<< "$verification" || { echo "::error::APK signer differs from the published GhostWeb Signal identity: $name"; exit 1; }
+          done
+          assets=("${apks[@]}" apk/SHA256SUMS apk/SIGNATURES.txt)
+          gh release upload "$TAG_REF" "${assets[@]}"
+          for asset in "${assets[@]}"; do
+            name="$(basename "$asset")"
+            expected="$(sha256sum "$asset" | cut -d' ' -f1)"
             actual="$(gh api "repos/$GITHUB_REPOSITORY/releases/tags/$TAG_REF" --jq ".assets[] | select(.name==\"$name\") | .digest" | sed 's/^sha256://')"
-            test -n "$actual" && test "$expected" = "$actual" || { echo "::error::Release checksum mismatch: $name"; exit 1; }
+            test -n "$actual" && test "$expected" = "$actual" || { echo "::error::Release asset checksum mismatch: $name"; exit 1; }
+          done
+          mkdir -p verified-release
+          gh release download "$TAG_REF" --pattern '*.apk' --pattern SHA256SUMS --pattern SIGNATURES.txt --dir verified-release
+          (cd verified-release && sha256sum --check SHA256SUMS)
+          cmp -s apk/SIGNATURES.txt verified-release/SIGNATURES.txt || { echo "::error::Downloaded signature evidence differs"; exit 1; }
+          for apk in "${apks[@]}"; do
+            name="$(basename "$apk")"
+            downloaded="verified-release/$name"
+            test -s "$downloaded" || { echo "::error::Downloaded release APK is missing: $name"; exit 1; }
+            cmp -s "$apk" "$downloaded" || { echo "::error::Downloaded release APK bytes differ: $name"; exit 1; }
+            verification="$("$APKSIGNER" verify --verbose --print-certs "$downloaded")"
+            grep -Fq "Verifies" <<< "$verification" || { echo "::error::Downloaded release APK signature failed: $name"; exit 1; }
+            grep -Fq "Verified using v2 scheme (APK Signature Scheme v2): true" <<< "$verification" || { echo "::error::Downloaded release APK lacks V2: $name"; exit 1; }
+            grep -Fq "Number of signers: 1" <<< "$verification" || { echo "::error::Downloaded release APK has unexpected signer count: $name"; exit 1; }
+            grep -Fq "Signer #1 certificate SHA-256 digest: ${EXPECTED_SIGNER_SHA256}" <<< "$verification" || { echo "::error::Downloaded release APK signer mismatch: $name"; exit 1; }
           done
           gh release edit "$TAG_REF" --draft=false
