@@ -170,6 +170,21 @@ class GhostWebPhotonUiRegressionTest {
   }
 
   @Test
+  fun lightSystemMode_staysOnPhotonSurfaceByDesign() {
+    val themed = RuntimeEnvironment.getApplication()
+    themed.setTheme(R.style.TextSecure_LightTheme)
+    val surface = themed.theme.resolveColor(com.google.android.material.R.attr.colorSurface)
+    val accent = themed.theme.resolveColor(R.attr.signal_accent_primary)
+    val statusBar = themed.theme.resolveColor(android.R.attr.statusBarColor)
+
+    // GhostWeb intentionally keeps the same high-contrast Photon navy/ice
+    // palette even when Android's system appearance is set to light.
+    assertEquals(context.getColor(R.color.ghostweb_signal_bg), surface)
+    assertEquals(context.getColor(R.color.ghostweb_signal_cyan), accent)
+    assertEquals(context.getColor(R.color.ghostweb_signal_bg), statusBar)
+  }
+
+  @Test
   fun gateVersion_isRegisteredForReleaseVerification() {
     val version = context.getString(R.string.ghostweb_ui_gate_version)
     assertEquals("photon-2", version)
