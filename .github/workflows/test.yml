@@ -18,6 +18,10 @@ jobs:
   test:
     name: Run tests
     runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    concurrency:
+      group: ghostweb-signal-tests-${{ github.ref }}
+      cancel-in-progress: true
 
     steps:
       - uses: actions/checkout@v6
