@@ -294,13 +294,20 @@ jobs:
           if gh release view "$RELEASE_TAG" > /dev/null 2>&1; then
             echo "Release $RELEASE_TAG already exists; verifying existing release instead of overwriting it."
             mkdir downloaded
-            gh release download "$RELEASE_TAG" --pattern '*.apk' --dir downloaded
-            if (cd downloaded && sha256sum --check ../SHA256SUMS); then
-              echo "Existing release already contains the verified APK bytes."
-              exit 0
-            fi
-            echo "Existing release tag points to different APK bytes; refusing to overwrite an immutable published release." >&2
-            exit 1
+            gh release download "$RELEASE_TAG" --dir downloaded
+            for evidence in "${apks[0]#./}" SHA256SUMS BUILD.txt UI_GATE.md apksigner.txt; do
+              test -s "downloaded/$evidence" || {
+                echo "::error::Existing release is missing $evidence" >&2
+                exit 1
+              }
+              cmp -s "$evidence" "downloaded/$evidence" || {
+                echo "::error::Existing release asset differs from the verified build: $evidence" >&2
+                exit 1
+              }
+            done
+            (cd downloaded && sha256sum --check SHA256SUMS)
+            echo "Existing release contains the exact verified APK and evidence bytes."
+            exit 0
           fi
           cat > release-notes.md <<EOF_NOTES
           GhostWeb Signal startup animation with the original icon and violet Photon-inspired glow.
