@@ -87,6 +87,15 @@ jobs:
         if: always()
         run: rm -f certs/keystore.jks
         working-directory: reproducible-builds
+      - name: Restore runner ownership of Docker build outputs
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -d outputs ]; then
+            sudo chown -R "$(id -u):$(id -g)" outputs
+          fi
+        working-directory: reproducible-builds
       - name: Reject unsigned release APKs
         shell: bash
         run: |
