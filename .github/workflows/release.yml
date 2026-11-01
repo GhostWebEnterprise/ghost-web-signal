@@ -129,6 +129,8 @@ jobs:
             [[ -z "${seen_names[$name]:-}" ]] || { echo "::error::Duplicate APK asset name: $name"; exit 1; }
             seen_names["$name"]=1
             verification="$("$APKSIGNER" verify --verbose --print-certs "$apk")"
+            # Certificate metadata is public; print it so signer mismatches are diagnosable without exposing keystore secrets.
+            printf '%s\n' "$verification" | grep -E 'certificate SHA-256 digest:|Number of signers:|Verified using v2 scheme' || true
             printf 'APK: %s\n%s\n\n' "$name" "$verification" >> outputs/apk/SIGNATURES.txt
             grep -Fq "Verifies" <<< "$verification" || { echo "::error::APK signature verification failed: $name"; exit 1; }
             grep -Fq "Verified using v2 scheme (APK Signature Scheme v2): true" <<< "$verification" || { echo "::error::APK Signature Scheme v2 is required: $name"; exit 1; }
