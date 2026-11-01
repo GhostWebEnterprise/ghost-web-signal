@@ -232,7 +232,7 @@ jobs:
       - name: Require full Test workflow success for exact commit
         run: |
           set -euo pipefail
-          runs="$(gh api "repos/$GH_REPO/actions/workflows/test.yml/runs" \
+          runs="$(gh api --method GET "repos/$GH_REPO/actions/workflows/test.yml/runs" \
             -f branch=GWSignal.main \
             -f head_sha="$GITHUB_SHA" \
             -f status=completed \
