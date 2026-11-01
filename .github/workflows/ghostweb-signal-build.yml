@@ -268,7 +268,29 @@ jobs:
             fi
           fi
           cd dist
+          set -euo pipefail
+          mapfile -t apks < <(find . -maxdepth 1 -type f -name '*.apk' -print | sort)
+          test "${#apks[@]}" -eq 1 || {
+            echo "::error::Expected exactly one APK in the downloaded build artifact" >&2
+            exit 1
+          }
+          [[ "${apks[0]}" != *unsigned* ]] || {
+            echo "::error::Unsigned APK artifact refused" >&2
+            exit 1
+          }
+          test -s SHA256SUMS
           sha256sum --check SHA256SUMS
+          test -s apksigner.txt
+          grep -Fq "Verifies" apksigner.txt
+          grep -Fq "Verified using v2 scheme (APK Signature Scheme v2): true" apksigner.txt
+          grep -Fq "Number of signers: 1" apksigner.txt
+          EXPECTED_SIGNER_SHA256="64bb12f28a7d39d2cf921024c6d36019ea3808481bd4471511bd83ca64f20435"
+          grep -Fq "Signer #1 certificate SHA-256 digest: ${EXPECTED_SIGNER_SHA256}" apksigner.txt
+          test -s BUILD.txt
+          grep -Fq "Commit: ${GITHUB_SHA}" BUILD.txt
+          test -s UI_GATE.md
+          grep -Fq "UI_GATE_STATUS: PASS" UI_GATE.md
+          grep -Fq "Source commit: ${GITHUB_SHA}" UI_GATE.md
           if gh release view "$RELEASE_TAG" > /dev/null 2>&1; then
             echo "Release $RELEASE_TAG already exists; verifying existing release instead of overwriting it."
             mkdir downloaded
@@ -296,6 +318,16 @@ jobs:
             --target "$GITHUB_SHA" --draft \
             --title "GhostWeb Signal $RELEASE_TAG" --notes-file release-notes.md
           mkdir downloaded
-          gh release download "$RELEASE_TAG" --pattern '*.apk' --dir downloaded
-          (cd downloaded && sha256sum --check ../SHA256SUMS)
+          gh release download "$RELEASE_TAG" --dir downloaded
+          for evidence in "${apks[0]#./}" SHA256SUMS BUILD.txt UI_GATE.md apksigner.txt; do
+            test -s "downloaded/$evidence" || {
+              echo "::error::Published release is missing $evidence" >&2
+              exit 1
+            }
+            cmp -s "$evidence" "downloaded/$evidence" || {
+              echo "::error::Downloaded release asset differs from the verified build: $evidence" >&2
+              exit 1
+            }
+          done
+          (cd downloaded && sha256sum --check SHA256SUMS)
           gh release edit "$RELEASE_TAG" --draft=false
