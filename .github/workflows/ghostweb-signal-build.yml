@@ -216,6 +216,7 @@ jobs:
        contains(github.event.head_commit.message, '[publish-apk]'))
     runs-on: ubuntu-latest
     permissions:
+      actions: read
       contents: write
     env:
       GH_TOKEN: ${{ github.token }}
@@ -227,6 +228,28 @@ jobs:
         with:
           name: ghostweb-signal-release-apk
           path: dist
+
+      - name: Require full Test workflow success for exact commit
+        run: |
+          set -euo pipefail
+          runs="$(gh api --method GET "repos/$GH_REPO/actions/workflows/test.yml/runs" \
+            -f branch=GWSignal.main \
+            -f head_sha="$GITHUB_SHA" \
+            -f status=completed \
+            -f per_page=100)"
+          jq -e --arg sha "$GITHUB_SHA" '
+            any(.workflow_runs[];
+              .head_sha == $sha and
+              .head_branch == "GWSignal.main" and
+              .event == "push" and
+              .name == "Test" and
+              .status == "completed" and
+              .conclusion == "success"
+            )
+          ' <<< "$runs" >/dev/null || {
+            echo "::error::A successful full Test workflow run for exact commit $GITHUB_SHA is required before publishing." >&2
+            exit 1
+          }
 
       - name: Publish verified release
         run: |
@@ -245,17 +268,46 @@ jobs:
             fi
           fi
           cd dist
+          set -euo pipefail
+          mapfile -t apks < <(find . -maxdepth 1 -type f -name '*.apk' -print | sort)
+          test "${#apks[@]}" -eq 1 || {
+            echo "::error::Expected exactly one APK in the downloaded build artifact" >&2
+            exit 1
+          }
+          [[ "${apks[0]}" != *unsigned* ]] || {
+            echo "::error::Unsigned APK artifact refused" >&2
+            exit 1
+          }
+          test -s SHA256SUMS
           sha256sum --check SHA256SUMS
+          test -s apksigner.txt
+          grep -Fq "Verifies" apksigner.txt
+          grep -Fq "Verified using v2 scheme (APK Signature Scheme v2): true" apksigner.txt
+          grep -Fq "Number of signers: 1" apksigner.txt
+          EXPECTED_SIGNER_SHA256="64bb12f28a7d39d2cf921024c6d36019ea3808481bd4471511bd83ca64f20435"
+          grep -Fq "Signer #1 certificate SHA-256 digest: ${EXPECTED_SIGNER_SHA256}" apksigner.txt
+          test -s BUILD.txt
+          grep -Fq "Commit: ${GITHUB_SHA}" BUILD.txt
+          test -s UI_GATE.md
+          grep -Fq "UI_GATE_STATUS: PASS" UI_GATE.md
+          grep -Fq "Source commit: ${GITHUB_SHA}" UI_GATE.md
           if gh release view "$RELEASE_TAG" > /dev/null 2>&1; then
             echo "Release $RELEASE_TAG already exists; verifying existing release instead of overwriting it."
             mkdir downloaded
-            gh release download "$RELEASE_TAG" --pattern '*.apk' --dir downloaded
-            if (cd downloaded && sha256sum --check ../SHA256SUMS); then
-              echo "Existing release already contains the verified APK bytes."
-              exit 0
-            fi
-            echo "Existing release tag points to different APK bytes; refusing to overwrite an immutable published release." >&2
-            exit 1
+            gh release download "$RELEASE_TAG" --dir downloaded
+            for evidence in "${apks[0]#./}" SHA256SUMS BUILD.txt UI_GATE.md apksigner.txt; do
+              test -s "downloaded/$evidence" || {
+                echo "::error::Existing release is missing $evidence" >&2
+                exit 1
+              }
+              cmp -s "$evidence" "downloaded/$evidence" || {
+                echo "::error::Existing release asset differs from the verified build: $evidence" >&2
+                exit 1
+              }
+            done
+            (cd downloaded && sha256sum --check SHA256SUMS)
+            echo "Existing release contains the exact verified APK and evidence bytes."
+            exit 0
           fi
           cat > release-notes.md <<EOF_NOTES
           GhostWeb Signal startup animation with the original icon and violet Photon-inspired glow.
@@ -273,6 +325,16 @@ jobs:
             --target "$GITHUB_SHA" --draft \
             --title "GhostWeb Signal $RELEASE_TAG" --notes-file release-notes.md
           mkdir downloaded
-          gh release download "$RELEASE_TAG" --pattern '*.apk' --dir downloaded
-          (cd downloaded && sha256sum --check ../SHA256SUMS)
+          gh release download "$RELEASE_TAG" --dir downloaded
+          for evidence in "${apks[0]#./}" SHA256SUMS BUILD.txt UI_GATE.md apksigner.txt; do
+            test -s "downloaded/$evidence" || {
+              echo "::error::Published release is missing $evidence" >&2
+              exit 1
+            }
+            cmp -s "$evidence" "downloaded/$evidence" || {
+              echo "::error::Downloaded release asset differs from the verified build: $evidence" >&2
+              exit 1
+            }
+          done
+          (cd downloaded && sha256sum --check SHA256SUMS)
           gh release edit "$RELEASE_TAG" --draft=false
