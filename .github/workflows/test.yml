@@ -56,6 +56,7 @@ jobs:
 
   prepare_release_tag:
     name: Tag release
+    needs: test
     if: github.event_name == 'push' && github.ref == 'refs/heads/GWSignal.main' && contains(github.event.head_commit.message, '[release]')
     runs-on: ubuntu-24.04
     permissions:
@@ -84,9 +85,10 @@ jobs:
       - name: Create and push immutable release tag
         env:
           TAG: ${{ steps.extract_version.outputs.version }}
-          PUBLISH_PAT: ${{ secrets.PUBLISH_PAT }}
           REPOSITORY: ${{ github.repository }}
-          GH_TOKEN: ${{ secrets.PUBLISH_PAT || secrets.GITHUB_TOKEN }}
+          # Use GITHUB_TOKEN so the tag push cannot launch a second, un-gated tag workflow.
+          # The reusable release workflow below runs only after the test job succeeds.
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
           if [[ ! "$TAG" =~ ^v[0-9]+(\.[0-9]+)*(-[0-9]+)?$ ]]; then
@@ -104,9 +106,6 @@ jobs:
             fi
           fi
           git check-ref-format "refs/tags/$TAG"
-          if [ -n "$PUBLISH_PAT" ]; then
-            git remote set-url origin "https://x-access-token:$PUBLISH_PAT@github.com/$REPOSITORY.git"
-          fi
           # Fail closed if the remote cannot be queried or the tag already exists.
           remote_tag="$(git ls-remote --tags origin "refs/tags/$TAG")"
           if [ -n "$remote_tag" ]; then
