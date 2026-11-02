@@ -22,7 +22,7 @@ import org.thoughtcrime.securesms.ghostweb.photon.PhotonGlassSurface
 @Composable
 fun ScreenTitlePane(
   title: String,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
 ) {
   val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
   val startPadding = if (
@@ -33,7 +33,7 @@ fun ScreenTitlePane(
     modifier = modifier.padding(
       start = startPadding,
       end = 20.dp,
-      bottom = 12.dp
+      bottom = 12.dp,
     ),
     cornerRadius = 16.dp,
     padding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
