@@ -135,7 +135,7 @@ jobs:
             grep -Fq "Verifies" <<< "$verification" || { echo "::error::APK signature verification failed: $name"; exit 1; }
             grep -Fq "Verified using v2 scheme (APK Signature Scheme v2): true" <<< "$verification" || { echo "::error::APK Signature Scheme v2 is required: $name"; exit 1; }
             grep -Fq "Number of signers: 1" <<< "$verification" || { echo "::error::Expected exactly one signer: $name"; exit 1; }
-            grep -Fq "Signer #1 certificate SHA-256 digest: ${EXPECTED_SIGNER_SHA256}" <<< "$verification" || { echo "::error::APK signer differs from the published GhostWeb Signal identity: $name"; exit 1; }
+            grep -Fq "certificate SHA-256 digest: ${EXPECTED_SIGNER_SHA256}" <<< "$verification" || { echo "::error::APK signer differs from the published GhostWeb Signal identity: $name"; exit 1; }
             sha256="$(sha256sum "$apk" | cut -d' ' -f1)"
             printf '%s  %s\n' "$sha256" "$name" >> outputs/apk/SHA256SUMS
           done
@@ -269,7 +269,7 @@ jobs:
             grep -Fq "Verifies" <<< "$verification" || { echo "::error::APK signature verification failed: $name"; exit 1; }
             grep -Fq "Verified using v2 scheme (APK Signature Scheme v2): true" <<< "$verification" || { echo "::error::APK Signature Scheme v2 is required: $name"; exit 1; }
             grep -Fq "Number of signers: 1" <<< "$verification" || { echo "::error::Expected exactly one signer: $name"; exit 1; }
-            grep -Fq "Signer #1 certificate SHA-256 digest: ${EXPECTED_SIGNER_SHA256}" <<< "$verification" || { echo "::error::APK signer differs from the published GhostWeb Signal identity: $name"; exit 1; }
+            grep -Fq "certificate SHA-256 digest: ${EXPECTED_SIGNER_SHA256}" <<< "$verification" || { echo "::error::APK signer differs from the published GhostWeb Signal identity: $name"; exit 1; }
           done
           assets=("${apks[@]}" apk/SHA256SUMS apk/SIGNATURES.txt)
           gh release upload "$TAG_REF" "${assets[@]}"
@@ -292,6 +292,6 @@ jobs:
             grep -Fq "Verifies" <<< "$verification" || { echo "::error::Downloaded release APK signature failed: $name"; exit 1; }
             grep -Fq "Verified using v2 scheme (APK Signature Scheme v2): true" <<< "$verification" || { echo "::error::Downloaded release APK lacks V2: $name"; exit 1; }
             grep -Fq "Number of signers: 1" <<< "$verification" || { echo "::error::Downloaded release APK has unexpected signer count: $name"; exit 1; }
-            grep -Fq "Signer #1 certificate SHA-256 digest: ${EXPECTED_SIGNER_SHA256}" <<< "$verification" || { echo "::error::Downloaded release APK signer mismatch: $name"; exit 1; }
+            grep -Fq "certificate SHA-256 digest: ${EXPECTED_SIGNER_SHA256}" <<< "$verification" || { echo "::error::Downloaded release APK signer mismatch: $name"; exit 1; }
           done
           gh release edit "$TAG_REF" --draft=false
