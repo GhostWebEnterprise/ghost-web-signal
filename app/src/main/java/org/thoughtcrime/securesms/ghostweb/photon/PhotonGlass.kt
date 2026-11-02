@@ -58,8 +58,7 @@ object PhotonPalette {
    * that may differ from the Android system-wide dark-mode setting.
    */
   @Composable
-  fun current(): PhotonColors =
-    if (MaterialTheme.colorScheme.surface.luminance() < 0.5f) dark else light
+  fun current(): PhotonColors = if (MaterialTheme.colorScheme.surface.luminance() < 0.5f) dark else light
 }
 
 @Composable
