@@ -4,6 +4,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.heightIn
@@ -23,13 +24,36 @@ import androidx.compose.ui.unit.dp
  *
  * Figma: https://www.figma.com/design/dD6E76OfB9jPoGJhTSDRqq
  */
+data class PhotonColors(
+  val background: Color,
+  val glass: Color,
+  val raisedGlass: Color,
+  val accent: Color,
+  val foreground: Color,
+  val muted: Color,
+)
+
 object PhotonPalette {
-  val Background = Color(0xFF080E1B)
-  val Glass = Color(0xFF18243B)
-  val RaisedGlass = Color(0xFF202C47)
-  val Accent = Color(0xFF536BFF)
-  val Foreground = Color(0xFFEAF1FF)
-  val Muted = Color(0xFFA5B2D0)
+  val Dark = PhotonColors(
+    background = Color(0xFF080E1B),
+    glass = Color(0xFF18243B),
+    raisedGlass = Color(0xFF202C47),
+    accent = Color(0xFF536BFF),
+    foreground = Color(0xFFEAF1FF),
+    muted = Color(0xFFA5B2D0),
+  )
+
+  val Light = PhotonColors(
+    background = Color(0xFFF0F5FF),
+    glass = Color(0xE6FFFFFF),
+    raisedGlass = Color(0xF2FFFFFF),
+    accent = Color(0xFF2B7BFF),
+    foreground = Color(0xFF0A1628),
+    muted = Color(0xFF5A6F8C),
+  )
+
+  @Composable
+  fun current(): PhotonColors = if (isSystemInDarkTheme()) Dark else Light
 }
 
 @Composable
@@ -40,16 +64,17 @@ fun PhotonGlassSurface(
   elevated: Boolean = false,
   content: @Composable () -> Unit,
 ) {
+  val colors = PhotonPalette.current()
   val shape = RoundedCornerShape(cornerRadius)
   Box(
     modifier = modifier
       .shadow(if (elevated) 8.dp else 2.dp, shape)
       .clip(shape)
       .background(
-        if (elevated) PhotonPalette.RaisedGlass.copy(alpha = 0.94f)
-        else PhotonPalette.Glass.copy(alpha = 0.88f),
+        if (elevated) colors.raisedGlass.copy(alpha = 0.94f)
+        else colors.glass.copy(alpha = 0.88f),
       )
-      .border(BorderStroke(1.dp, PhotonPalette.Accent.copy(alpha = 0.26f)), shape)
+      .border(BorderStroke(1.dp, colors.accent.copy(alpha = 0.26f)), shape)
       .padding(padding),
   ) {
     content()
