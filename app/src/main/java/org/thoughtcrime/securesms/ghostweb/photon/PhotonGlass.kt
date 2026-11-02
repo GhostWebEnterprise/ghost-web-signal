@@ -4,17 +4,18 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
@@ -34,7 +35,7 @@ data class PhotonColors(
 )
 
 object PhotonPalette {
-  val Dark = PhotonColors(
+  val dark = PhotonColors(
     background = Color(0xFF080E1B),
     glass = Color(0xFF18243B),
     raisedGlass = Color(0xFF202C47),
@@ -43,7 +44,7 @@ object PhotonPalette {
     muted = Color(0xFFA5B2D0),
   )
 
-  val Light = PhotonColors(
+  val light = PhotonColors(
     background = Color(0xFFF0F5FF),
     glass = Color(0xE6FFFFFF),
     raisedGlass = Color(0xF2FFFFFF),
@@ -52,8 +53,13 @@ object PhotonPalette {
     muted = Color(0xFF5A6F8C),
   )
 
+  /**
+   * Follow the app's resolved Material theme, including an in-app theme choice
+   * that may differ from the Android system-wide dark-mode setting.
+   */
   @Composable
-  fun current(): PhotonColors = if (isSystemInDarkTheme()) Dark else Light
+  fun current(): PhotonColors =
+    if (MaterialTheme.colorScheme.surface.luminance() < 0.5f) dark else light
 }
 
 @Composable
