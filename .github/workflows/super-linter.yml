@@ -23,8 +23,6 @@ jobs:
   super-linter:
     name: Super-Linter
     runs-on: ubuntu-latest
-    # Incremental linting (only changed files) finishes in minutes; full
-    # sweeps of the Signal/Molly codebase exceeded 60-minute job limits.
     timeout-minutes: 60
     permissions:
       contents: read
@@ -56,3 +54,4 @@ jobs:
           FILTER_REGEX_EXCLUDE: '(^|/)(build|\.gradle|\.idea|generated|node_modules|reproducible-builds)(/|$)|(^|/)(local\.properties)$'
           ENABLE_GITHUB_ACTIONS_STEP_SUMMARY: true
           SAVE_SUPER_LINTER_SUMMARY: true
+          ENABLE_GITHUB_PULL_REQUEST_SUMMARY_COMMENT: false
