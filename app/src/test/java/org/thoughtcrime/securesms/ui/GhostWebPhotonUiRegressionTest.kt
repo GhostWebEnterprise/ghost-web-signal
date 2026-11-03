@@ -18,15 +18,15 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Rule
-import org.junit.runner.RunWith
 import org.junit.Test
-import org.robolectric.annotation.Config
+import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
+import org.robolectric.annotation.Config
+import org.thoughtcrime.securesms.R
 import org.thoughtcrime.securesms.ghostweb.photon.PhotonActionSurface
 import org.thoughtcrime.securesms.ghostweb.photon.PhotonGlassSurface
 import org.thoughtcrime.securesms.main.GhostWebStartupAnimation
-import org.thoughtcrime.securesms.R
 
 /**
  * GhostWeb Signal Photon migration UI gate.
@@ -229,5 +229,4 @@ class GhostWebPhotonUiRegressionTest {
     composeRule.onNodeWithText("Photon action").performClick()
     assertEquals(1, clickCount)
   }
-
 }
