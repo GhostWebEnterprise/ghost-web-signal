@@ -7,6 +7,15 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.PopupMenu
 import android.widget.TextView
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
+import org.junit.Rule
+import org.thoughtcrime.securesms.ghostweb.photon.PhotonActionSurface
+import org.thoughtcrime.securesms.ghostweb.photon.PhotonGlassSurface
 import androidx.test.core.app.ApplicationProvider
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
@@ -30,6 +39,9 @@ import org.thoughtcrime.securesms.main.GhostWebStartupAnimation
 @RunWith(RobolectricTestRunner::class)
 @Config(application = android.app.Application::class, sdk = [28])
 class GhostWebPhotonUiRegressionTest {
+
+  @get:Rule
+  val composeRule = createComposeRule()
 
   private val context: Context = ApplicationProvider.getApplicationContext()
 
@@ -189,4 +201,33 @@ class GhostWebPhotonUiRegressionTest {
     val version = context.getString(R.string.ghostweb_ui_gate_version)
     assertEquals("photon-2", version)
   }
+
+  @Test
+  fun photonGlassSurface_rendersContent() {
+    composeRule.setContent {
+      MaterialTheme {
+        PhotonGlassSurface {
+          Text("Photon glass content")
+        }
+      }
+    }
+
+    composeRule.onNodeWithText("Photon glass content").assertIsDisplayed()
+  }
+
+  @Test
+  fun photonActionSurface_invokesClick() {
+    var clickCount = 0
+    composeRule.setContent {
+      MaterialTheme {
+        PhotonActionSurface(onClick = { clickCount++ }) {
+          Text("Photon action")
+        }
+      }
+    }
+
+    composeRule.onNodeWithText("Photon action").performClick()
+    assertEquals(1, clickCount)
+  }
+
 }
