@@ -136,7 +136,7 @@ jobs:
             grep -Fq "Verified using v2 scheme (APK Signature Scheme v2): true" <<< "$verification" || { echo "::error::APK Signature Scheme v2 is required: $name"; exit 1; }
             grep -Fq "Number of signers: 1" <<< "$verification" || { echo "::error::Expected exactly one signer: $name"; exit 1; }
             printf '%s\\n' "$verification" > "$RUNNER_TEMP/apksigner-verification.txt"
-            bash scripts/verify-apksigner-fingerprint.sh "$RUNNER_TEMP/apksigner-verification.txt" "$EXPECTED_SIGNER_SHA256"
+            bash ../scripts/verify-apksigner-fingerprint.sh "$RUNNER_TEMP/apksigner-verification.txt" "$EXPECTED_SIGNER_SHA256"
             sha256="$(sha256sum "$apk" | cut -d' ' -f1)"
             printf '%s  %s\n' "$sha256" "$name" >> outputs/apk/SHA256SUMS
           done
