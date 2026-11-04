@@ -23,6 +23,11 @@ V2 Signer: certificate SHA-256 digest: $fingerprint
 EOF_V2_SIGNER
 bash "$root/scripts/verify-apksigner-fingerprint.sh" "$tmp" "$fingerprint"
 
+(
+  cd "$root/reproducible-builds"
+  bash ../scripts/verify-apksigner-fingerprint.sh "$tmp" "$fingerprint"
+)
+
 if bash "$root/scripts/verify-apksigner-fingerprint.sh" "$tmp" "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"; then
   echo "Expected a mismatched signer fingerprint to be rejected" >&2
   exit 1
