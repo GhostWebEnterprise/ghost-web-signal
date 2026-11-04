@@ -141,11 +141,7 @@ jobs:
             exit 1
           }
           EXPECTED_SIGNER_SHA256="64bb12f28a7d39d2cf921024c6d36019ea3808481bd4471511bd83ca64f20435"
-          if ! grep -Fq "Signer #1 certificate SHA-256 digest: ${EXPECTED_SIGNER_SHA256}" dist/apksigner.txt \
-            && ! grep -Fq "V2 Signer: certificate SHA-256 digest: ${EXPECTED_SIGNER_SHA256}" dist/apksigner.txt; then
-            echo "::error::APK signer differs from the published GhostWeb Signal update identity" >&2
-            exit 1
-          fi
+          bash scripts/verify-apksigner-fingerprint.sh dist/apksigner.txt "$EXPECTED_SIGNER_SHA256"
           badging=$("$tools/aapt" dump badging "$apk")
           package=$(sed -n "s/^package: name='\([^']*\)'.*/\1/p" <<< "$badging")
           version=$(sed -n "s/^package: .*versionName='\([^']*\)'.*/\1/p" <<< "$badging")
