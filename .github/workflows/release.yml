@@ -270,11 +270,8 @@ jobs:
             grep -Fq "Verifies" <<< "$verification" || { echo "::error::APK signature verification failed: $name"; exit 1; }
             grep -Fq "Verified using v2 scheme (APK Signature Scheme v2): true" <<< "$verification" || { echo "::error::APK Signature Scheme v2 is required: $name"; exit 1; }
             grep -Fq "Number of signers: 1" <<< "$verification" || { echo "::error::Expected exactly one signer: $name"; exit 1; }
-            if ! grep -Fq "Signer #1 certificate SHA-256 digest: ${EXPECTED_SIGNER_SHA256}" <<< "$verification" \
-              && ! grep -Fq "V2 Signer: certificate SHA-256 digest: ${EXPECTED_SIGNER_SHA256}" <<< "$verification"; then
-              echo "::error::APK signer differs from the published GhostWeb Signal identity: $name"
-              exit 1
-            fi
+            printf '%s\n' "$verification" > "$RUNNER_TEMP/apksigner-verification.txt"
+            bash scripts/verify-apksigner-fingerprint.sh "$RUNNER_TEMP/apksigner-verification.txt" "$EXPECTED_SIGNER_SHA256"
           done
           assets=("${apks[@]}" apk/SHA256SUMS apk/SIGNATURES.txt)
           gh release upload "$TAG_REF" "${assets[@]}"
@@ -297,10 +294,7 @@ jobs:
             grep -Fq "Verifies" <<< "$verification" || { echo "::error::Downloaded release APK signature failed: $name"; exit 1; }
             grep -Fq "Verified using v2 scheme (APK Signature Scheme v2): true" <<< "$verification" || { echo "::error::Downloaded release APK lacks V2: $name"; exit 1; }
             grep -Fq "Number of signers: 1" <<< "$verification" || { echo "::error::Downloaded release APK has unexpected signer count: $name"; exit 1; }
-            if ! grep -Fq "Signer #1 certificate SHA-256 digest: ${EXPECTED_SIGNER_SHA256}" <<< "$verification" \
-              && ! grep -Fq "V2 Signer: certificate SHA-256 digest: ${EXPECTED_SIGNER_SHA256}" <<< "$verification"; then
-              echo "::error::Downloaded release APK signer mismatch: $name"
-              exit 1
-            fi
+            printf '%s\n' "$verification" > "$RUNNER_TEMP/apksigner-verification.txt"
+            bash scripts/verify-apksigner-fingerprint.sh "$RUNNER_TEMP/apksigner-verification.txt" "$EXPECTED_SIGNER_SHA256"
           done
           gh release edit "$TAG_REF" --draft=false
