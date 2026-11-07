@@ -26,6 +26,9 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
+      - name: Test accepted apksigner fingerprint formats
+        run: bash tests/test_apksigner_fingerprint.sh
+
       - name: Free up disk space in runner
         uses: ./.github/actions/disk-cleanup
 
