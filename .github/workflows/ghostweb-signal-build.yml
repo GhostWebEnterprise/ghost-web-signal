@@ -30,7 +30,7 @@ jobs:
       CI_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
       CI_KEYSTORE_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
       CI_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
-      CI_APP_TITLE: GhostWeb Signal
+      CI_APP_TITLE: GhostWeb
       CI_PACKAGE_ID: org.ghostweb.signal
       CI_BUILD_VARIANTS: prodWebsite(Release|Debug)
       CI_FORCE_INTERNAL_USER_FLAG: "false"
@@ -87,7 +87,7 @@ jobs:
             --tests 'org.thoughtcrime.securesms.ui.GhostWebPhotonUiRegressionTest' \
             --stacktrace \
             -PbaseAppTitle="$CI_APP_TITLE" \
-            -PbaseAppFileName="GhostWeb-Signal" \
+            -PbaseAppFileName="GhostWeb" \
             -PbasePackageId="$CI_PACKAGE_ID" \
             -PbuildVariants="$CI_BUILD_VARIANTS" \
             -PforceInternalUserFlag="$CI_FORCE_INTERNAL_USER_FLAG"
