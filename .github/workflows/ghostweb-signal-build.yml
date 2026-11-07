@@ -226,27 +226,49 @@ jobs:
           name: ghostweb-signal-release-apk
           path: dist
 
-      - name: Require full Test workflow success for exact commit
+      - name: Wait for full Test workflow success on exact commit
+        timeout-minutes: 185
         run: |
           set -euo pipefail
-          runs="$(gh api --method GET "repos/$GH_REPO/actions/workflows/test.yml/runs" \
-            -f branch=GWSignal.main \
-            -f head_sha="$GITHUB_SHA" \
-            -f status=completed \
-            -f per_page=100)"
-          jq -e --arg sha "$GITHUB_SHA" '
-            any(.workflow_runs[];
-              .head_sha == $sha and
-              .head_branch == "GWSignal.main" and
-              .event == "push" and
-              .name == "Test" and
-              .status == "completed" and
-              .conclusion == "success"
-            )
-          ' <<< "$runs" >/dev/null || {
-            echo "::error::A successful full Test workflow run for exact commit $GITHUB_SHA is required before publishing." >&2
-            exit 1
-          }
+          deadline=$((SECONDS + 10800))
+          while (( SECONDS < deadline )); do
+            runs="$(gh api --method GET "repos/$GH_REPO/actions/workflows/test.yml/runs" \
+              -f branch=GWSignal.main \
+              -f head_sha="$GITHUB_SHA" \
+              -f per_page=100)"
+            run="$(jq -c --arg sha "$GITHUB_SHA" '
+              [.workflow_runs[]? |
+                select(
+                  .head_sha == $sha and
+                  .head_branch == "GWSignal.main" and
+                  .event == "push" and
+                  .name == "Test"
+                )
+              ] | sort_by(.created_at) | last // empty
+            ' <<< "$runs")"
+            if [[ -z "$run" ]]; then
+              echo "Waiting for the full Test workflow to be scheduled for $GITHUB_SHA."
+              sleep 30
+              continue
+            fi
+
+            status="$(jq -r '.status' <<< "$run")"
+            conclusion="$(jq -r '.conclusion // empty' <<< "$run")"
+            if [[ "$status" == "completed" ]]; then
+              if [[ "$conclusion" == "success" ]]; then
+                echo "Full Test workflow passed for exact commit $GITHUB_SHA."
+                exit 0
+              fi
+              echo "::error::Full Test workflow for $GITHUB_SHA completed with conclusion: ${conclusion:-unknown}" >&2
+              exit 1
+            fi
+
+            echo "Full Test workflow for $GITHUB_SHA is $status; waiting."
+            sleep 30
+          done
+
+          echo "::error::Timed out waiting for full Test workflow success on exact commit $GITHUB_SHA." >&2
+          exit 1
 
       - name: Publish verified release
         run: |
