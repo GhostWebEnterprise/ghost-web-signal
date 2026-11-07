@@ -64,7 +64,13 @@ creates the GitHub Release, so a green build alone can never release a new APK.
 
 ## Release trigger and exact-commit test requirement
 
-A release can be requested with `workflow_dispatch` and `publish_release=true`, or by a push commit message containing `[publish-apk]`. In either case, the publish job requires the full `Test` workflow to finish successfully for the exact same commit before it creates or publishes a release. A documentation-only release-trigger commit must therefore touch a non-ignored documentation path so the `Test` workflow is actually scheduled.
+A release can be requested with `workflow_dispatch` and
+`publish_release=true`, or by a push commit message containing
+`[publish-apk]`. In either case, the publish job requires the full `Test`
+workflow to finish successfully for the exact same commit before it creates
+or publishes a release. A documentation-only release-trigger commit must
+therefore touch a non-ignored documentation path so the `Test` workflow is
+actually scheduled.
 
 ## Manual pass still required
 
