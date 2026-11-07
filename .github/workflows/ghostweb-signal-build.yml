@@ -21,7 +21,7 @@ concurrency:
 jobs:
   build:
     if: github.ref == 'refs/heads/GWSignal.main'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 90
     outputs:
       release_tag: ${{ steps.verify.outputs.release_tag }}
