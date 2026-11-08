@@ -199,7 +199,7 @@ class GhostWebPhotonUiRegressionTest {
   @Test
   fun gateVersion_isRegisteredForReleaseVerification() {
     val version = context.getString(R.string.ghostweb_ui_gate_version)
-    assertEquals("photon-2", version)
+    assertEquals("photon-glass-1", version)
   }
 
   @Test

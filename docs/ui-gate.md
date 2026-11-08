@@ -8,14 +8,27 @@ verified on the exact APK bytes being released.
 
 ## Gate version
 
-Current gate version: **`photon-2`**
+Current gate version: **`photon-glass-1`**
 
 The gate version is registered in the build (`ghostweb_ui_gate_version` res
 value in `app/build.gradle.kts`) and is asserted by
 `GhostWebPhotonUiRegressionTest#gateVersion_isRegisteredForReleaseVerification`.
 Bump both places together whenever the UI gate criteria change.
 
-## UI migration scope (Photon navy/ice)
+## UI migration scope (Photon navy/ice + Liquid Glass)
+
+### Photon Liquid Glass — first Compose integration
+
+- Reusable `PhotonGlassSurface` and `PhotonActionSurface` primitives resolve
+  their palette from the app's active Material theme.
+- The adaptive `ScreenTitlePane` is the first existing Compose surface migrated
+  to `PhotonGlassSurface`.
+- `photonGlassSurface_rendersContent` and
+  `photonActionSurface_invokesClick` are part of the release regression suite.
+- This increment verifies one reusable surface integration; it does not claim
+  that all 22 planned screens or all Figma components are implemented.
+- Physical-device screenshots, accessibility review and visual-flow testing
+  remain outstanding.
 
 The following surfaces must stay on the GhostWeb Photon system before any release:
 
@@ -45,7 +58,8 @@ The following surfaces must stay on the GhostWeb Photon system before any releas
 covers: palette presence, distinct surface layers, ice-blue unread badge,
 resolved theme surface/accent, Photon primary and secondary buttons, fixed color
 roles, startup overlay lifecycle, startup drawables/layout, menu integrity and
-the registered gate version.
+the registered gate version, PhotonGlassSurface rendering and
+PhotonActionSurface click behavior.
 
 The CI build job runs this suite as part of
 `:app:testProdWebsiteDebugUnitTest` and fails the run on any regression.
@@ -56,7 +70,7 @@ The CI build job runs this suite as part of
 
 - Refuses to publish when the gate summary file (`dist/UI_GATE.md`) is missing.
 - Refuses to publish when the gate version in `UI_GATE.md` does not match
-  `photon-2` (the expectation is injected as `UI_GATE_EXPECTED_VERSION`).
+  `photon-glass-1` (the expectation is injected as `UI_GATE_EXPECTED_VERSION`).
 - Refuses to publish when the gate marker `UI_GATE_STATUS: PASS` is absent.
 
 The publish job downloads the gate summary together with the APK and only then
