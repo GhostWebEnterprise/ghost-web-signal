@@ -47,6 +47,39 @@ jobs:
       - name: Build and run tests
         run: ./gradlew --write-verification-metadata sha256 build
 
+      - name: Verify Photon UI and startup regression tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import glob
+          import sys
+          import xml.etree.ElementTree as ET
+
+          expected = {
+              "org.thoughtcrime.securesms.ui.GhostWebPhotonUiRegressionTest",
+              "org.thoughtcrime.securesms.main.GhostWebStartupAnimationTest",
+          }
+          found = set()
+          reports = glob.glob(
+              "app/build/test-results/testProdWebsiteDebugUnitTest/**/*.xml",
+              recursive=True,
+          )
+          for report in reports:
+              root = ET.parse(report).getroot()
+              for case in root.iter("testcase"):
+                  classname = case.attrib.get("classname", "")
+                  if classname in expected:
+                      found.add(classname)
+                      if any(child.tag in ("failure", "error", "skipped") for child in case):
+                          sys.exit("Required GhostWeb regression test failed or skipped: " + classname)
+
+          missing = expected - found
+          if missing:
+              sys.exit("Required GhostWeb regression tests were not executed: " + ", ".join(sorted(missing)))
+          print("Photon UI and startup regression tests executed successfully")
+          PY
+
       - name: Archive reports for failed build
         if: "failure()"
         uses: actions/upload-artifact@v7
