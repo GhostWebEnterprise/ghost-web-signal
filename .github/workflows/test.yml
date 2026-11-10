@@ -26,6 +26,29 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
+      # PR-safe mirror of the release UI gate. This job uses no signing secrets.
+      - name: Verify Photon Liquid Glass gate wiring
+        shell: bash
+        run: |
+          set -euo pipefail
+          workflow=".github/workflows/ghostweb-signal-build.yml"
+          docs="docs/ui-gate.md"
+          build="app/build.gradle.kts"
+          glass="app/src/main/java/org/thoughtcrime/securesms/ghostweb/photon/PhotonGlass.kt"
+          title="app/src/main/java/org/thoughtcrime/securesms/components/compose/ScreenTitlePane.kt"
+          test -s "$workflow"
+          test -s "$docs"
+          test -s "$build"
+          test -s "$glass"
+          test -s "$title"
+          grep -Fq 'CI_UI_GATE_VERSION: photon-glass-1' "$workflow"
+          grep -Fq 'Current gate version: **`photon-glass-1`**' "$docs"
+          grep -Fq 'resValue("string", "ghostweb_ui_gate_version", "photon-glass-1")' "$build"
+          grep -Fq 'fun PhotonGlassSurface(' "$glass"
+          grep -Fq 'fun PhotonActionSurface(' "$glass"
+          grep -Fq 'PhotonGlassSurface(' "$title"
+          echo "Photon Liquid Glass gate wiring verified for pull requests"
+
       - name: Test accepted apksigner fingerprint formats
         run: bash tests/test_apksigner_fingerprint.sh
 
