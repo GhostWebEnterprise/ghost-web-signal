@@ -42,7 +42,7 @@ jobs:
           test -s "$glass"
           test -s "$title"
           grep -Fq 'CI_UI_GATE_VERSION: photon-glass-1' "$workflow"
-          grep -Fq 'Current gate version: **`photon-glass-1`**' "$docs"
+          grep -Fq "Current gate version: **\`photon-glass-1\`**" "$docs"
           grep -Fq 'resValue("string", "ghostweb_ui_gate_version", "photon-glass-1")' "$build"
           grep -Fq 'fun PhotonGlassSurface(' "$glass"
           grep -Fq 'fun PhotonActionSurface(' "$glass"
