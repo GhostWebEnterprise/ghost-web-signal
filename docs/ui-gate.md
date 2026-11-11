@@ -23,10 +23,15 @@ Bump both places together whenever the UI gate criteria change.
   their palette from the app's active Material theme.
 - The adaptive `ScreenTitlePane` is the first existing Compose surface migrated
   to `PhotonGlassSurface`.
+- The current surface uses translucent fills, an outline and elevation. It does
+  **not** implement backdrop blur, background sampling or refraction yet; the
+  `photon-glass-1` gate must not be interpreted as full Liquid Glass.
 - `photonGlassSurface_rendersContent` and
   `photonActionSurface_invokesClick` are part of the release regression suite.
 - This increment verifies one reusable surface integration; it does not claim
   that all 22 planned screens or all Figma components are implemented.
+- The next visual gate must add a platform-appropriate blur treatment with a
+  tested fallback, then verify it in screenshots and on a physical device.
 - Physical-device screenshots, accessibility review and visual-flow testing
   remain outstanding.
 
@@ -59,7 +64,8 @@ covers: palette presence, distinct surface layers, ice-blue unread badge,
 resolved theme surface/accent, Photon primary and secondary buttons, fixed color
 roles, startup overlay lifecycle, startup drawables/layout, menu integrity and
 the registered gate version, PhotonGlassSurface rendering and
-PhotonActionSurface click behavior.
+PhotonActionSurface click behavior. It does not test backdrop blur because that
+capability is not implemented in this increment.
 
 The CI build job runs this suite as part of
 `:app:testProdWebsiteDebugUnitTest` and fails the run on any regression.
