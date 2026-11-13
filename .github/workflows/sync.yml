@@ -5,13 +5,16 @@ on:
   schedule:
     - cron: '7 2,18,22 * * *'
 
+# Keep the workflow default read-only; only the sync job needs to push refs.
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   sync:
     name: Sync
     if: github.ref == 'refs/heads/GWSignal.main'
+    permissions:
+      contents: write
     runs-on: ubuntu-24.04
 
     steps:
