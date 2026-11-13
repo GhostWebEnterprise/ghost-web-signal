@@ -1,6 +1,14 @@
 name: Sync Upstream
 
 on:
+  # Run once when this workflow changes so its credential gate is exercised.
+  # Sync pushes target upstream-main/upstream-stable, so they cannot retrigger
+  # this path-filtered GWSignal.main workflow.
+  push:
+    branches:
+      - GWSignal.main
+    paths:
+      - .github/workflows/sync.yml
   workflow_dispatch:
   schedule:
     - cron: '0 2,18,22 * * *'
