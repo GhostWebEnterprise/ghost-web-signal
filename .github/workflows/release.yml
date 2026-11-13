@@ -205,29 +205,49 @@ jobs:
       contents: write
       actions: read
     runs-on: ubuntu-24.04
+    timeout-minutes: 100
     needs: [build, prepare_release]
     steps:
       - uses: actions/checkout@v6
         with:
           ref: "${{ env.TAG_REF }}"
-      - name: Require passing UI gate build for this commit
+      - name: Wait for passing UI gate build for this commit
         shell: bash
+        timeout-minutes: 100
         run: |
           set -euo pipefail
-          # The Photon UI migration gate: a release tag may only produce
-          # published APKs if the gated build (including
-          # GhostWebPhotonUiRegressionTest, see docs/ui-gate.md) passed on
-          # this exact commit. A green release build alone is not enough.
-          gate_run=$(gh run list --repo "$GITHUB_REPOSITORY" \
-            --workflow=ghostweb-signal-build.yml \
-            --commit "$GITHUB_SHA" \
-            --status success \
-            --limit 1 --json databaseId --jq '.[0].databaseId')
-          if [ -z "$gate_run" ]; then
-            echo "::error::UI gate build has not passed for $GITHUB_SHA; refusing to publish (docs/ui-gate.md)" >&2
-            exit 1
-          fi
-          echo "UI gate build passed for $GITHUB_SHA (run $gate_run)"
+          # The Photon UI migration gate remains mandatory. Wait for the
+          # exact-commit build to finish instead of failing a valid release
+          # merely because the independent workflow is still running.
+          deadline=$((SECONDS + 5700))
+          while (( SECONDS < deadline )); do
+            gate_runs="$(gh run list --repo "$GITHUB_REPOSITORY" \
+              --workflow=ghostweb-signal-build.yml \
+              --commit "$GITHUB_SHA" \
+              --limit 1 --json databaseId,status,conclusion)"
+            gate_run="$(jq -r '.[0].databaseId // empty' <<< "$gate_runs")"
+            gate_status="$(jq -r '.[0].status // empty' <<< "$gate_runs")"
+            gate_conclusion="$(jq -r '.[0].conclusion // empty' <<< "$gate_runs")"
+
+            if [[ -n "$gate_run" && "$gate_status" == "completed" ]]; then
+              if [[ "$gate_conclusion" == "success" ]]; then
+                echo "UI gate build passed for exact commit $GITHUB_SHA (run $gate_run)"
+                exit 0
+              fi
+              echo "::error::UI gate build for $GITHUB_SHA completed with conclusion: ${gate_conclusion:-unknown}; refusing to publish" >&2
+              exit 1
+            fi
+
+            if [[ -z "$gate_run" ]]; then
+              echo "Waiting for the UI gate build to be scheduled for $GITHUB_SHA."
+            else
+              echo "UI gate build $gate_run is $gate_status; waiting."
+            fi
+            sleep 30
+          done
+
+          echo "::error::Timed out waiting for UI gate success on exact commit $GITHUB_SHA; refusing to publish" >&2
+          exit 1
         env:
           GH_TOKEN: ${{ github.token }}
       - name: Download artifacts
