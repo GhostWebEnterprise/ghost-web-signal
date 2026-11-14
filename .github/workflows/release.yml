@@ -322,7 +322,7 @@ jobs:
             grep -Fq "Verifies" <<< "$verification" || { echo "::error::APK signature verification failed: $name" >&2; exit 1; }
             grep -Fq "Verified using v2 scheme (APK Signature Scheme v2): true" <<< "$verification" || { echo "::error::APK Signature Scheme v2 is required: $name" >&2; exit 1; }
             grep -Fq "Number of signers: 1" <<< "$verification" || { echo "::error::Expected exactly one signer: $name" >&2; exit 1; }
-            printf '%s\\n' "$verification" > "$RUNNER_TEMP/apksigner-verification.txt"
+            printf '%s\n "$verification" > "$RUNNER_TEMP/apksigner-verification.txt"
             bash scripts/verify-apksigner-fingerprint.sh "$RUNNER_TEMP/apksigner-verification.txt" "$EXPECTED_SIGNER_SHA256"
           done
 
@@ -388,12 +388,12 @@ jobs:
               echo "Existing release asset matches byte-for-byte: $name"
             elif [[ "$existing_count" == "0" ]]; then
               encoded_name="$(jq -rn --arg value "$name" '$value | @uri')"
-              response="$(curl --fail --silent --show-error --request POST \\
-                --header "Authorization: Bearer $GITHUB_TOKEN" \\
-                --header "Accept: application/vnd.github+json" \\
-                --header "Content-Type: application/octet-stream" \\
-                --header "X-GitHub-Api-Version: 2022-11-28" \\
-                --data-binary "@$asset" \\
+              response="$(curl --fail --silent --show-error --request POST \
+                --header "Authorization: Bearer $GITHUB_TOKEN" \
+                --header "Accept: application/vnd.github+json" \
+                --header "Content-Type: application/octet-stream" \
+                --header "X-GitHub-Api-Version: 2022-11-28" \
+                --data-binary "@$asset" \
                 "https://uploads.github.com/repos/$GITHUB_REPOSITORY/releases/$release_id/assets?name=$encoded_name")"
               jq -e --arg name "$name" '.name == $name and .state == "uploaded"' <<< "$response" >/dev/null || {
                 echo "::error::GitHub did not confirm upload of $name" >&2
@@ -457,7 +457,7 @@ jobs:
             grep -Fq "Verifies" <<< "$verification" || { echo "::error::Downloaded release APK signature failed: $name" >&2; exit 1; }
             grep -Fq "Verified using v2 scheme (APK Signature Scheme v2): true" <<< "$verification" || { echo "::error::Downloaded release APK lacks V2: $name" >&2; exit 1; }
             grep -Fq "Number of signers: 1" <<< "$verification" || { echo "::error::Downloaded release APK has unexpected signer count: $name" >&2; exit 1; }
-            printf '%s\\n' "$verification" > "$RUNNER_TEMP/apksigner-verification.txt"
+            printf '%s\n "$verification" > "$RUNNER_TEMP/apksigner-verification.txt"
             bash scripts/verify-apksigner-fingerprint.sh "$RUNNER_TEMP/apksigner-verification.txt" "$EXPECTED_SIGNER_SHA256"
           done
 
