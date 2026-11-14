@@ -298,7 +298,12 @@ jobs:
           for asset in "${assets[@]}"; do
             name="$(basename "$asset")"
             expected="$(sha256sum "$asset" | cut -d' ' -f1)"
-            actual="$(gh api "repos/$GITHUB_REPOSITORY/releases/tags/$TAG_REF" --jq ".assets[] | select(.name==\"$name\") | .digest" | sed 's/^sha256://')"
+            # GitHub's release-by-tag endpoint can return 404 for draft releases.
+  # The releases collection includes drafts and exposes their asset digests.
+  release_json="$(gh api "repos/$GITHUB_REPOSITORY/releases?per_page=100")"
+  actual="$(jq -r --arg tag "$TAG_REF" --arg name "$name" \
+    '.[] | select(.tag_name == $tag) | .assets[] | select(.name == $name) | .digest' \
+    <<< "$release_json" | sed 's/^sha256://')"
             test -n "$actual" && test "$expected" = "$actual" || { echo "::error::Release asset checksum mismatch: $name"; exit 1; }
           done
           mkdir -p verified-release
