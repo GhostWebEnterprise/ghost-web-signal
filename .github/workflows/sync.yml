@@ -13,22 +13,24 @@ on:
   schedule:
     - cron: '0 2,18,22 * * *'
 
-# Use only the repository-scoped workflow token for checkout and sync pushes.
-# No long-lived personal access token is required.
+# Keep the default token read-only; grant write only to the sync job.
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   sync:
     name: Sync
     if: github.ref == 'refs/heads/GWSignal.main'
     runs-on: ubuntu-24.04
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout GhostWeb base
         uses: actions/checkout@v6
         with:
           ref: GWSignal.main
+          token: ${{ github.token }}
           fetch-depth: 0
           lfs: true
           persist-credentials: true
