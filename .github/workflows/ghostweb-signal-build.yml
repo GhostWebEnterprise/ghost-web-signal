@@ -359,7 +359,7 @@ jobs:
 
           mkdir downloaded
           gh release download "$RELEASE_TAG" --dir downloaded
-          for evidence in "\${apks[0]#./}" SHA256SUMS BUILD.txt UI_GATE.md apksigner.txt; do
+          for evidence in "${apks[0]#./}" SHA256SUMS BUILD.txt UI_GATE.md apksigner.txt; do
             test -s "downloaded/$evidence" || {
               echo "::error::Release is missing verified asset $evidence" >&2
               exit 1
@@ -375,7 +375,7 @@ jobs:
               exit 1
             }
             digest="$(jq -r '.[0].digest // empty' <<< "$asset_matches")"
-            test "\${digest#sha256:}" = "$expected" || {
+            test "${digest#sha256:}" = "$expected" || {
               echo "::error::Release asset digest mismatch: $evidence" >&2
               exit 1
             }
@@ -408,7 +408,7 @@ jobs:
             echo "::error::Final release state is not published" >&2
             exit 1
           }
-          for evidence in "\${apks[0]#./}" SHA256SUMS BUILD.txt UI_GATE.md apksigner.txt; do
+          for evidence in "${apks[0]#./}" SHA256SUMS BUILD.txt UI_GATE.md apksigner.txt; do
             expected="$(sha256sum "$evidence" | cut -d' ' -f1)"
             final_asset_matches="$(jq -c --arg name "$evidence" '[.[0].assets[] | select(.name == $name)]' <<< "$final_matches")"
             test "$(jq 'length' <<< "$final_asset_matches")" = "1" || {
@@ -416,7 +416,7 @@ jobs:
               exit 1
             }
             digest="$(jq -r '.[0].digest // empty' <<< "$final_asset_matches")"
-            test "\${digest#sha256:}" = "$expected" || {
+            test "${digest#sha256:}" = "$expected" || {
               echo "::error::Published asset digest changed: $evidence" >&2
               exit 1
             }
