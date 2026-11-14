@@ -194,8 +194,9 @@ jobs:
         run: |
           set -euo pipefail
           release_json="$(gh api "repos/$GITHUB_REPOSITORY/releases?per_page=100")"
-          matches="$(jq -c --arg tag "$TAG_REF" '[.[] | if .tag_name == $tag then . else empty end]' <<< "$release_json")"
-          count="$(jq 'length' <<< "$matches")"
+          release_names="$(jq -r '.[].tag_name' <<< "$release_json")"
+          count="$(grep -Fxc -- "$TAG_REF" <<< "$release_names" || true)"
+          matches="$(jq -c --arg tag "$TAG_REF" 'map({key: .tag_name, value: .}) | from_entries | .[$tag] | [.]' <<< "$release_json")"
           if [[ "$count" == "1" ]]; then
             is_draft="$(jq -r '.[0].draft' <<< "$matches")"
             test "$is_draft" = true || {
@@ -322,14 +323,16 @@ jobs:
             grep -Fq "Verifies" <<< "$verification" || { echo "::error::APK signature verification failed: $name" >&2; exit 1; }
             grep -Fq "Verified using v2 scheme (APK Signature Scheme v2): true" <<< "$verification" || { echo "::error::APK Signature Scheme v2 is required: $name" >&2; exit 1; }
             grep -Fq "Number of signers: 1" <<< "$verification" || { echo "::error::Expected exactly one signer: $name" >&2; exit 1; }
-            printf '%s\n "$verification" > "$RUNNER_TEMP/apksigner-verification.txt"
+            printf '%s\n' "$verification" > "$RUNNER_TEMP/apksigner-verification.txt"
             bash scripts/verify-apksigner-fingerprint.sh "$RUNNER_TEMP/apksigner-verification.txt" "$EXPECTED_SIGNER_SHA256"
           done
 
           assets=("${apks[@]}" apk/SHA256SUMS apk/SIGNATURES.txt)
           release_json="$(gh api "repos/$GITHUB_REPOSITORY/releases?per_page=100")"
-          matches="$(jq -c --arg tag "$TAG_REF" '[.[] | if .tag_name == $tag then . else empty end]' <<< "$release_json")"
-          test "$(jq 'length' <<< "$matches")" = "1" || {
+          release_names="$(jq -r '.[].tag_name' <<< "$release_json")"
+          count="$(grep -Fxc -- "$TAG_REF" <<< "$release_names" || true)"
+          matches="$(jq -c --arg tag "$TAG_REF" 'map({key: .tag_name, value: .}) | from_entries | .[$tag] | [.]' <<< "$release_json")"
+          test "$count" = "1" || {
             echo "::error::Expected exactly one draft release for $TAG_REF" >&2
             exit 1
           }
@@ -376,8 +379,10 @@ jobs:
           }
           for asset in "${assets[@]}"; do
             name="$(basename "$asset")"
-            existing="$(jq -c --arg name "$name" '[.assets[] | if .name == $name then . else empty end]' <<< "$release_record")"
-            existing_count="$(jq 'length' <<< "$existing")"
+            asset_list="$(jq -c '.assets' <<< "$release_record")"
+            asset_names="$(jq -r '.[].name' <<< "$asset_list")"
+            existing_count="$(grep -Fxc -- "$name" <<< "$asset_names" || true)"
+            existing="$(jq -c --arg name "$name" 'map({key: .name, value: .}) | from_entries | .[$name] | [.]' <<< "$asset_list")"
             if [[ "$existing_count" == "1" ]]; then
               asset_id="$(jq -r '.[0].id' <<< "$existing")"
               download_release_asset "$asset_id" "existing-assets/$name"
@@ -407,8 +412,10 @@ jobs:
 
           # Refresh the draft from the releases collection; draft-by-tag lookup is not reliable here.
           release_json="$(gh api "repos/$GITHUB_REPOSITORY/releases?per_page=100")"
-          matches="$(jq -c --arg tag "$TAG_REF" '[.[] | if .tag_name == $tag then . else empty end]' <<< "$release_json")"
-          test "$(jq 'length' <<< "$matches")" = "1" || {
+          release_names="$(jq -r '.[].tag_name' <<< "$release_json")"
+          count="$(grep -Fxc -- "$TAG_REF" <<< "$release_names" || true)"
+          matches="$(jq -c --arg tag "$TAG_REF" 'map({key: .tag_name, value: .}) | from_entries | .[$tag] | [.]' <<< "$release_json")"
+          test "$count" = "1" || {
             echo "::error::Draft release disappeared or became ambiguous" >&2
             exit 1
           }
@@ -422,8 +429,11 @@ jobs:
           for asset in "${assets[@]}"; do
             name="$(basename "$asset")"
             expected="$(sha256sum "$asset" | cut -d' ' -f1)"
-            asset_matches="$(jq -c --arg name "$name" '[.assets[] | if .name == $name then . else empty end]' <<< "$release_record")"
-            test "$(jq 'length' <<< "$asset_matches")" = "1" || {
+            asset_list="$(jq -c '.assets' <<< "$release_record")"
+            asset_names="$(jq -r '.[].name' <<< "$asset_list")"
+            asset_count="$(grep -Fxc -- "$name" <<< "$asset_names" || true)"
+            asset_matches="$(jq -c --arg name "$name" 'map({key: .name, value: .}) | from_entries | .[$name] | [.]' <<< "$asset_list")"
+            test "$asset_count" = "1" || {
               echo "::error::Expected exactly one uploaded release asset: $name" >&2
               exit 1
             }
@@ -457,7 +467,7 @@ jobs:
             grep -Fq "Verifies" <<< "$verification" || { echo "::error::Downloaded release APK signature failed: $name" >&2; exit 1; }
             grep -Fq "Verified using v2 scheme (APK Signature Scheme v2): true" <<< "$verification" || { echo "::error::Downloaded release APK lacks V2: $name" >&2; exit 1; }
             grep -Fq "Number of signers: 1" <<< "$verification" || { echo "::error::Downloaded release APK has unexpected signer count: $name" >&2; exit 1; }
-            printf '%s\n "$verification" > "$RUNNER_TEMP/apksigner-verification.txt"
+            printf '%s\n' "$verification" > "$RUNNER_TEMP/apksigner-verification.txt"
             bash scripts/verify-apksigner-fingerprint.sh "$RUNNER_TEMP/apksigner-verification.txt" "$EXPECTED_SIGNER_SHA256"
           done
 
@@ -469,8 +479,10 @@ jobs:
           }
 
           final_json="$(gh api "repos/$GITHUB_REPOSITORY/releases?per_page=100")"
-          final_matches="$(jq -c --arg tag "$TAG_REF" '[.[] | if .tag_name == $tag then . else empty end]' <<< "$final_json")"
-          test "$(jq 'length' <<< "$final_matches")" = "1" || {
+          final_names="$(jq -r '.[].tag_name' <<< "$final_json")"
+          final_count="$(grep -Fxc -- "$TAG_REF" <<< "$final_names" || true)"
+          final_matches="$(jq -c --arg tag "$TAG_REF" 'map({key: .tag_name, value: .}) | from_entries | .[$tag] | [.]' <<< "$final_json")"
+          test "$final_count" = "1" || {
             echo "::error::Published release could not be uniquely re-read" >&2
             exit 1
           }
@@ -482,7 +494,8 @@ jobs:
           for asset in "${assets[@]}"; do
             name="$(basename "$asset")"
             expected="$(sha256sum "$asset" | cut -d' ' -f1)"
-            actual="$(jq -r --arg name "$name" '[.assets[] | if .name == $name then .digest else empty end] | if length == 1 then .[0] else empty end' <<< "$final_record" | sed 's/^sha256://')"
+            final_assets="$(jq -c '.assets' <<< "$final_record")"
+            actual="$(jq -r --arg name "$name" 'map({key: .name, value: .digest}) | from_entries | .[$name] // empty' <<< "$final_assets" | sed 's/^sha256://')"
             test "$actual" = "$expected" || {
               echo "::error::Published asset digest changed: $name" >&2
               exit 1
