@@ -356,7 +356,7 @@ jobs:
               200)
                 ;;
               301|302|303|307|308)
-                location="$(awk 'tolower($1) == "location:" { sub(/^[^:]*:[[:space:]]*/, ""); sub(/\\r$/, ""); print; exit }' "$headers")"
+                location="$(awk 'tolower($1) == "location:" { sub(/^[^:]*:[[:space:]]*/, ""); sub(/\r$/, ""); print; exit }' "$headers")"
                 test -n "$location" || {
                   rm -f "$headers" "$destination"
                   echo "::error::GitHub returned a redirect without a download URL" >&2
