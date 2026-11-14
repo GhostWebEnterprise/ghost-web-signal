@@ -351,9 +351,29 @@ jobs:
             echo "Verified published release $RELEASE_TAG (release ID $release_id)."
           }
 
+          assert_tag_commit() {
+            local ref_json object_sha object_type tag_commit
+            ref_json="$(gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/$RELEASE_TAG")"
+            object_sha="$(jq -r '.object.sha' <<< "$ref_json")"
+            object_type="$(jq -r '.object.type' <<< "$ref_json")"
+            case "$object_type" in
+              commit) tag_commit="$object_sha" ;;
+              tag) tag_commit="$(gh api "repos/$GITHUB_REPOSITORY/git/tags/$object_sha" --jq '.object.sha')" ;;
+              *)
+                echo "::error::Unexpected Git tag object type for $RELEASE_TAG: $object_type" >&2
+                return 1
+                ;;
+            esac
+            test "$tag_commit" = "$GITHUB_SHA" || {
+              echo "::error::Release tag $RELEASE_TAG resolves to $tag_commit, not build commit $GITHUB_SHA" >&2
+              return 1
+            }
+          }
+
           EXISTING_RELEASE_ID="$(find_release_id)"
           if [[ -n "$EXISTING_RELEASE_ID" ]]; then
             echo "Release $RELEASE_TAG already exists; verifying exact assets before any draft finalization."
+            assert_tag_commit
             mkdir downloaded
             gh release download "$RELEASE_TAG" --dir downloaded
             for evidence in "${apks[0]#./}" SHA256SUMS BUILD.txt UI_GATE.md apksigner.txt; do
@@ -385,6 +405,7 @@ jobs:
           gh release create "$RELEASE_TAG" ./*.apk SHA256SUMS BUILD.txt UI_GATE.md apksigner.txt \
             --target "$GITHUB_SHA" --draft \
             --title "GhostWeb Signal $RELEASE_TAG" --notes-file release-notes.md
+          assert_tag_commit
           mkdir downloaded
           gh release download "$RELEASE_TAG" --dir downloaded
           for evidence in "${apks[0]#./}" SHA256SUMS BUILD.txt UI_GATE.md apksigner.txt; do
