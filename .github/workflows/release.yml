@@ -306,6 +306,11 @@ jobs:
           shopt -s nullglob
           apks=(./apk/*/release/*.apk)
           test "${#apks[@]}" -gt 0 || { echo "::error::No APKs to publish" >&2; exit 1; }
+          tag_commit="$(git rev-parse "$TAG_REF^{commit}")"
+          test "$tag_commit" = "$GITHUB_SHA" || {
+            echo "::error::Release tag does not resolve to the workflow commit" >&2
+            exit 1
+          }
 
           APKSIGNER="$(find "$ANDROID_HOME/build-tools" -type f -name apksigner | sort -V | tail -1)"
           test -x "$APKSIGNER" || { echo "::error::apksigner unavailable" >&2; exit 1; }
@@ -336,18 +341,46 @@ jobs:
           }
 
           mkdir -p existing-assets verified-release
+          download_release_asset() {
+            local asset_id="$1"
+            local destination="$2"
+            local headers status location
+            headers="$(mktemp)"
+            status="$(curl --silent --show-error --dump-header "$headers" \
+              --output "$destination" --write-out '%{http_code}' \
+              --header "Authorization: Bearer $GITHUB_TOKEN" \
+              --header "Accept: application/octet-stream" \
+              --header "X-GitHub-Api-Version: 2022-11-28" \
+              "https://api.github.com/repos/$GITHUB_REPOSITORY/releases/assets/$asset_id")"
+            case "$status" in
+              200)
+                ;;
+              301|302|303|307|308)
+                location="$(awk 'tolower($1) == "location:" { sub(/^[^:]*:[[:space:]]*/, ""); sub(/\\r$/, ""); print; exit }' "$headers")"
+                test -n "$location" || {
+                  rm -f "$headers" "$destination"
+                  echo "::error::GitHub returned a redirect without a download URL" >&2
+                  return 1
+                }
+                # Do not forward the GitHub token to the signed object-storage URL.
+                curl --fail --silent --show-error --location "$location" --output "$destination"
+                ;;
+              *)
+                rm -f "$headers" "$destination"
+                echo "::error::GitHub asset download returned HTTP $status" >&2
+                return 1
+                ;;
+            esac
+            rm -f "$headers"
+            test -s "$destination"
+          }
           for asset in "${assets[@]}"; do
             name="$(basename "$asset")"
             existing="$(jq -c --arg name "$name" '[.assets[] | select(.name == $name)]' <<< "$release_record")"
             existing_count="$(jq 'length' <<< "$existing")"
             if [[ "$existing_count" == "1" ]]; then
               asset_id="$(jq -r '.[0].id' <<< "$existing")"
-              curl --fail --silent --show-error --location \\
-                --header "Authorization: Bearer $GITHUB_TOKEN" \\
-                --header "Accept: application/octet-stream" \\
-                --header "X-GitHub-Api-Version: 2022-11-28" \\
-                "https://api.github.com/repos/$GITHUB_REPOSITORY/releases/assets/$asset_id" \\
-                --output "existing-assets/$name"
+              download_release_asset "$asset_id" "existing-assets/$name"
               cmp -s "$asset" "existing-assets/$name" || {
                 echo "::error::Existing immutable release asset differs; refusing to replace: $name" >&2
                 exit 1
@@ -401,12 +434,7 @@ jobs:
               echo "::error::Release asset checksum mismatch: $name" >&2
               exit 1
             }
-            curl --fail --silent --show-error --location \\
-              --header "Authorization: Bearer $GITHUB_TOKEN" \\
-              --header "Accept: application/octet-stream" \\
-              --header "X-GitHub-Api-Version: 2022-11-28" \\
-              "https://api.github.com/repos/$GITHUB_REPOSITORY/releases/assets/$asset_id" \\
-              --output "verified-release/$name"
+            download_release_asset "$asset_id" "verified-release/$name"
             test -s "verified-release/$name" || {
               echo "::error::Downloaded release asset is empty: $name" >&2
               exit 1
