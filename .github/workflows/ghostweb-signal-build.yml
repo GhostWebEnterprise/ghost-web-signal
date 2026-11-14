@@ -314,25 +314,11 @@ jobs:
           test -s UI_GATE.md
           grep -Fq "UI_GATE_STATUS: PASS" UI_GATE.md
           grep -Fq "Source commit: ${GITHUB_SHA}" UI_GATE.md
-          if gh release view "$RELEASE_TAG" > /dev/null 2>&1; then
-            echo "Release $RELEASE_TAG already exists; verifying existing release instead of overwriting it."
-            mkdir downloaded
-            gh release download "$RELEASE_TAG" --dir downloaded
-            for evidence in "${apks[0]#./}" SHA256SUMS BUILD.txt UI_GATE.md apksigner.txt; do
-              test -s "downloaded/$evidence" || {
-                echo "::error::Existing release is missing $evidence" >&2
-                exit 1
-              }
-              cmp -s "$evidence" "downloaded/$evidence" || {
-                echo "::error::Existing release asset differs from the verified build: $evidence" >&2
-                exit 1
-              }
-            done
-            (cd downloaded && sha256sum --check SHA256SUMS)
-            echo "Existing release contains the exact verified APK and evidence bytes."
-            exit 0
-          fi
-          cat > release-notes.md <<EOF_NOTES
+          release_json="$(gh api "repos/$GH_REPO/releases?per_page=100")"
+          matches="$(jq -c --arg tag "$RELEASE_TAG" '[.[] | select(.tag_name == $tag)]' <<< "$release_json")"
+          release_count="$(jq 'length' <<< "$matches")"
+          if [[ "$release_count" == "0" ]]; then
+            cat > release-notes.md <<EOF_NOTES
           GhostWeb Signal startup animation with the original icon and violet Photon-inspired glow.
 
           Plays after completed registration and app unlock. Respects disabled animations.
@@ -344,20 +330,95 @@ jobs:
           Signed APK and startup lifecycle tests verified by GitHub Actions.
           Physical-device registration and biometric testing is still required.
           EOF_NOTES
-          gh release create "$RELEASE_TAG" ./*.apk SHA256SUMS BUILD.txt UI_GATE.md apksigner.txt \
-            --target "$GITHUB_SHA" --draft \
-            --title "GhostWeb Signal $RELEASE_TAG" --notes-file release-notes.md
+            gh release create "$RELEASE_TAG" ./*.apk SHA256SUMS BUILD.txt UI_GATE.md apksigner.txt \
+              --target "$GITHUB_SHA" --draft \
+              --title "GhostWeb Signal $RELEASE_TAG" --notes-file release-notes.md
+            release_json="$(gh api "repos/$GH_REPO/releases?per_page=100")"
+            matches="$(jq -c --arg tag "$RELEASE_TAG" '[.[] | select(.tag_name == $tag)]' <<< "$release_json")"
+            release_count="$(jq 'length' <<< "$matches")"
+          fi
+
+          test "$release_count" = "1" || {
+            echo "::error::Expected exactly one release for $RELEASE_TAG; found $release_count" >&2
+            exit 1
+          }
+          release_record="$(jq -c '.[0]' <<< "$matches")"
+          release_id="$(jq -r '.id' <<< "$release_record")"
+          release_draft="$(jq -r '.draft' <<< "$release_record")"
+
+          tag_ref="$(gh api "repos/$GH_REPO/git/ref/tags/$RELEASE_TAG")"
+          tag_sha="$(jq -r '.object.sha' <<< "$tag_ref")"
+          tag_type="$(jq -r '.object.type' <<< "$tag_ref")"
+          if [[ "$tag_type" == "tag" ]]; then
+            tag_sha="$(gh api "repos/$GH_REPO/git/tags/$tag_sha" --jq '.object.sha')"
+          fi
+          test "$tag_sha" = "$GITHUB_SHA" || {
+            echo "::error::Release tag points to $tag_sha, not verified build commit $GITHUB_SHA" >&2
+            exit 1
+          }
+
           mkdir downloaded
           gh release download "$RELEASE_TAG" --dir downloaded
-          for evidence in "${apks[0]#./}" SHA256SUMS BUILD.txt UI_GATE.md apksigner.txt; do
+          for evidence in "\${apks[0]#./}" SHA256SUMS BUILD.txt UI_GATE.md apksigner.txt; do
             test -s "downloaded/$evidence" || {
-              echo "::error::Published release is missing $evidence" >&2
+              echo "::error::Release is missing verified asset $evidence" >&2
               exit 1
             }
             cmp -s "$evidence" "downloaded/$evidence" || {
-              echo "::error::Downloaded release asset differs from the verified build: $evidence" >&2
+              echo "::error::Release asset differs from the verified build: $evidence" >&2
+              exit 1
+            }
+            expected="$(sha256sum "$evidence" | cut -d' ' -f1)"
+            asset_matches="$(jq -c --arg name "$evidence" '[.assets[] | select(.name == $name)]' <<< "$release_record")"
+            test "$(jq 'length' <<< "$asset_matches")" = "1" || {
+              echo "::error::Expected exactly one release asset named $evidence" >&2
+              exit 1
+            }
+            digest="$(jq -r '.[0].digest // empty' <<< "$asset_matches")"
+            test "\${digest#sha256:}" = "$expected" || {
+              echo "::error::Release asset digest mismatch: $evidence" >&2
               exit 1
             }
           done
           (cd downloaded && sha256sum --check SHA256SUMS)
-          gh release edit "$RELEASE_TAG" --draft=false
+
+          if [[ "$release_draft" == "false" ]]; then
+            echo "Release $RELEASE_TAG is already published and its immutable assets match this verified build."
+            exit 0
+          fi
+          test "$release_draft" = "true" || {
+            echo "::error::Release draft state is invalid; refusing promotion" >&2
+            exit 1
+          }
+
+          gh api --method PATCH -F draft=false "repos/$GH_REPO/releases/$release_id" > "$RUNNER_TEMP/published-release.json"
+          jq -e '.draft == false and .published_at != null' "$RUNNER_TEMP/published-release.json" >/dev/null || {
+            echo "::error::GitHub did not confirm release publication" >&2
+            exit 1
+          }
+
+          final_json="$(gh api "repos/$GH_REPO/releases?per_page=100")"
+          final_matches="$(jq -c --arg tag "$RELEASE_TAG" '[.[] | select(.tag_name == $tag)]' <<< "$final_json")"
+          test "$(jq 'length' <<< "$final_matches")" = "1" || {
+            echo "::error::Published release could not be uniquely re-read" >&2
+            exit 1
+          }
+          final_record="$(jq -c '.[0]' <<< "$final_matches")"
+          jq -e '.draft == false and .published_at != null' <<< "$final_record" >/dev/null || {
+            echo "::error::Final release state is not published" >&2
+            exit 1
+          }
+          for evidence in "\${apks[0]#./}" SHA256SUMS BUILD.txt UI_GATE.md apksigner.txt; do
+            expected="$(sha256sum "$evidence" | cut -d' ' -f1)"
+            final_asset_matches="$(jq -c --arg name "$evidence" '[.[0].assets[] | select(.name == $name)]' <<< "$final_matches")"
+            test "$(jq 'length' <<< "$final_asset_matches")" = "1" || {
+              echo "::error::Published release is missing or duplicates asset $evidence" >&2
+              exit 1
+            }
+            digest="$(jq -r '.[0].digest // empty' <<< "$final_asset_matches")"
+            test "\${digest#sha256:}" = "$expected" || {
+              echo "::error::Published asset digest changed: $evidence" >&2
+              exit 1
+            }
+          done
+          echo "Published and verified $RELEASE_TAG through immutable release ID $release_id."
