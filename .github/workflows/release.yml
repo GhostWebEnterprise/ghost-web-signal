@@ -188,15 +188,43 @@ jobs:
           fi
       - name: Check if release exists
         id: check_release
-        run: |
-          if gh release view "$TAG_REF"; then echo "release_exists=true" >> "$GITHUB_OUTPUT"; else echo "release_exists=false" >> "$GITHUB_OUTPUT"; fi
+        shell: bash
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          release_json="$(gh api "repos/$GITHUB_REPOSITORY/releases?per_page=100")"
+          matches="$(jq -c --arg tag "$TAG_REF" '[.[] | select(.tag_name == $tag)]' <<< "$release_json")"
+          count="$(jq 'length' <<< "$matches")"
+          if [[ "$count" == "1" ]]; then
+            is_draft="$(jq -r '.[0].draft' <<< "$matches")"
+            test "$is_draft" = true || {
+              echo "::error::Refusing to modify already-published release $TAG_REF" >&2
+              exit 1
+            }
+            echo "release_exists=true" >> "$GITHUB_OUTPUT"
+          elif [[ "$count" == "0" ]]; then
+            echo "release_exists=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "::error::Multiple releases found for tag $TAG_REF" >&2
+            exit 1
+          fi
       - name: Create release draft
         if: "steps.check_release.outputs.release_exists == 'false'"
-        run: gh release create -d --verify-tag -t "$TAG_REF" "$TAG_REF"
+        shell: bash
         env:
-          GITHUB_TOKEN: ${{ secrets.PUBLISH_PAT || secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.PUBLISH_PAT || secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          git rev-parse --verify "refs/tags/$TAG_REF^{commit}" >/dev/null
+          created="$(gh api --method POST \
+            -F tag_name="$TAG_REF" \
+            -F name="$TAG_REF" \
+            -F draft=true \
+            "repos/$GITHUB_REPOSITORY/releases")"
+          jq -e --arg tag "$TAG_REF" \
+            '.tag_name == $tag and .draft == true and (.id | type == "number")' \
+            <<< "$created" >/dev/null
 
   upload:
     name: Upload verified signed APKs
@@ -277,65 +305,158 @@ jobs:
           set -euo pipefail
           shopt -s nullglob
           apks=(./apk/*/release/*.apk)
-          test "${#apks[@]}" -gt 0 || { echo "::error::No APKs to publish"; exit 1; }
-          is_draft="$(gh release view "$TAG_REF" --json isDraft --jq .isDraft)"
-          test "$is_draft" = true || { echo "::error::Refusing to modify an already published release"; exit 1; }
+          test "${#apks[@]}" -gt 0 || { echo "::error::No APKs to publish" >&2; exit 1; }
+
           APKSIGNER="$(find "$ANDROID_HOME/build-tools" -type f -name apksigner | sort -V | tail -1)"
-          test -x "$APKSIGNER" || { echo "::error::apksigner unavailable"; exit 1; }
+          test -x "$APKSIGNER" || { echo "::error::apksigner unavailable" >&2; exit 1; }
           EXPECTED_SIGNER_SHA256="64bb12f28a7d39d2cf921024c6d36019ea3808481bd4471511bd83ca64f20435"
           for apk in "${apks[@]}"; do
             name="$(basename "$apk")"
-            [[ "$name" != *unsigned* ]] || { echo "::error::Unsigned APK refused: $name"; exit 1; }
+            [[ "$name" != *unsigned* ]] || { echo "::error::Unsigned APK refused: $name" >&2; exit 1; }
             verification="$("$APKSIGNER" verify --verbose --print-certs "$apk")"
-            grep -Fq "Verifies" <<< "$verification" || { echo "::error::APK signature verification failed: $name"; exit 1; }
-            grep -Fq "Verified using v2 scheme (APK Signature Scheme v2): true" <<< "$verification" || { echo "::error::APK Signature Scheme v2 is required: $name"; exit 1; }
-            grep -Fq "Number of signers: 1" <<< "$verification" || { echo "::error::Expected exactly one signer: $name"; exit 1; }
-            printf '%s\n' "$verification" > "$RUNNER_TEMP/apksigner-verification.txt"
+            grep -Fq "Verifies" <<< "$verification" || { echo "::error::APK signature verification failed: $name" >&2; exit 1; }
+            grep -Fq "Verified using v2 scheme (APK Signature Scheme v2): true" <<< "$verification" || { echo "::error::APK Signature Scheme v2 is required: $name" >&2; exit 1; }
+            grep -Fq "Number of signers: 1" <<< "$verification" || { echo "::error::Expected exactly one signer: $name" >&2; exit 1; }
+            printf '%s\\n' "$verification" > "$RUNNER_TEMP/apksigner-verification.txt"
             bash scripts/verify-apksigner-fingerprint.sh "$RUNNER_TEMP/apksigner-verification.txt" "$EXPECTED_SIGNER_SHA256"
           done
+
           assets=("${apks[@]}" apk/SHA256SUMS apk/SIGNATURES.txt)
-          # Make retries safe: never overwrite a published/draft asset. If a prior
-          # attempt already uploaded it, require byte-for-byte equality and reuse it.
-          mkdir -p existing-assets
+          release_json="$(gh api "repos/$GITHUB_REPOSITORY/releases?per_page=100")"
+          matches="$(jq -c --arg tag "$TAG_REF" '[.[] | select(.tag_name == $tag)]' <<< "$release_json")"
+          test "$(jq 'length' <<< "$matches")" = "1" || {
+            echo "::error::Expected exactly one draft release for $TAG_REF" >&2
+            exit 1
+          }
+          release_record="$(jq -c '.[0]' <<< "$matches")"
+          release_id="$(jq -r '.id' <<< "$release_record")"
+          test "$(jq -r '.draft' <<< "$release_record")" = true || {
+            echo "::error::Refusing to modify an already-published release" >&2
+            exit 1
+          }
+
+          mkdir -p existing-assets verified-release
           for asset in "${assets[@]}"; do
             name="$(basename "$asset")"
-            if gh release view "$TAG_REF" --json assets --jq '.assets[].name' | grep -Fxq "$name"; then
-              rm -f "existing-assets/$name"
-              gh release download "$TAG_REF" --pattern "$name" --dir existing-assets
+            existing="$(jq -c --arg name "$name" '[.assets[] | select(.name == $name)]' <<< "$release_record")"
+            existing_count="$(jq 'length' <<< "$existing")"
+            if [[ "$existing_count" == "1" ]]; then
+              asset_id="$(jq -r '.[0].id' <<< "$existing")"
+              curl --fail --silent --show-error --location \\
+                --header "Authorization: Bearer $GITHUB_TOKEN" \\
+                --header "Accept: application/octet-stream" \\
+                --header "X-GitHub-Api-Version: 2022-11-28" \\
+                "https://api.github.com/repos/$GITHUB_REPOSITORY/releases/assets/$asset_id" \\
+                --output "existing-assets/$name"
               cmp -s "$asset" "existing-assets/$name" || {
-                echo "::error::Existing release asset differs; refusing to replace: $name" >&2
+                echo "::error::Existing immutable release asset differs; refusing to replace: $name" >&2
                 exit 1
               }
-              echo "Existing immutable release asset already matches: $name"
+              echo "Existing release asset matches byte-for-byte: $name"
+            elif [[ "$existing_count" == "0" ]]; then
+              encoded_name="$(jq -rn --arg value "$name" '$value | @uri')"
+              response="$(curl --fail --silent --show-error --request POST \\
+                --header "Authorization: Bearer $GITHUB_TOKEN" \\
+                --header "Accept: application/vnd.github+json" \\
+                --header "Content-Type: application/octet-stream" \\
+                --header "X-GitHub-Api-Version: 2022-11-28" \\
+                --data-binary "@$asset" \\
+                "https://uploads.github.com/repos/$GITHUB_REPOSITORY/releases/$release_id/assets?name=$encoded_name")"
+              jq -e --arg name "$name" '.name == $name and .state == "uploaded"' <<< "$response" >/dev/null || {
+                echo "::error::GitHub did not confirm upload of $name" >&2
+                exit 1
+              }
             else
-              gh release upload "$TAG_REF" "$asset"
+              echo "::error::Multiple release assets named $name; refusing to continue" >&2
+              exit 1
             fi
           done
+
+          # Refresh the draft from the releases collection; draft-by-tag lookup is not reliable here.
+          release_json="$(gh api "repos/$GITHUB_REPOSITORY/releases?per_page=100")"
+          matches="$(jq -c --arg tag "$TAG_REF" '[.[] | select(.tag_name == $tag)]' <<< "$release_json")"
+          test "$(jq 'length' <<< "$matches")" = "1" || {
+            echo "::error::Draft release disappeared or became ambiguous" >&2
+            exit 1
+          }
+          release_record="$(jq -c '.[0]' <<< "$matches")"
+          release_id="$(jq -r '.id' <<< "$release_record")"
+          test "$(jq -r '.draft' <<< "$release_record")" = true || {
+            echo "::error::Release is no longer a draft; refusing promotion" >&2
+            exit 1
+          }
+
           for asset in "${assets[@]}"; do
             name="$(basename "$asset")"
             expected="$(sha256sum "$asset" | cut -d' ' -f1)"
-            # GitHub's release-by-tag endpoint can return 404 for draft releases.
-            # The releases collection includes drafts and exposes their asset digests.
-            release_json="$(gh api "repos/$GITHUB_REPOSITORY/releases?per_page=100")"
-            actual="$(jq -r --arg tag "$TAG_REF" --arg name "$name" \
-              '.[] | select(.tag_name == $tag) | .assets[] | select(.name == $name) | .digest' \
-              <<< "$release_json" | sed 's/^sha256://')"
-            test -n "$actual" && test "$expected" = "$actual" || { echo "::error::Release asset checksum mismatch: $name"; exit 1; }
+            asset_matches="$(jq -c --arg name "$name" '[.assets[] | select(.name == $name)]' <<< "$release_record")"
+            test "$(jq 'length' <<< "$asset_matches")" = "1" || {
+              echo "::error::Expected exactly one uploaded release asset: $name" >&2
+              exit 1
+            }
+            asset_record="$(jq -c '.[0]' <<< "$asset_matches")"
+            asset_id="$(jq -r '.id' <<< "$asset_record")"
+            digest="$(jq -r '.digest // empty' <<< "$asset_record")"
+            test "${digest#sha256:}" = "$expected" || {
+              echo "::error::Release asset checksum mismatch: $name" >&2
+              exit 1
+            }
+            curl --fail --silent --show-error --location \\
+              --header "Authorization: Bearer $GITHUB_TOKEN" \\
+              --header "Accept: application/octet-stream" \\
+              --header "X-GitHub-Api-Version: 2022-11-28" \\
+              "https://api.github.com/repos/$GITHUB_REPOSITORY/releases/assets/$asset_id" \\
+              --output "verified-release/$name"
+            test -s "verified-release/$name" || {
+              echo "::error::Downloaded release asset is empty: $name" >&2
+              exit 1
+            }
+            cmp -s "$asset" "verified-release/$name" || {
+              echo "::error::Downloaded release asset bytes differ: $name" >&2
+              exit 1
+            }
           done
-          mkdir -p verified-release
-          gh release download "$TAG_REF" --pattern '*.apk' --pattern SHA256SUMS --pattern SIGNATURES.txt --dir verified-release
+
           (cd verified-release && sha256sum --check SHA256SUMS)
-          cmp -s apk/SIGNATURES.txt verified-release/SIGNATURES.txt || { echo "::error::Downloaded signature evidence differs"; exit 1; }
+          cmp -s apk/SIGNATURES.txt verified-release/SIGNATURES.txt || {
+            echo "::error::Downloaded signature evidence differs" >&2
+            exit 1
+          }
           for apk in "${apks[@]}"; do
             name="$(basename "$apk")"
             downloaded="verified-release/$name"
-            test -s "$downloaded" || { echo "::error::Downloaded release APK is missing: $name"; exit 1; }
-            cmp -s "$apk" "$downloaded" || { echo "::error::Downloaded release APK bytes differ: $name"; exit 1; }
             verification="$("$APKSIGNER" verify --verbose --print-certs "$downloaded")"
-            grep -Fq "Verifies" <<< "$verification" || { echo "::error::Downloaded release APK signature failed: $name"; exit 1; }
-            grep -Fq "Verified using v2 scheme (APK Signature Scheme v2): true" <<< "$verification" || { echo "::error::Downloaded release APK lacks V2: $name"; exit 1; }
-            grep -Fq "Number of signers: 1" <<< "$verification" || { echo "::error::Downloaded release APK has unexpected signer count: $name"; exit 1; }
-            printf '%s\n' "$verification" > "$RUNNER_TEMP/apksigner-verification.txt"
+            grep -Fq "Verifies" <<< "$verification" || { echo "::error::Downloaded release APK signature failed: $name" >&2; exit 1; }
+            grep -Fq "Verified using v2 scheme (APK Signature Scheme v2): true" <<< "$verification" || { echo "::error::Downloaded release APK lacks V2: $name" >&2; exit 1; }
+            grep -Fq "Number of signers: 1" <<< "$verification" || { echo "::error::Downloaded release APK has unexpected signer count: $name" >&2; exit 1; }
+            printf '%s\\n' "$verification" > "$RUNNER_TEMP/apksigner-verification.txt"
             bash scripts/verify-apksigner-fingerprint.sh "$RUNNER_TEMP/apksigner-verification.txt" "$EXPECTED_SIGNER_SHA256"
           done
-          gh release edit "$TAG_REF" --draft=false
+
+          # Promote only after every asset has passed digest, byte and signature verification.
+          gh api --method PATCH -F draft=false "repos/$GITHUB_REPOSITORY/releases/$release_id" > "$RUNNER_TEMP/published-release.json"
+          jq -e '.draft == false and .published_at != null' "$RUNNER_TEMP/published-release.json" >/dev/null || {
+            echo "::error::GitHub did not confirm release publication" >&2
+            exit 1
+          }
+
+          final_json="$(gh api "repos/$GITHUB_REPOSITORY/releases?per_page=100")"
+          final_matches="$(jq -c --arg tag "$TAG_REF" '[.[] | select(.tag_name == $tag)]' <<< "$final_json")"
+          test "$(jq 'length' <<< "$final_matches")" = "1" || {
+            echo "::error::Published release could not be uniquely re-read" >&2
+            exit 1
+          }
+          final_record="$(jq -c '.[0]' <<< "$final_matches")"
+          jq -e '.draft == false and .published_at != null' <<< "$final_record" >/dev/null || {
+            echo "::error::Final release state is not published" >&2
+            exit 1
+          }
+          for asset in "${assets[@]}"; do
+            name="$(basename "$asset")"
+            expected="$(sha256sum "$asset" | cut -d' ' -f1)"
+            actual="$(jq -r --arg name "$name" '[.assets[] | select(.name == $name)] | if length == 1 then .[0].digest else empty end' <<< "$final_record" | sed 's/^sha256://')"
+            test "$actual" = "$expected" || {
+              echo "::error::Published asset digest changed: $name" >&2
+              exit 1
+            }
+          done
