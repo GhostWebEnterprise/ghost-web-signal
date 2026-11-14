@@ -314,8 +314,46 @@ jobs:
           test -s UI_GATE.md
           grep -Fq "UI_GATE_STATUS: PASS" UI_GATE.md
           grep -Fq "Source commit: ${GITHUB_SHA}" UI_GATE.md
-          if gh release view "$RELEASE_TAG" > /dev/null 2>&1; then
-            echo "Release $RELEASE_TAG already exists; verifying existing release instead of overwriting it."
+          find_release_id() {
+            local release_json matches count
+            release_json="$(gh api "repos/$GITHUB_REPOSITORY/releases?per_page=100")"
+            matches="$(jq -c --arg tag "$RELEASE_TAG" '[.[] | select(.tag_name == $tag)]' <<< "$release_json")"
+            count="$(jq 'length' <<< "$matches")"
+            if [[ "$count" -gt 1 ]]; then
+              echo "::error::Multiple releases found for $RELEASE_TAG" >&2
+              return 1
+            fi
+            if [[ "$count" -eq 1 ]]; then
+              jq -r '.[0].id' <<< "$matches"
+            fi
+          }
+
+          finalize_verified_release() {
+            local release_id="$1" draft final_json
+            test -n "$release_id" || {
+              echo "::error::Verified release ID is missing" >&2
+              return 1
+            }
+            draft="$(gh api "repos/$GITHUB_REPOSITORY/releases/$release_id" --jq '.draft')"
+            if [[ "$draft" == "true" ]]; then
+              gh api --method PATCH -F draft=false \
+                "repos/$GITHUB_REPOSITORY/releases/$release_id" > "$RUNNER_TEMP/published-release.json"
+            elif [[ "$draft" != "false" ]]; then
+              echo "::error::Unexpected draft state for release $release_id" >&2
+              return 1
+            fi
+            final_json="$(gh api "repos/$GITHUB_REPOSITORY/releases/$release_id")"
+            jq -e --arg tag "$RELEASE_TAG" \
+              '.tag_name == $tag and .draft == false' <<< "$final_json" > /dev/null || {
+              echo "::error::Release $RELEASE_TAG did not reach the published state" >&2
+              return 1
+            }
+            echo "Verified published release $RELEASE_TAG (release ID $release_id)."
+          }
+
+          EXISTING_RELEASE_ID="$(find_release_id)"
+          if [[ -n "$EXISTING_RELEASE_ID" ]]; then
+            echo "Release $RELEASE_TAG already exists; verifying exact assets before any draft finalization."
             mkdir downloaded
             gh release download "$RELEASE_TAG" --dir downloaded
             for evidence in "${apks[0]#./}" SHA256SUMS BUILD.txt UI_GATE.md apksigner.txt; do
@@ -329,7 +367,7 @@ jobs:
               }
             done
             (cd downloaded && sha256sum --check SHA256SUMS)
-            echo "Existing release contains the exact verified APK and evidence bytes."
+            finalize_verified_release "$EXISTING_RELEASE_ID"
             exit 0
           fi
           cat > release-notes.md <<EOF_NOTES
@@ -360,4 +398,4 @@ jobs:
             }
           done
           (cd downloaded && sha256sum --check SHA256SUMS)
-          gh release edit "$RELEASE_TAG" --draft=false
+          finalize_verified_release "$(find_release_id)"
