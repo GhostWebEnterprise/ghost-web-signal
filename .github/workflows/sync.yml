@@ -13,11 +13,10 @@ on:
   schedule:
     - cron: '0 2,18,22 * * *'
 
-# The repository-scoped SYNC_PAT is used only by checkout/push. Keep the
-# workflow's built-in token read-only so a missing PAT cannot silently fall
-# back to a write-capable GITHUB_TOKEN.
+# Use only the repository-scoped workflow token for checkout and sync pushes.
+# No long-lived personal access token is required.
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   sync:
@@ -26,22 +25,10 @@ jobs:
     runs-on: ubuntu-24.04
 
     steps:
-      - name: Require SYNC_PAT
-        shell: bash
-        env:
-          SYNC_PAT: ${{ secrets.SYNC_PAT }}
-        run: |
-          set -euo pipefail
-          test -n "$SYNC_PAT" || {
-            echo "::error::SYNC_PAT is missing; refusing to run upstream write operations"
-            exit 1
-          }
-
       - name: Checkout GhostWeb base
         uses: actions/checkout@v6
         with:
           ref: GWSignal.main
-          token: ${{ secrets.SYNC_PAT }}
           fetch-depth: 0
           lfs: true
           persist-credentials: true
