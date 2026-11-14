@@ -194,7 +194,7 @@ jobs:
         run: |
           set -euo pipefail
           release_json="$(gh api "repos/$GITHUB_REPOSITORY/releases?per_page=100")"
-          matches="$(jq -c --arg tag "$TAG_REF" '[.[] | select(.tag_name == $tag)]' <<< "$release_json")"
+          matches="$(jq -c --arg tag "$TAG_REF" '[.[] | if .tag_name == $tag then . else empty end]' <<< "$release_json")"
           count="$(jq 'length' <<< "$matches")"
           if [[ "$count" == "1" ]]; then
             is_draft="$(jq -r '.[0].draft' <<< "$matches")"
@@ -328,7 +328,7 @@ jobs:
 
           assets=("${apks[@]}" apk/SHA256SUMS apk/SIGNATURES.txt)
           release_json="$(gh api "repos/$GITHUB_REPOSITORY/releases?per_page=100")"
-          matches="$(jq -c --arg tag "$TAG_REF" '[.[] | select(.tag_name == $tag)]' <<< "$release_json")"
+          matches="$(jq -c --arg tag "$TAG_REF" '[.[] | if .tag_name == $tag then . else empty end]' <<< "$release_json")"
           test "$(jq 'length' <<< "$matches")" = "1" || {
             echo "::error::Expected exactly one draft release for $TAG_REF" >&2
             exit 1
@@ -376,7 +376,7 @@ jobs:
           }
           for asset in "${assets[@]}"; do
             name="$(basename "$asset")"
-            existing="$(jq -c --arg name "$name" '[.assets[] | select(.name == $name)]' <<< "$release_record")"
+            existing="$(jq -c --arg name "$name" '[.assets[] | if .name == $name then . else empty end]' <<< "$release_record")"
             existing_count="$(jq 'length' <<< "$existing")"
             if [[ "$existing_count" == "1" ]]; then
               asset_id="$(jq -r '.[0].id' <<< "$existing")"
@@ -407,7 +407,7 @@ jobs:
 
           # Refresh the draft from the releases collection; draft-by-tag lookup is not reliable here.
           release_json="$(gh api "repos/$GITHUB_REPOSITORY/releases?per_page=100")"
-          matches="$(jq -c --arg tag "$TAG_REF" '[.[] | select(.tag_name == $tag)]' <<< "$release_json")"
+          matches="$(jq -c --arg tag "$TAG_REF" '[.[] | if .tag_name == $tag then . else empty end]' <<< "$release_json")"
           test "$(jq 'length' <<< "$matches")" = "1" || {
             echo "::error::Draft release disappeared or became ambiguous" >&2
             exit 1
@@ -422,7 +422,7 @@ jobs:
           for asset in "${assets[@]}"; do
             name="$(basename "$asset")"
             expected="$(sha256sum "$asset" | cut -d' ' -f1)"
-            asset_matches="$(jq -c --arg name "$name" '[.assets[] | select(.name == $name)]' <<< "$release_record")"
+            asset_matches="$(jq -c --arg name "$name" '[.assets[] | if .name == $name then . else empty end]' <<< "$release_record")"
             test "$(jq 'length' <<< "$asset_matches")" = "1" || {
               echo "::error::Expected exactly one uploaded release asset: $name" >&2
               exit 1
@@ -469,7 +469,7 @@ jobs:
           }
 
           final_json="$(gh api "repos/$GITHUB_REPOSITORY/releases?per_page=100")"
-          final_matches="$(jq -c --arg tag "$TAG_REF" '[.[] | select(.tag_name == $tag)]' <<< "$final_json")"
+          final_matches="$(jq -c --arg tag "$TAG_REF" '[.[] | if .tag_name == $tag then . else empty end]' <<< "$final_json")"
           test "$(jq 'length' <<< "$final_matches")" = "1" || {
             echo "::error::Published release could not be uniquely re-read" >&2
             exit 1
@@ -482,7 +482,7 @@ jobs:
           for asset in "${assets[@]}"; do
             name="$(basename "$asset")"
             expected="$(sha256sum "$asset" | cut -d' ' -f1)"
-            actual="$(jq -r --arg name "$name" '[.assets[] | select(.name == $name)] | if length == 1 then .[0].digest else empty end' <<< "$final_record" | sed 's/^sha256://')"
+            actual="$(jq -r --arg name "$name" '[.assets[] | if .name == $name then .digest else empty end] | if length == 1 then .[0] else empty end' <<< "$final_record" | sed 's/^sha256://')"
             test "$actual" = "$expected" || {
               echo "::error::Published asset digest changed: $name" >&2
               exit 1
