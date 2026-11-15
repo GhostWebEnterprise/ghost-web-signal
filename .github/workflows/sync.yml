@@ -13,7 +13,7 @@ on:
   schedule:
     - cron: '0 2,18,22 * * *'
 
-# Keep the default token read-only; grant write only to the sync job.
+# Keep the GitHub token read-only; use SYNC_PAT only for mirror-branch writes.
 permissions:
   contents: read
 
@@ -23,17 +23,28 @@ jobs:
     if: github.ref == 'refs/heads/GWSignal.main'
     runs-on: ubuntu-24.04
     permissions:
-      contents: write
+      contents: read
 
     steps:
       - name: Checkout GhostWeb base
         uses: actions/checkout@v6
         with:
           ref: GWSignal.main
-          token: ${{ secrets.SYNC_PAT }}
+          token: ${{ github.token }}
           fetch-depth: 0
           lfs: true
-          persist-credentials: true
+          persist-credentials: false
+
+      - name: Require SYNC_PAT for origin writes
+        shell: bash
+        env:
+          SYNC_PAT: ${{ secrets.SYNC_PAT }}
+        run: |
+          set -euo pipefail
+          test -n "$SYNC_PAT" || {
+            echo "::error::SYNC_PAT is missing or empty; configure the repository secret with Contents: write access."
+            exit 1
+          }
 
       - name: Fetch Signal upstream
         run: |
@@ -51,21 +62,33 @@ jobs:
       - run: git lfs fetch --all upstream
 
       - name: Publish upstream-main
+        shell: bash
+        env:
+          SYNC_PAT: ${{ secrets.SYNC_PAT }}
         run: |
-          remote_sha="$(git ls-remote --heads origin refs/heads/upstream-main | awk '{print $1}')"
+          set -euo pipefail
+          auth_header="$(printf 'x-access-token:%s' "$SYNC_PAT" | base64 -w0)"
+          echo "::add-mask::$auth_header"
+          remote_sha="$(git -c "http.https://github.com/.extraheader=AUTHORIZATION: basic ${auth_header}" ls-remote --heads origin refs/heads/upstream-main | awk '{print $1}')"
           if [ -n "$remote_sha" ]; then
-            git push origin "HEAD:refs/heads/upstream-main" \
+            git -c "http.https://github.com/.extraheader=AUTHORIZATION: basic ${auth_header}" push origin "HEAD:refs/heads/upstream-main" \
               --force-with-lease="refs/heads/upstream-main:${remote_sha}"
           else
-            git push origin "HEAD:refs/heads/upstream-main"
+            git -c "http.https://github.com/.extraheader=AUTHORIZATION: basic ${auth_header}" push origin "HEAD:refs/heads/upstream-main"
           fi
 
       - name: Track upstream stable release
+        shell: bash
+        env:
+          SYNC_PAT: ${{ secrets.SYNC_PAT }}
         run: |
+          set -euo pipefail
           curl -fsSL -o latest.json https://updates.signal.org/android/latest.json
           tag="v$(jq -r .versionName latest.json)"
           if ! git rev-parse -q --verify "refs/tags/${tag}"; then
             echo "::notice::tag ${tag} not pushed to upstream yet, skipping"
             exit 0
           fi
-          git push -f origin "${tag}^{commit}:refs/heads/upstream-stable"
+          auth_header="$(printf 'x-access-token:%s' "$SYNC_PAT" | base64 -w0)"
+          echo "::add-mask::$auth_header"
+          git -c "http.https://github.com/.extraheader=AUTHORIZATION: basic ${auth_header}" push -f origin "${tag}^{commit}:refs/heads/upstream-stable"
