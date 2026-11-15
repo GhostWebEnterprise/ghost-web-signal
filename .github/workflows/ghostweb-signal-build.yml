@@ -35,10 +35,22 @@ jobs:
       CI_BUILD_VARIANTS: prodWebsite(Release|Debug)
       CI_FORCE_INTERNAL_USER_FLAG: "false"
       # Must match docs/ui-gate.md and the resValue in app/build.gradle.kts.
-      CI_UI_GATE_VERSION: photon-2
+      CI_UI_GATE_VERSION: photon-glass-1
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Verify Photon Liquid Glass source integration
+        shell: bash
+        run: |
+          set -euo pipefail
+          glass="app/src/main/java/org/thoughtcrime/securesms/ghostweb/photon/PhotonGlass.kt"
+          title="app/src/main/java/org/thoughtcrime/securesms/components/compose/ScreenTitlePane.kt"
+          test -s "$glass"
+          grep -Fq 'fun PhotonGlassSurface(' "$glass"
+          grep -Fq 'fun PhotonActionSurface(' "$glass"
+          grep -Fq 'PhotonGlassSurface(' "$title"
+          echo "Photon Liquid Glass primitives and ScreenTitlePane integration are present"
 
       - name: Set up JDK
         uses: actions/setup-java@v4
@@ -92,7 +104,7 @@ jobs:
             -PbuildVariants="$CI_BUILD_VARIANTS" \
             -PforceInternalUserFlag="$CI_FORCE_INTERNAL_USER_FLAG"
 
-      - name: Verify Photon UI regression test results
+      - name: Verify Photon Liquid Glass regression test results
         shell: bash
         run: |
           set -euo pipefail
@@ -108,10 +120,10 @@ jobs:
                   if 'GhostWebPhotonUiRegressionTest' in case.attrib.get('classname', ''):
                       found = True
                       if any(child.tag in ('failure', 'error', 'skipped') for child in case):
-                          sys.exit('Photon UI regression test failed or skipped: ' + report)
+                          sys.exit('Photon Liquid Glass regression test failed or skipped: ' + report)
           if not found:
-              sys.exit('Photon UI regression tests were not executed; blocking release')
-          print('Photon UI regression tests executed successfully')
+              sys.exit('Photon Liquid Glass regression tests were not executed; blocking release')
+          print('Photon Liquid Glass regression tests executed successfully')
           PY
 
       - name: Verify release APK and signature
@@ -157,7 +169,7 @@ jobs:
         env:
           UI_GATE_EXPECTED_VERSION: ${{ env.CI_UI_GATE_VERSION }}
         run: |
-          # The Photon UI migration gate: a green build alone never releases a
+          # The Photon Liquid Glass UI gate: a green build alone never releases a
           # new APK. See docs/ui-gate.md for the full gate criteria.
           apk="$(find dist -name '*.apk' | head -1)"
           apk_sha256="$(sha256sum "$apk" | awk '{print $1}')"
@@ -167,10 +179,11 @@ jobs:
           Gate version: ${UI_GATE_EXPECTED_VERSION}
           UI_GATE_STATUS: PASS
 
-          Covered by GhostWebPhotonUiRegressionTest (palette and surface tokens,
-          resolved theme/button roles, unread badge, startup overlay lifecycle and
-          drawables/layout, conversation-list menu items, and core layout resource
-          presence) executed in :app:testProdWebsiteDebugUnitTest on this exact build.
+          Covered by GhostWebPhotonUiRegressionTest: Photon palette/theme regressions,
+          startup and conversation UI checks, PhotonGlassSurface rendering,
+          PhotonActionSurface click behavior, and ScreenTitlePane glass integration.
+          These tests execute in :app:testProdWebsiteDebugUnitTest on this exact build.
+          This is the first Compose surface integration, not all 22 planned screens.
           This automated gate does not replace physical-device or visual-flow testing.
 
           APK: $(basename "$apk")
@@ -338,7 +351,7 @@ jobs:
           Plays after completed registration and app unlock. Respects disabled animations.
           Android 12+ uses blur-to-focus; older devices use a scale/fade transition.
 
-          Photon UI migration gate verified before publishing (see UI_GATE.md and docs/ui-gate.md).
+          Photon Liquid Glass gate verified before publishing (see UI_GATE.md and docs/ui-gate.md).
 
           Source commit: $GITHUB_SHA
           Signed APK and startup lifecycle tests verified by GitHub Actions.
