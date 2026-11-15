@@ -361,6 +361,22 @@ jobs:
               return 1
             }
             release_json="$(gh api "repos/$GITHUB_REPOSITORY/releases/$release_id")"
+            local expected_apk
+            local -a release_apks=()
+            mapfile -t release_apks < <(jq -r '.assets[] | select(.name | ascii_downcase | endswith(".apk")) | .name' <<< "$release_json")
+            expected_apk="${apks[0]#./}"
+            test "${#release_apks[@]}" = "1" || {
+              echo "::error::Expected exactly one APK asset in the release; refusing unverified extra APKs" >&2
+              return 1
+            }
+            test "${release_apks[0]}" = "$expected_apk" || {
+              echo "::error::Release APK asset does not match the verified build: ${release_apks[0]}" >&2
+              return 1
+            }
+            [[ "${release_apks[0],,}" != *unsigned* ]] || {
+              echo "::error::Release contains an unsigned APK asset" >&2
+              return 1
+            }
             for evidence in "${apks[0]#./}" SHA256SUMS BUILD.txt UI_GATE.md apksigner.txt; do
               expected="$(sha256sum "$evidence" | awk '{print $1}')"
               matches="$(jq -c --arg name "$evidence" '[.assets[] | select(.name == $name)]' <<< "$release_json")"

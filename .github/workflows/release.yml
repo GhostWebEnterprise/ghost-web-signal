@@ -337,6 +337,16 @@ jobs:
             exit 1
           }
           release_record="$(jq -c '.[0]' <<< "$matches")"
+          expected_apk_names="$(for apk in "${apks[@]}"; do basename "$apk"; done | LC_ALL=C sort)"
+          release_apk_names="$(jq -r '.assets[] | select(.name | ascii_downcase | endswith(".apk")) | .name' <<< "$release_record" | LC_ALL=C sort)"
+          if [[ "$release_apk_names" != "$expected_apk_names" ]]; then
+            echo "::error::Release APK asset set differs from the verified build; refusing publication." >&2
+            echo "Expected APK assets:" >&2
+            printf '%s\n' "$expected_apk_names" >&2
+            echo "Actual APK assets:" >&2
+            printf '%s\n' "$release_apk_names" >&2
+            exit 1
+          fi
           release_id="$(jq -r '.id' <<< "$release_record")"
           test "$(jq -r '.draft' <<< "$release_record")" = true || {
             echo "::error::Refusing to modify an already-published release" >&2
