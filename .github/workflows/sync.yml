@@ -64,23 +64,26 @@ jobs:
       - name: Publish upstream-main
         shell: bash
         env:
-          SYNC_PAT: ${{ secrets.SYNC_PAT }}
+          GH_TOKEN: ${{ secrets.SYNC_PAT }}
         run: |
           set -euo pipefail
-          auth_header="$(printf 'x-access-token:%s' "$SYNC_PAT" | base64 -w0)"
-          echo "::add-mask::$auth_header"
-          remote_sha="$(git -c "http.https://github.com/.extraheader=AUTHORIZATION: basic ${auth_header}" ls-remote --heads origin refs/heads/upstream-main | awk '{print $1}')"
+          # Use GitHub CLI's credential helper instead of a URL-scoped extraheader.
+          # The previous extraheader was not applied to the push and Git fell back
+          # to an interactive username prompt in the non-interactive runner.
+          gh auth status --hostname github.com
+          gh auth setup-git --hostname github.com
+          remote_sha="$(git ls-remote --heads origin refs/heads/upstream-main | awk '{print $1}')"
           if [ -n "$remote_sha" ]; then
-            git -c "http.https://github.com/.extraheader=AUTHORIZATION: basic ${auth_header}" push origin "HEAD:refs/heads/upstream-main" \
+            git push origin "HEAD:refs/heads/upstream-main" \
               --force-with-lease="refs/heads/upstream-main:${remote_sha}"
           else
-            git -c "http.https://github.com/.extraheader=AUTHORIZATION: basic ${auth_header}" push origin "HEAD:refs/heads/upstream-main"
+            git push origin "HEAD:refs/heads/upstream-main"
           fi
 
       - name: Track upstream stable release
         shell: bash
         env:
-          SYNC_PAT: ${{ secrets.SYNC_PAT }}
+          GH_TOKEN: ${{ secrets.SYNC_PAT }}
         run: |
           set -euo pipefail
           curl -fsSL -o latest.json https://updates.signal.org/android/latest.json
@@ -89,6 +92,6 @@ jobs:
             echo "::notice::tag ${tag} not pushed to upstream yet, skipping"
             exit 0
           fi
-          auth_header="$(printf 'x-access-token:%s' "$SYNC_PAT" | base64 -w0)"
-          echo "::add-mask::$auth_header"
-          git -c "http.https://github.com/.extraheader=AUTHORIZATION: basic ${auth_header}" push -f origin "${tag}^{commit}:refs/heads/upstream-stable"
+          gh auth status --hostname github.com
+          gh auth setup-git --hostname github.com
+          git push -f origin "${tag}^{commit}:refs/heads/upstream-stable"
