@@ -351,6 +351,28 @@ jobs:
             echo "Verified published release $RELEASE_TAG (release ID $release_id)."
           }
 
+          assert_release_asset_digests() {
+            local release_id="$1" release_json evidence expected matches digest
+            test -n "$release_id" || {
+              echo "::error::Verified release ID is missing for asset digest checks" >&2
+              return 1
+            }
+            release_json="$(gh api "repos/$GITHUB_REPOSITORY/releases/$release_id")"
+            for evidence in "${apks[0]#./}" SHA256SUMS BUILD.txt UI_GATE.md apksigner.txt; do
+              expected="$(sha256sum "$evidence" | awk '{print $1}')"
+              matches="$(jq -c --arg name "$evidence" '[.assets[] | select(.name == $name)]' <<< "$release_json")"
+              test "$(jq 'length' <<< "$matches")" = "1" || {
+                echo "::error::Expected exactly one release asset named $evidence" >&2
+                return 1
+              }
+              digest="$(jq -r '.[0].digest // empty' <<< "$matches")"
+              test "${digest#sha256:}" = "$expected" || {
+                echo "::error::GitHub release asset digest mismatch or missing digest: $evidence" >&2
+                return 1
+              }
+            done
+          }
+
           assert_tag_commit() {
             local ref_json object_sha object_type tag_commit
             ref_json="$(gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/$RELEASE_TAG")"
@@ -387,6 +409,7 @@ jobs:
               }
             done
             (cd downloaded && sha256sum --check SHA256SUMS)
+            assert_release_asset_digests "$EXISTING_RELEASE_ID"
             finalize_verified_release "$EXISTING_RELEASE_ID"
             exit 0
           fi
@@ -419,4 +442,6 @@ jobs:
             }
           done
           (cd downloaded && sha256sum --check SHA256SUMS)
-          finalize_verified_release "$(find_release_id)"
+          NEW_RELEASE_ID="$(find_release_id)"
+          assert_release_asset_digests "$NEW_RELEASE_ID"
+          finalize_verified_release "$NEW_RELEASE_ID"
