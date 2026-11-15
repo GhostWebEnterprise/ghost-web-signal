@@ -344,10 +344,13 @@ jobs:
             fi
             final_json="$(gh api "repos/$GITHUB_REPOSITORY/releases/$release_id")"
             jq -e --arg tag "$RELEASE_TAG" \
-              '.tag_name == $tag and .draft == false' <<< "$final_json" > /dev/null || {
+              '.tag_name == $tag and .draft == false and .published_at != null' <<< "$final_json" > /dev/null || {
               echo "::error::Release $RELEASE_TAG did not reach the published state" >&2
               return 1
             }
+            # Re-read every immutable asset after publication; pre-promotion
+            # verification alone is not sufficient evidence of final state.
+            assert_release_asset_digests "$release_id"
             echo "Verified published release $RELEASE_TAG (release ID $release_id)."
           }
 
