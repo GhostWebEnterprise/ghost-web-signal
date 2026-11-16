@@ -13,7 +13,8 @@ on:
   schedule:
     - cron: '0 2,18,22 * * *'
 
-# Keep the GitHub token read-only; use SYNC_PAT only for mirror-branch writes.
+# Use the short-lived repository-scoped GitHub token; do not depend on a
+# long-lived PAT for writes to branches in this same repository.
 permissions:
   contents: read
 
@@ -23,7 +24,7 @@ jobs:
     if: github.ref == 'refs/heads/GWSignal.main'
     runs-on: ubuntu-24.04
     permissions:
-      contents: read
+      contents: write
 
     steps:
       - name: Checkout GhostWeb base
@@ -34,17 +35,6 @@ jobs:
           fetch-depth: 0
           lfs: true
           persist-credentials: false
-
-      - name: Require SYNC_PAT for origin writes
-        shell: bash
-        env:
-          SYNC_PAT: ${{ secrets.SYNC_PAT }}
-        run: |
-          set -euo pipefail
-          test -n "$SYNC_PAT" || {
-            echo "::error::SYNC_PAT is missing or empty; configure the repository secret with Contents: write access."
-            exit 1
-          }
 
       - name: Fetch Signal upstream
         run: |
@@ -64,12 +54,9 @@ jobs:
       - name: Publish upstream-main
         shell: bash
         env:
-          GH_TOKEN: ${{ secrets.SYNC_PAT }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          # Use GitHub CLI's credential helper instead of a URL-scoped extraheader.
-          # The previous extraheader was not applied to the push and Git fell back
-          # to an interactive username prompt in the non-interactive runner.
           gh auth status --hostname github.com
           gh auth setup-git --hostname github.com
           remote_sha="$(git ls-remote --heads origin refs/heads/upstream-main | awk '{print $1}')"
@@ -83,7 +70,7 @@ jobs:
       - name: Track upstream stable release
         shell: bash
         env:
-          GH_TOKEN: ${{ secrets.SYNC_PAT }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           curl -fsSL -o latest.json https://updates.signal.org/android/latest.json
