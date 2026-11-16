@@ -279,6 +279,44 @@ jobs:
           exit 1
         env:
           GH_TOKEN: ${{ github.token }}
+      - name: Wait for full Test workflow success on exact commit
+        shell: bash
+        timeout-minutes: 100
+        run: |
+          set -euo pipefail
+          # The full Test workflow is independent from the Photon UI build.
+          # A release must wait for its result on this exact source commit.
+          deadline=$((SECONDS + 5700))
+          while (( SECONDS < deadline )); do
+            test_runs="$(gh run list --repo "$GITHUB_REPOSITORY" \
+              --workflow=test.yml \
+              --commit "$GITHUB_SHA" \
+              --limit 1 --json databaseId,status,conclusion)"
+            test_run="$(jq -r '.[0].databaseId // empty' <<< "$test_runs")"
+            test_status="$(jq -r '.[0].status // empty' <<< "$test_runs")"
+            test_conclusion="$(jq -r '.[0].conclusion // empty' <<< "$test_runs")"
+
+            if [[ -n "$test_run" && "$test_status" == "completed" ]]; then
+              if [[ "$test_conclusion" == "success" ]]; then
+                echo "Full Test workflow passed for exact commit $GITHUB_SHA (run $test_run)"
+                exit 0
+              fi
+              echo "::error::Full Test workflow for $GITHUB_SHA completed with conclusion: ${test_conclusion:-unknown}; refusing to publish" >&2
+              exit 1
+            fi
+
+            if [[ -z "$test_run" ]]; then
+              echo "Waiting for the full Test workflow to be scheduled for $GITHUB_SHA."
+            else
+              echo "Full Test workflow $test_run is $test_status; waiting."
+            fi
+            sleep 30
+          done
+
+          echo "::error::Timed out waiting for full Test workflow success on exact commit $GITHUB_SHA; refusing to publish" >&2
+          exit 1
+        env:
+          GH_TOKEN: ${{ github.token }}
       - name: Download artifacts
         uses: actions/download-artifact@v4
       - name: Reject unsigned artifacts before publishing
