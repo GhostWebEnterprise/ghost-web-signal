@@ -14,9 +14,11 @@ on:
 permissions:
   contents: read
 
+# A newer commit supersedes a stale build on the same branch; do not let a
+# hung Gradle run hold all subsequent release verification behind it.
 concurrency:
   group: ghostweb-signal-build-${{ github.ref }}
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   build:
