@@ -279,41 +279,51 @@ jobs:
           exit 1
         env:
           GH_TOKEN: ${{ github.token }}
-      - name: Wait for full Test workflow success on exact commit
+      - name: Wait for full Test job success on exact commit
         shell: bash
         timeout-minutes: 100
         run: |
           set -euo pipefail
-          # The full Test workflow is independent from the Photon UI build.
-          # A release must wait for its result on this exact source commit.
+          # The Test workflow may also call this release workflow. Gate on its
+          # dedicated Run tests job, not the aggregate workflow conclusion,
+          # to avoid a circular wait on the release jobs.
           deadline=$((SECONDS + 5700))
           while (( SECONDS < deadline )); do
             test_runs="$(gh run list --repo "$GITHUB_REPOSITORY" \
               --workflow=test.yml \
               --commit "$GITHUB_SHA" \
-              --limit 1 --json databaseId,status,conclusion)"
+              --limit 1 --json databaseId)"
             test_run="$(jq -r '.[0].databaseId // empty' <<< "$test_runs")"
-            test_status="$(jq -r '.[0].status // empty' <<< "$test_runs")"
-            test_conclusion="$(jq -r '.[0].conclusion // empty' <<< "$test_runs")"
 
-            if [[ -n "$test_run" && "$test_status" == "completed" ]]; then
-              if [[ "$test_conclusion" == "success" ]]; then
-                echo "Full Test workflow passed for exact commit $GITHUB_SHA (run $test_run)"
-                exit 0
+            if [[ -n "$test_run" ]]; then
+              test_jobs="$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$test_run/jobs?per_page=100")"
+              test_job_count="$(jq '[.jobs[] | select(.name == "Run tests")] | length' <<< "$test_jobs")"
+              if [[ "$test_job_count" -gt 1 ]]; then
+                echo "::error::Multiple Run tests jobs found for exact commit $GITHUB_SHA; refusing to publish" >&2
+                exit 1
               fi
-              echo "::error::Full Test workflow for $GITHUB_SHA completed with conclusion: ${test_conclusion:-unknown}; refusing to publish" >&2
-              exit 1
-            fi
-
-            if [[ -z "$test_run" ]]; then
-              echo "Waiting for the full Test workflow to be scheduled for $GITHUB_SHA."
+              if [[ "$test_job_count" -eq 1 ]]; then
+                test_job_status="$(jq -r '[.jobs[] | select(.name == "Run tests")][0].status' <<< "$test_jobs")"
+                test_job_conclusion="$(jq -r '[.jobs[] | select(.name == "Run tests")][0].conclusion // empty' <<< "$test_jobs")"
+                if [[ "$test_job_status" == "completed" ]]; then
+                  if [[ "$test_job_conclusion" == "success" ]]; then
+                    echo "Full Test job passed for exact commit $GITHUB_SHA (workflow run $test_run)"
+                    exit 0
+                  fi
+                  echo "::error::Full Test job for $GITHUB_SHA completed with conclusion: ${test_job_conclusion:-unknown}; refusing to publish" >&2
+                  exit 1
+                fi
+                echo "Full Test job for exact commit $GITHUB_SHA is $test_job_status; waiting."
+              else
+                echo "Waiting for the Run tests job to be scheduled for $GITHUB_SHA."
+              fi
             else
-              echo "Full Test workflow $test_run is $test_status; waiting."
+              echo "Waiting for the full Test workflow to be scheduled for $GITHUB_SHA."
             fi
             sleep 30
           done
 
-          echo "::error::Timed out waiting for full Test workflow success on exact commit $GITHUB_SHA; refusing to publish" >&2
+          echo "::error::Timed out waiting for full Test job success on exact commit $GITHUB_SHA; refusing to publish" >&2
           exit 1
         env:
           GH_TOKEN: ${{ github.token }}
