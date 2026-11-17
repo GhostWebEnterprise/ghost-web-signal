@@ -392,6 +392,48 @@ jobs:
             done
           }
 
+          download_release_asset() {
+            local release_id="$1" asset_name="$2" destination="$3"
+            local release_json matches count asset_id headers status location
+            release_json="$(gh api "repos/$GITHUB_REPOSITORY/releases/$release_id")"
+            matches="$(jq -c --arg name "$asset_name" '[.assets[] | select(.name == $name)]' <<< "$release_json")"
+            count="$(jq 'length' <<< "$matches")"
+            test "$count" = "1" || {
+              echo "::error::Expected exactly one release asset named $asset_name" >&2
+              return 1
+            }
+            asset_id="$(jq -r '.[0].id' <<< "$matches")"
+            mkdir -p "$(dirname "$destination")"
+            headers="$(mktemp)"
+            status="$(curl --silent --show-error --dump-header "$headers" \
+              --output "$destination" --write-out '%{http_code}' \
+              --header "Authorization: Bearer $GH_TOKEN" \
+              --header "Accept: application/octet-stream" \
+              --header "X-GitHub-Api-Version: 2022-11-28" \
+              "https://api.github.com/repos/$GITHUB_REPOSITORY/releases/assets/$asset_id")"
+            case "$status" in
+              200)
+                ;;
+              301|302|303|307|308)
+                location="$(awk 'tolower($1) == "location:" { sub(/^[^:]*:[[:space:]]*/, ""); sub(/\r$/, ""); print; exit }' "$headers")"
+                test -n "$location" || {
+                  rm -f "$headers" "$destination"
+                  echo "::error::GitHub asset redirect omitted its download URL" >&2
+                  return 1
+                }
+                # Never forward the GitHub token to the signed object-storage URL.
+                curl --fail --silent --show-error --location "$location" --output "$destination"
+                ;;
+              *)
+                rm -f "$headers" "$destination"
+                echo "::error::GitHub asset download returned HTTP $status" >&2
+                return 1
+                ;;
+            esac
+            rm -f "$headers"
+            test -s "$destination"
+          }
+
           assert_tag_commit() {
             local ref_json object_sha object_type tag_commit
             ref_json="$(gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/$RELEASE_TAG")"
@@ -416,7 +458,9 @@ jobs:
             echo "Release $RELEASE_TAG already exists; verifying exact assets before any draft finalization."
             assert_tag_commit
             mkdir downloaded
-            gh release download "$RELEASE_TAG" --dir downloaded
+            for evidence in "${apks[0]#./}" SHA256SUMS BUILD.txt UI_GATE.md apksigner.txt; do
+              download_release_asset "$EXISTING_RELEASE_ID" "$evidence" "downloaded/$evidence"
+            done
             for evidence in "${apks[0]#./}" SHA256SUMS BUILD.txt UI_GATE.md apksigner.txt; do
               test -s "downloaded/$evidence" || {
                 echo "::error::Existing release is missing $evidence" >&2
@@ -448,8 +492,15 @@ jobs:
             --target "$GITHUB_SHA" --draft \
             --title "GhostWeb Signal $RELEASE_TAG" --notes-file release-notes.md
           assert_tag_commit
+          NEW_RELEASE_ID="$(find_release_id)"
+          test -n "$NEW_RELEASE_ID" || {
+            echo "::error::New release ID could not be resolved after creation" >&2
+            exit 1
+          }
           mkdir downloaded
-          gh release download "$RELEASE_TAG" --dir downloaded
+          for evidence in "${apks[0]#./}" SHA256SUMS BUILD.txt UI_GATE.md apksigner.txt; do
+            download_release_asset "$NEW_RELEASE_ID" "$evidence" "downloaded/$evidence"
+          done
           for evidence in "${apks[0]#./}" SHA256SUMS BUILD.txt UI_GATE.md apksigner.txt; do
             test -s "downloaded/$evidence" || {
               echo "::error::Published release is missing $evidence" >&2
@@ -461,6 +512,5 @@ jobs:
             }
           done
           (cd downloaded && sha256sum --check SHA256SUMS)
-          NEW_RELEASE_ID="$(find_release_id)"
           assert_release_asset_digests "$NEW_RELEASE_ID"
           finalize_verified_release "$NEW_RELEASE_ID"
