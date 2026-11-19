@@ -279,6 +279,54 @@ jobs:
           exit 1
         env:
           GH_TOKEN: ${{ github.token }}
+      - name: Wait for full Test job success on exact commit
+        shell: bash
+        timeout-minutes: 100
+        run: |
+          set -euo pipefail
+          # The Test workflow may also call this release workflow. Gate on its
+          # dedicated Run tests job, not the aggregate workflow conclusion,
+          # to avoid a circular wait on the release jobs.
+          deadline=$((SECONDS + 5700))
+          while (( SECONDS < deadline )); do
+            test_runs="$(gh run list --repo "$GITHUB_REPOSITORY" \
+              --workflow=test.yml \
+              --commit "$GITHUB_SHA" \
+              --limit 1 --json databaseId)"
+            test_run="$(jq -r '.[0].databaseId // empty' <<< "$test_runs")"
+
+            if [[ -n "$test_run" ]]; then
+              test_jobs="$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$test_run/jobs?per_page=100")"
+              test_job_count="$(jq '[.jobs[] | select(.name == "Run tests")] | length' <<< "$test_jobs")"
+              if [[ "$test_job_count" -gt 1 ]]; then
+                echo "::error::Multiple Run tests jobs found for exact commit $GITHUB_SHA; refusing to publish" >&2
+                exit 1
+              fi
+              if [[ "$test_job_count" -eq 1 ]]; then
+                test_job_status="$(jq -r '[.jobs[] | select(.name == "Run tests")][0].status' <<< "$test_jobs")"
+                test_job_conclusion="$(jq -r '[.jobs[] | select(.name == "Run tests")][0].conclusion // empty' <<< "$test_jobs")"
+                if [[ "$test_job_status" == "completed" ]]; then
+                  if [[ "$test_job_conclusion" == "success" ]]; then
+                    echo "Full Test job passed for exact commit $GITHUB_SHA (workflow run $test_run)"
+                    exit 0
+                  fi
+                  echo "::error::Full Test job for $GITHUB_SHA completed with conclusion: ${test_job_conclusion:-unknown}; refusing to publish" >&2
+                  exit 1
+                fi
+                echo "Full Test job for exact commit $GITHUB_SHA is $test_job_status; waiting."
+              else
+                echo "Waiting for the Run tests job to be scheduled for $GITHUB_SHA."
+              fi
+            else
+              echo "Waiting for the full Test workflow to be scheduled for $GITHUB_SHA."
+            fi
+            sleep 30
+          done
+
+          echo "::error::Timed out waiting for full Test job success on exact commit $GITHUB_SHA; refusing to publish" >&2
+          exit 1
+        env:
+          GH_TOKEN: ${{ github.token }}
       - name: Download artifacts
         uses: actions/download-artifact@v4
       - name: Reject unsigned artifacts before publishing
@@ -337,6 +385,16 @@ jobs:
             exit 1
           }
           release_record="$(jq -c '.[0]' <<< "$matches")"
+          expected_apk_names="$(for apk in "${apks[@]}"; do basename "$apk"; done | LC_ALL=C sort)"
+          release_apk_names="$(jq -r '.assets[] | select(.name | ascii_downcase | endswith(".apk")) | .name' <<< "$release_record" | LC_ALL=C sort)"
+          if [[ "$release_apk_names" != "$expected_apk_names" ]]; then
+            echo "::error::Release APK asset set differs from the verified build; refusing publication." >&2
+            echo "Expected APK assets:" >&2
+            printf '%s\n' "$expected_apk_names" >&2
+            echo "Actual APK assets:" >&2
+            printf '%s\n' "$release_apk_names" >&2
+            exit 1
+          fi
           release_id="$(jq -r '.id' <<< "$release_record")"
           test "$(jq -r '.draft' <<< "$release_record")" = true || {
             echo "::error::Refusing to modify an already-published release" >&2

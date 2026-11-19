@@ -17,7 +17,7 @@ permissions:
 # A newer commit supersedes a stale build on the same branch; do not let a
 # hung Gradle run hold all subsequent release verification behind it.
 concurrency:
-  group: ghostweb-signal-build-${{ github.ref }}-${{ github.sha }}
+  group: ghostweb-signal-build-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -316,10 +316,153 @@ jobs:
           test -s UI_GATE.md
           grep -Fq "UI_GATE_STATUS: PASS" UI_GATE.md
           grep -Fq "Source commit: ${GITHUB_SHA}" UI_GATE.md
-          if gh release view "$RELEASE_TAG" > /dev/null 2>&1; then
-            echo "Release $RELEASE_TAG already exists; verifying existing release instead of overwriting it."
+          find_release_id() {
+            local release_json matches count
+            release_json="$(gh api "repos/$GITHUB_REPOSITORY/releases?per_page=100")"
+            matches="$(jq -c --arg tag "$RELEASE_TAG" '[.[] | select(.tag_name == $tag)]' <<< "$release_json")"
+            count="$(jq 'length' <<< "$matches")"
+            if [[ "$count" -gt 1 ]]; then
+              echo "::error::Multiple releases found for $RELEASE_TAG" >&2
+              return 1
+            fi
+            if [[ "$count" -eq 1 ]]; then
+              jq -r '.[0].id' <<< "$matches"
+            fi
+          }
+
+          finalize_verified_release() {
+            local release_id="$1" draft final_json
+            test -n "$release_id" || {
+              echo "::error::Verified release ID is missing" >&2
+              return 1
+            }
+            draft="$(gh api "repos/$GITHUB_REPOSITORY/releases/$release_id" --jq '.draft')"
+            if [[ "$draft" == "true" ]]; then
+              gh api --method PATCH -F draft=false \
+                "repos/$GITHUB_REPOSITORY/releases/$release_id" > "$RUNNER_TEMP/published-release.json"
+            elif [[ "$draft" != "false" ]]; then
+              echo "::error::Unexpected draft state for release $release_id" >&2
+              return 1
+            fi
+            final_json="$(gh api "repos/$GITHUB_REPOSITORY/releases/$release_id")"
+            jq -e --arg tag "$RELEASE_TAG" \
+              '.tag_name == $tag and .draft == false and .published_at != null' <<< "$final_json" > /dev/null || {
+              echo "::error::Release $RELEASE_TAG did not reach the published state" >&2
+              return 1
+            }
+            # Re-read every immutable asset after publication; pre-promotion
+            # verification alone is not sufficient evidence of final state.
+            assert_release_asset_digests "$release_id"
+            echo "Verified published release $RELEASE_TAG (release ID $release_id)."
+          }
+
+          assert_release_asset_digests() {
+            local release_id="$1" release_json evidence expected matches digest
+            test -n "$release_id" || {
+              echo "::error::Verified release ID is missing for asset digest checks" >&2
+              return 1
+            }
+            release_json="$(gh api "repos/$GITHUB_REPOSITORY/releases/$release_id")"
+            local expected_apk
+            local -a release_apks=()
+            mapfile -t release_apks < <(jq -r '.assets[] | select(.name | ascii_downcase | endswith(".apk")) | .name' <<< "$release_json")
+            expected_apk="${apks[0]#./}"
+            test "${#release_apks[@]}" = "1" || {
+              echo "::error::Expected exactly one APK asset in the release; refusing unverified extra APKs" >&2
+              return 1
+            }
+            test "${release_apks[0]}" = "$expected_apk" || {
+              echo "::error::Release APK asset does not match the verified build: ${release_apks[0]}" >&2
+              return 1
+            }
+            [[ "${release_apks[0],,}" != *unsigned* ]] || {
+              echo "::error::Release contains an unsigned APK asset" >&2
+              return 1
+            }
+            for evidence in "${apks[0]#./}" SHA256SUMS BUILD.txt UI_GATE.md apksigner.txt; do
+              expected="$(sha256sum "$evidence" | awk '{print $1}')"
+              matches="$(jq -c --arg name "$evidence" '[.assets[] | select(.name == $name)]' <<< "$release_json")"
+              test "$(jq 'length' <<< "$matches")" = "1" || {
+                echo "::error::Expected exactly one release asset named $evidence" >&2
+                return 1
+              }
+              digest="$(jq -r '.[0].digest // empty' <<< "$matches")"
+              test "${digest#sha256:}" = "$expected" || {
+                echo "::error::GitHub release asset digest mismatch or missing digest: $evidence" >&2
+                return 1
+              }
+            done
+          }
+
+          download_release_asset() {
+            local release_id="$1" asset_name="$2" destination="$3"
+            local release_json matches count asset_id headers status location
+            release_json="$(gh api "repos/$GITHUB_REPOSITORY/releases/$release_id")"
+            matches="$(jq -c --arg name "$asset_name" '[.assets[] | select(.name == $name)]' <<< "$release_json")"
+            count="$(jq 'length' <<< "$matches")"
+            test "$count" = "1" || {
+              echo "::error::Expected exactly one release asset named $asset_name" >&2
+              return 1
+            }
+            asset_id="$(jq -r '.[0].id' <<< "$matches")"
+            mkdir -p "$(dirname "$destination")"
+            headers="$(mktemp)"
+            status="$(curl --silent --show-error --dump-header "$headers" \
+              --output "$destination" --write-out '%{http_code}' \
+              --header "Authorization: Bearer $GH_TOKEN" \
+              --header "Accept: application/octet-stream" \
+              --header "X-GitHub-Api-Version: 2022-11-28" \
+              "https://api.github.com/repos/$GITHUB_REPOSITORY/releases/assets/$asset_id")"
+            case "$status" in
+              200)
+                ;;
+              301|302|303|307|308)
+                location="$(awk 'tolower($1) == "location:" { sub(/^[^:]*:[[:space:]]*/, ""); sub(/\r$/, ""); print; exit }' "$headers")"
+                test -n "$location" || {
+                  rm -f "$headers" "$destination"
+                  echo "::error::GitHub asset redirect omitted its download URL" >&2
+                  return 1
+                }
+                # Never forward the GitHub token to the signed object-storage URL.
+                curl --fail --silent --show-error --location "$location" --output "$destination"
+                ;;
+              *)
+                rm -f "$headers" "$destination"
+                echo "::error::GitHub asset download returned HTTP $status" >&2
+                return 1
+                ;;
+            esac
+            rm -f "$headers"
+            test -s "$destination"
+          }
+
+          assert_tag_commit() {
+            local ref_json object_sha object_type tag_commit
+            ref_json="$(gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/$RELEASE_TAG")"
+            object_sha="$(jq -r '.object.sha' <<< "$ref_json")"
+            object_type="$(jq -r '.object.type' <<< "$ref_json")"
+            case "$object_type" in
+              commit) tag_commit="$object_sha" ;;
+              tag) tag_commit="$(gh api "repos/$GITHUB_REPOSITORY/git/tags/$object_sha" --jq '.object.sha')" ;;
+              *)
+                echo "::error::Unexpected Git tag object type for $RELEASE_TAG: $object_type" >&2
+                return 1
+                ;;
+            esac
+            test "$tag_commit" = "$GITHUB_SHA" || {
+              echo "::error::Release tag $RELEASE_TAG resolves to $tag_commit, not build commit $GITHUB_SHA" >&2
+              return 1
+            }
+          }
+
+          EXISTING_RELEASE_ID="$(find_release_id)"
+          if [[ -n "$EXISTING_RELEASE_ID" ]]; then
+            echo "Release $RELEASE_TAG already exists; verifying exact assets before any draft finalization."
+            assert_tag_commit
             mkdir downloaded
-            gh release download "$RELEASE_TAG" --dir downloaded
+            for evidence in "${apks[0]#./}" SHA256SUMS BUILD.txt UI_GATE.md apksigner.txt; do
+              download_release_asset "$EXISTING_RELEASE_ID" "$evidence" "downloaded/$evidence"
+            done
             for evidence in "${apks[0]#./}" SHA256SUMS BUILD.txt UI_GATE.md apksigner.txt; do
               test -s "downloaded/$evidence" || {
                 echo "::error::Existing release is missing $evidence" >&2
@@ -331,7 +474,8 @@ jobs:
               }
             done
             (cd downloaded && sha256sum --check SHA256SUMS)
-            echo "Existing release contains the exact verified APK and evidence bytes."
+            assert_release_asset_digests "$EXISTING_RELEASE_ID"
+            finalize_verified_release "$EXISTING_RELEASE_ID"
             exit 0
           fi
           cat > release-notes.md <<EOF_NOTES
@@ -349,8 +493,16 @@ jobs:
           gh release create "$RELEASE_TAG" ./*.apk SHA256SUMS BUILD.txt UI_GATE.md apksigner.txt \
             --target "$GITHUB_SHA" --draft \
             --title "GhostWeb Signal $RELEASE_TAG" --notes-file release-notes.md
+          assert_tag_commit
+          NEW_RELEASE_ID="$(find_release_id)"
+          test -n "$NEW_RELEASE_ID" || {
+            echo "::error::New release ID could not be resolved after creation" >&2
+            exit 1
+          }
           mkdir downloaded
-          gh release download "$RELEASE_TAG" --dir downloaded
+          for evidence in "${apks[0]#./}" SHA256SUMS BUILD.txt UI_GATE.md apksigner.txt; do
+            download_release_asset "$NEW_RELEASE_ID" "$evidence" "downloaded/$evidence"
+          done
           for evidence in "${apks[0]#./}" SHA256SUMS BUILD.txt UI_GATE.md apksigner.txt; do
             test -s "downloaded/$evidence" || {
               echo "::error::Published release is missing $evidence" >&2
@@ -362,4 +514,5 @@ jobs:
             }
           done
           (cd downloaded && sha256sum --check SHA256SUMS)
-          gh release edit "$RELEASE_TAG" --draft=false
+          assert_release_asset_digests "$NEW_RELEASE_ID"
+          finalize_verified_release "$NEW_RELEASE_ID"

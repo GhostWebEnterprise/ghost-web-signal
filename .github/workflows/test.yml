@@ -44,8 +44,11 @@ jobs:
       - name: Copy Docker gradle.properties
         run: cp gradle.properties.docker "$GRADLE_USER_HOME/gradle.properties"
 
+      # Verification metadata is committed and checked by normal Gradle builds.
+      # The dedicated bootstrap-verification workflow updates that file when
+      # dependencies change; do not rewrite it during every PR/push test run.
       - name: Build and run tests
-        run: ./gradlew --write-verification-metadata sha256 build
+        run: ./gradlew build
 
       - name: Archive reports for failed build
         if: "failure()"
