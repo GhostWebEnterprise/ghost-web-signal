@@ -13,6 +13,8 @@ on:
   schedule:
     - cron: '7 2,18,22 * * *'
 
+# Use the short-lived repository-scoped GitHub token; do not depend on a
+# long-lived PAT for writes to branches in this same repository.
 permissions:
   contents: read
 
@@ -20,18 +22,19 @@ jobs:
   sync:
     name: Sync
     if: github.ref == 'refs/heads/GWSignal.main'
+    runs-on: ubuntu-24.04
     permissions:
       contents: write
-    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout GhostWeb base
         uses: actions/checkout@v6
         with:
           ref: GWSignal.main
+          token: ${{ github.token }}
           fetch-depth: 0
           lfs: true
-          persist-credentials: true
+          persist-credentials: false
 
       - name: Fetch Signal upstream
         run: |
@@ -49,7 +52,13 @@ jobs:
       - run: git lfs fetch --all upstream
 
       - name: Publish upstream-main
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
+          set -euo pipefail
+          gh auth status --hostname github.com
+          gh auth setup-git --hostname github.com
           remote_sha="$(git ls-remote --heads origin refs/heads/upstream-main | awk '{print $1}')"
           if [ -n "$remote_sha" ]; then
             git push origin "HEAD:refs/heads/upstream-main" \
@@ -59,11 +68,17 @@ jobs:
           fi
 
       - name: Track upstream stable release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
+          set -euo pipefail
           curl -fsSL -o latest.json https://updates.signal.org/android/latest.json
           tag="v$(jq -r .versionName latest.json)"
           if ! git rev-parse -q --verify "refs/tags/${tag}"; then
             echo "::notice::tag ${tag} not pushed to upstream yet, skipping"
             exit 0
           fi
+          gh auth status --hostname github.com
+          gh auth setup-git --hostname github.com
           git push -f origin "${tag}^{commit}:refs/heads/upstream-stable"
