@@ -11,7 +11,7 @@ on:
       - .github/workflows/sync.yml
   workflow_dispatch:
   schedule:
-    - cron: '0 2,18,22 * * *'
+    - cron: '7 2,18,22 * * *'
 
 # Use the short-lived repository-scoped GitHub token; do not depend on a
 # long-lived PAT for writes to branches in this same repository.
