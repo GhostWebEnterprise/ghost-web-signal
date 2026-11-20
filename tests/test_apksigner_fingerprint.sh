@@ -3,7 +3,8 @@ set -euo pipefail
 
 root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 tmp="$(mktemp)"
-trap 'rm -f "$tmp"' EXIT
+rejection="$(mktemp)"
+trap 'rm -f "$tmp" "$rejection"' EXIT
 
 fingerprint="64bb12f28a7d39d2cf921024c6d36019ea3808481bd4471511bd83ca64f20435"
 
@@ -28,9 +29,13 @@ bash "$root/scripts/verify-apksigner-fingerprint.sh" "$tmp" "$fingerprint"
   bash ../scripts/verify-apksigner-fingerprint.sh "$tmp" "$fingerprint"
 )
 
-if bash "$root/scripts/verify-apksigner-fingerprint.sh" "$tmp" "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"; then
+if bash "$root/scripts/verify-apksigner-fingerprint.sh" "$tmp" "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" 2>"$rejection"; then
   echo "Expected a mismatched signer fingerprint to be rejected" >&2
   exit 1
 fi
+grep -Fq "APK signer differs from the published GhostWeb Signal identity:" "$rejection" || {
+  echo "Expected fingerprint mismatch rejection message was not emitted" >&2
+  exit 1
+}
 
 echo "Both supported apksigner formats accepted; mismatched fingerprint rejected."
